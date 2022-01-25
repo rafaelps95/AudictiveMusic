@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+  <Identity Name="102RafaelPedrodaSilva.WSCenterMusic" Publisher="CN=3AE3994C-9393-4069-B5FE-906F703E42CC" Version="11.2022.124.0" />
+  <mp:PhoneIdentity PhoneProductId="97529d50-44da-4563-a71a-52d05543b78a" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Properties>
+    <DisplayName>Audictive Music</DisplayName>
+    <PublisherDisplayName>Rafael Pedro da Silva</PublisherDisplayName>
+    <Logo>Assets\Logos\Fluent\StoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="AudictiveMusicUWP.App">
+      <uap:VisualElements DisplayName="Audictive Music" Square150x150Logo="Assets\Logos\Fluent\Square150.png" Square44x44Logo="Assets\Logos\Fluent\Square44.png" Description="Audictive Music 11" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Logos\Fluent\Wide310.png" Square310x310Logo="Assets\Logos\Fluent\Square310.png" Square71x71Logo="Assets\Logos\Fluent\Square71.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="wide310x150Logo" />
+            <uap:ShowOn Tile="square310x310Logo" />
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="Assets\Logos\Fluent\SplashScreen.png" BackgroundColor="transparent" />
+      </uap:VisualElements>
+      <Extensions>
+        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundAudioAgent.AudictiveMusicMediaPlayerAgent">
+          <BackgroundTasks>
+            <Task Type="audio" />
+          </BackgroundTasks>
+        </Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <uap:Capability Name="musicLibrary" />
+  </Capabilities>
+</Package>

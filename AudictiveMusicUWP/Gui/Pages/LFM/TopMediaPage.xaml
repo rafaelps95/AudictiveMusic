@@ -1,0 +1,156 @@
+﻿<Page
+    x:Class="AudictiveMusicUWP.Gui.Pages.LFM.TopMediaPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AudictiveMusicUWP.Gui.UC"
+    xmlns:converter="using:AudictiveMusicUWP.Gui.Util"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Name="root">
+
+    <Page.Resources>
+        <converter:ToUpperConverter x:Key="ToUpperConverter" />
+        <converter:NumberFormatConverter x:Key="NumberFormatConverter" />
+
+        <DataTemplate x:Key="userTopTracksTemplate">
+            <Grid HorizontalAlignment="Stretch" Margin="0,5,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ProgressBar Padding="0" Grid.RowSpan="2" Grid.ColumnSpan="4" Foreground="#55666666" Background="#22666666" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" Minimum="0" Maximum="{Binding TopTracksMaximumValue, ElementName=root}" Value="{Binding PlayCount}" />
+                <Image Source="{Binding Images.Medium}" Grid.RowSpan="2" Width="40" Height="40" Margin="4,4,10,4" />
+                <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="14" FontWeight="Medium" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ArtistName}" FontSize="12" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Opacity="0.8" Margin="0,0,8,0" FontWeight="Medium" Text="{Binding PlayCount, Converter={StaticResource NumberFormatConverter}}" FontSize="16" HorizontalAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="artistTopTracksTemplate">
+            <Grid HorizontalAlignment="Stretch" Margin="0,5,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ProgressBar Padding="0" Grid.RowSpan="2" Grid.ColumnSpan="4" Foreground="#55666666" Background="#22666666" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" Minimum="0" Maximum="{Binding TopTracksMaximumValue, ElementName=root}" Value="{Binding PlayCount}" />
+                <!--<Image Source="{Binding Images.Medium}" Grid.RowSpan="2" Width="40" Height="40" Margin="4,4,10,4" />-->
+                <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="4,0,0,0" FontSize="14" FontWeight="Medium" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ArtistName}" Margin="4,0,0,0" FontSize="12" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Opacity="0.8" Margin="0,0,8,0" FontWeight="Medium" Text="{Binding PlayCount, Converter={StaticResource NumberFormatConverter}}" FontSize="16" HorizontalAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="userTopAlbumsTemplate">
+            <Grid HorizontalAlignment="Stretch" Margin="0,5,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ProgressBar Padding="0" Grid.RowSpan="2" Grid.ColumnSpan="4" Foreground="#55666666" Background="#22666666" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" Minimum="0" Maximum="{Binding TopAlbumsMaximumValue, ElementName=root}" Value="{Binding PlayCount}" />
+                <Image Source="{Binding Images.Medium}" Grid.RowSpan="2" Width="40" Height="40" Margin="4,4,10,4" />
+                <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="14" FontWeight="Medium" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ArtistName}" FontSize="12" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Opacity="0.8" Margin="0,0,8,0" FontWeight="Medium" Text="{Binding PlayCount, Converter={StaticResource NumberFormatConverter}}" FontSize="16" HorizontalAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+
+    </Page.Resources>
+    <Grid>
+        <local:ModernProgressBar x:Name="progress" IsActive="True" Height="2" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="firstColumn" Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="topArtistsGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Visibility="{Binding ElementName=recentTopArtists, Path=Visibility}" Margin="12,12,0,12">
+                    <TextBlock x:Uid="TopArtists" Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                </Grid>
+                <ListView Grid.Row="1" x:Name="recentTopArtists" SelectionMode="None" IsItemClickEnabled="True" ItemClick="recentTopArtists_ItemClick" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Visibility="Collapsed" Margin="0,0,0,20">
+                    <ListView.ItemContainerTransitions>
+                        <TransitionCollection />
+                    </ListView.ItemContainerTransitions>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch" Margin="0,5,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <ProgressBar Padding="0" Grid.ColumnSpan="4" Foreground="#55666666" Background="#22666666" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" Minimum="0" Maximum="{Binding TopArtistsMaximumValue, ElementName=root}" Value="{Binding PlayCount}" />
+                                <local:CircleImage Source="{Binding Artist.Image}" ImageFailed="CircleImage_ImageFailed" FallbackSource="ms-appx:///Assets/artist-error.png" Width="40" Height="40" Margin="4,4,10,4" />
+                                <TextBlock Grid.Column="1" Text="{Binding Name, Converter={StaticResource ToUpperConverter}}" FontSize="14" FontWeight="Medium" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Column="2" VerticalAlignment="Center" Opacity="0.8" Margin="0,0,8,0" FontWeight="Medium" Text="{Binding PlayCount, Converter={StaticResource NumberFormatConverter}}" FontSize="16" HorizontalAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+
+            <Grid x:Name="topAlbumsGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Visibility="{Binding ElementName=recentTopAlbums, Path=Visibility}" Margin="12,12,0,12">
+                    <TextBlock x:Uid="TopAlbums" Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                </Grid>
+                <ListView Grid.Row="1" x:Name="recentTopAlbums" ItemTemplate="{StaticResource userTopAlbumsTemplate}" SelectionMode="None" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Visibility="Collapsed" Margin="0,0,0,20">
+                    <ListView.ItemContainerTransitions>
+                        <TransitionCollection />
+                    </ListView.ItemContainerTransitions>
+                </ListView>
+            </Grid>
+
+            <Grid x:Name="topTracksGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Visibility="{Binding ElementName=recentTopTracks, Path=Visibility}" Margin="12,12,0,12">
+                    <TextBlock x:Uid="TopTracks" Style="{ThemeResource SubtitleTextBlockStyle}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                </Grid>
+                <ListView Grid.Row="1" x:Name="recentTopTracks" SelectionMode="None" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Visibility="Collapsed" Margin="0,0,0,20">
+                    <ListView.ItemContainerTransitions>
+                        <TransitionCollection />
+                    </ListView.ItemContainerTransitions>
+                </ListView>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Page>

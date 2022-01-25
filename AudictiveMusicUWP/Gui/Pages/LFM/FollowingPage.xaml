@@ -1,0 +1,45 @@
+﻿<Page
+    x:Class="AudictiveMusicUWP.Gui.Pages.LFM.FollowingPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AudictiveMusicUWP.Gui.UC"
+    xmlns:converter="using:AudictiveMusicUWP.Gui.Util"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Name="root">
+
+    <Page.Resources>
+        <converter:ToUpperConverter x:Key="ToUpperConverter" />
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <local:ModernProgressBar x:Name="progress" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" />
+        <GridView x:Name="listView" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" SizeChanged="listView_SizeChanged" Grid.Row="0" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listView_ItemClick" HorizontalContentAlignment="Stretch" Padding="0,0,0,0">
+            <GridView.ItemContainerTransitions>
+                <TransitionCollection />
+            </GridView.ItemContainerTransitions>
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5" Background="Transparent" Width="{Binding GridItemSize, ElementName=root, Mode=TwoWay}" IsHoldingEnabled="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition MinHeight="40" />
+                        </Grid.RowDefinitions>
+                        <Border RequestedTheme="Dark" CornerRadius="120" Height="{Binding GridItemSize, ElementName=root, Mode=TwoWay}">
+                            <local:CircleImage Source="{Binding ProfilePic}" Glyph="" IsRevealEnabled="True" FallbackSource="ms-appx:///Assets/artist-error.png" />
+                        </Border>
+                        <TextBlock Margin="0,5,0,0" Grid.Row="1" Text="{Binding Name}" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" />
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+        <Grid Grid.Row="1">
+            <Button x:Name="loadMoreButton" x:Uid="LoadMore" Visibility="Collapsed" Margin="0,0,0,110" Content="Mostrar mais" Click="LoadMoreButton_Click" Grid.Row="1" HorizontalAlignment="Center" />
+        </Grid>
+    </Grid>
+</Page>
