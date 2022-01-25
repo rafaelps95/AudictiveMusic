@@ -5,5 +5,5 @@ O aplicativo foi desenvolvido em C# na plataforma UWP com banco de dados local S
 
 O projeto foi descontinuado em 2018 motivado pelo encerramento do Windows 10 Mobile pela Microsoft. Em 2019 algumas mudanças foram realizadas na API do Last.fm, o que causou alguns bugs na aplicação e que me levou a removê-lo da Microsoft Store.
 
-Apesar de tê-lo descontinuado anos atrás, decidi, no começo de 2022, desenvolver uma nova (e talvez última) versão com correções de bugs e mudanças visuais para mantê-lo mais de acordo com o design do Windows 11.
-Decidi transformá-lo em um projeto open source, para assim manter vivo um projeto que significou muito para mim e talvez auxiliar de alguma forma quem planeja aprender sobre o desenvolvimento de aplicações Windows.
+Apesar de tê-lo descontinuado anos atrás, decidi, no começo de 2022, desenvolver uma nova (e talvez última) versão com correções de bugs, novas funções e mudanças visuais para mantê-lo mais de acordo com o design do Windows 11.
+Decidi transformá-lo em um projeto open source, para assim manter vivo algo que significou muito para mim e talvez auxiliar de alguma forma quem planeja aprender sobre o desenvolvimento de aplicações Windows.
