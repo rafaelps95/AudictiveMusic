@@ -105,7 +105,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
             await DeleteExistingAlbumCovers();
 
-            //Está retornando apenas 67 MÚSICAS!!!!! Verificar o que há de errado
             await Collection.CheckMusicCollection();
         }
 

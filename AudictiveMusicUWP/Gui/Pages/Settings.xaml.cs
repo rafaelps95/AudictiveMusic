@@ -2,9 +2,12 @@
 using AudictiveMusicUWP.Gui.Util;
 using AudictiveMusicUWP.Purchase;
 using BackgroundAudioShared.Messages;
+using ClassLibrary;
 using ClassLibrary.Control;
 using ClassLibrary.Helpers;
+using ClassLibrary.Themes;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +25,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using static AudictiveMusicUWP.Gui.Pages.ThemeSelector;
+using static AudictiveMusicUWP.Gui.UC.SettingsSection;
 using static ClassLibrary.Helpers.Enumerators;
 
 // O modelo de item de Página em Branco está documentado em https://go.microsoft.com/fwlink/?LinkId=234238
@@ -33,8 +37,15 @@ namespace AudictiveMusicUWP.Gui.Pages
     /// </summary>
     public sealed partial class Settings : Page
     {
+        private bool loadedColors = false;
         private string NavigationArguments;
         private double PageWidth;
+        private bool handledNavigation = false;
+        private string NavigationPath;
+        private bool storageInfoLoaded = false;
+
+        private string[] colors = new string[] { "#FFFFB900", "#FFFF8C00", "#FFF7630C", "#FFCA5010", "#FFDA3B01", "#FFEF6950", "#FFD13438", "#FFFF4343", "#FFE74856", "#FFE81123", "#FFEA005E", "#FFC30052", "#FFE3008C", "#FFBF0077", "#FFC239B3", "#FF9A0089", "#FF0078D7", "#FF0063B1", "#FF8E8CD8", "#FF6B69D6", "#FF8764B8", "#FF744DA9", "#FFB146C2", "#FF881798", "#FF0099BC", "#FF2D7D9A", "#FF00B7C3", "#FF038387", "#FF00B294", "#FF018574", "#FF00CC6A", "#FF10893E", "#FF7A7574", "#FF5D5A58", "#FF68768A", "#FF515C6B", "#FF567C73", "#FF486860", "#FF498205", "#FF107C10", "#FF767676", "#FF4C4A48", "#FF69797E", "#FF4A5459", "#FF647C64", "#FF525E54", "#FF847545", "#FF7E735F" };
+        private ObservableCollection<ThemeColor> ColorsList = new ObservableCollection<ThemeColor>();
 
         private SettingsPageContent view;
 
@@ -46,8 +57,8 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
             set
             {
-                if (value != view)
-                    GoToView(value);
+                //if (value != view)
+                //    GoToView(value);
 
                 view = value;
             }
@@ -86,16 +97,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 menuTranslate.X = -e.NewSize.Width;
             }
 
-            if (e.NewSize.Width < 450)
-            {
-                freeSpaceFlyout.Placement = FlyoutPlacementMode.Full;
-            }
-            else
-            {
-                freeSpaceFlyout.Placement = FlyoutPlacementMode.Top;
-            }
-
-            content.Padding = pageFrame.Margin = frameContent.Padding = new Thickness(0, 0, 0, ApplicationInfo.Current.FooterHeight);
+            menuScroll.Margin = pageFrame.Margin = frameContent.Padding = new Thickness(0, 0, 0, ApplicationInfo.Current.FooterHeight);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -113,13 +115,13 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (string.IsNullOrWhiteSpace(arguments) == false)
             {
                 this.NavigationArguments = arguments;
+                this.NavigationPath = NavigationHelper.GetParameter(this.NavigationArguments, "path");
             }
             else
             {
                 this.CurrentView = SettingsPageContent.Menu;
             }
 
-            ThemesButton.Content = ApplicationInfo.Current.Resources.GetString("Themes");
             OpenPage(NavMode == NavigationMode.Back);
         }
 
@@ -128,27 +130,14 @@ namespace AudictiveMusicUWP.Gui.Pages
             base.OnNavigatedFrom(e);
 
             PageHelper.Settings = null;
-            //TitleBarColorCheckBox.Checked -= TitleBarColorCheckBox_Checked;
-            //TitleBarColorCheckBox.Unchecked -= TitleBarColorCheckBox_Unchecked;
-            //PlaybackBarColorCheckBox.Checked -= PlaybackBarColorCheckBox_Checked;
-            //PlaybackBarColorCheckBox.Unchecked -= PlaybackBarColorCheckBox_Unchecked;
-            //MenuColorCheckBox.Checked -= MenuColorCheckBox_Checked;
-            //MenuColorCheckBox.Unchecked -= MenuColorCheckBox_Unchecked;
-            darkRadioButton.Checked -= DarkRadioButton_Checked;
-            lightRadioButton.Checked -= LightRadioButton_Checked;
-            //ThemeComboBox.SelectionChanged -= ThemeComboBox_SelectionChanged;
+
             LockScreenToggleSwitch.Toggled -= LockScreenToggleSwitch_Toggled;
-            //UseBlurImageCheckBox.Checked -= UseBlurImageCheckBox_Checked;
-            //UseBlurImageCheckBox.Unchecked -= UseBlurImageCheckBox_Unchecked;
-            //transparentEffectsToggleSwitch.Toggled -= TransparentEffectsToggleSwitch_Toggled;
-            celullarDownloadToggleSwitch.Toggled -= CelullarDownloadToggleSwitch_Toggled;
+            LimitedConnectionToggleSwitch.Toggled -= CelullarDownloadToggleSwitch_Toggled;
             WhatsNextNotification.Toggled -= WhatsNextNotification_Toggled;
-            WhatsNextNotificationSuppressPopup.Toggled -= WhatsNextNotificationSuppressPopup_Toggled;
             TapToResumeSwitch.Toggled -= TapToResumeSwitch_Toggled;
 
             Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
             sb.Begin();
-            //StartupPage.SelectionChanged -= StartupPage_SelectionChanged;
         }
 
 
@@ -156,68 +145,56 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             if (ApplicationInfo.Current.GetDeviceFormFactorType() != ApplicationInfo.DeviceFormFactorType.Phone)
             {
-                LockScreenToggleSwitch.Visibility = Visibility.Collapsed;
+                LockScreenSettingsItem.Visibility = Visibility.Collapsed;
             }
 
             if (ApiInformation.IsMethodPresent("Windows.Storage.StorageLibrary", "RequestAddFolderAsync")
                 && ApplicationInfo.Current.GetDeviceFormFactorType() != ApplicationInfo.DeviceFormFactorType.Phone)
             {
-                ChooseLibraryBtn.Visibility = Visibility.Visible;
+                ChooseLibrarySettingsItem.Visibility = Visibility.Visible;
             }
 
             int theme = ApplicationSettings.AppTheme;
 
-            if (theme == 0)
+            // REPLACES THE LEGACY 'DEFAULT' (FOLLOW SYSTEM THEME) SETTING IN CASE THE USER IS UPDATING FROM AN OLD VERSION
+            if (theme == 2)
             {
-                darkRadioButton.IsChecked = true;
-            }
-            else if (theme == 1)
-            {
-                lightRadioButton.IsChecked = true;
-            }
-            else if (theme == 2)
-            {
-                darkRadioButton.IsChecked = true;
+                theme = ApplicationSettings.AppTheme = 0;
             }
 
+            AppThemeSettingsItem.SelectedIndex = theme;
+            UpdateDropDownItemAdditionalInfo(AppThemeSettingsItem);
+            BackgroundPreferencesSettingsItem.SelectedIndex = ApplicationSettings.ThemeBackgroundPreference;
+            UpdateDropDownItemAdditionalInfo(BackgroundPreferencesSettingsItem);
+            ColorSettingsItem.SelectedIndex = ApplicationSettings.ThemeColorPreference;
+            UpdateDropDownItemAdditionalInfo(ColorSettingsItem);
+            CustomColorSettingsSection.Visibility = ApplicationSettings.ThemeColorPreference == 2 ? Visibility.Visible : Visibility.Collapsed;
 
-            sendInfoYes.IsChecked = ApplicationSettings.DownloadEnabled;
-            sendInfoNo.IsChecked = ApplicationSettings.DownloadEnabled == false;
 
-            if (sendInfoYes.IsChecked == true)
-                celullarDownloadToggleSwitch.IsEnabled = true;
-            else
-                celullarDownloadToggleSwitch.IsEnabled = false;
+            SendInfoToggleSwitch.IsOn = ApplicationSettings.DownloadEnabled;
 
+            LimitedConnectionToggleSwitch.IsEnabled = ApplicationSettings.DownloadEnabled;
 
-            celullarDownloadToggleSwitch.IsOn = ApplicationSettings.CellularDownloadEnabled;
+            LimitedConnectionToggleSwitch.IsOn = ApplicationSettings.CellularDownloadEnabled;
 
             LockScreenToggleSwitch.IsOn = ApplicationSettings.LockscreenEnabled;
-
-            if (ApplicationSettings.NextSongInActionCenterEnabled)
-                WhatsNextNotificationSuppressPopup.Visibility = Visibility.Visible;
-            else
-                WhatsNextNotificationSuppressPopup.Visibility = Visibility.Collapsed;
-
             WhatsNextNotification.IsOn = ApplicationSettings.NextSongInActionCenterEnabled;
-
-            WhatsNextNotificationSuppressPopup.IsOn = ApplicationSettings.NextSongInActionCenterSuppressPopup;
-
             TapToResumeSwitch.IsOn = ApplicationSettings.TapToResumeNotificationEnabled;
 
-            SendScrobble.IsEnabled = LastFm.Current.IsAuthenticated;
-            SendScrobble.IsOn = ApplicationSettings.IsScrobbleEnabled;
+            SendScrobbleToggleSwitch.IsEnabled = LastFm.Current.IsAuthenticated;
+            SendScrobbleToggleSwitch.IsOn = ApplicationSettings.IsScrobbleEnabled;
 
             LoadTimerSettings();
 
-            darkRadioButton.Checked += DarkRadioButton_Checked;
-            lightRadioButton.Checked += LightRadioButton_Checked;
+            AppThemeSettingsItem.SelectionChanged += AppThemeSettingsItem_SelectionChanged;
+            BackgroundPreferencesSettingsItem.SelectionChanged += BackgroundPreferencesSettingsItem_SelectionChanged;
+            ColorSettingsItem.SelectionChanged += ColorSettingsItem_SelectionChanged;   
             LockScreenToggleSwitch.Toggled += LockScreenToggleSwitch_Toggled;
-            celullarDownloadToggleSwitch.Toggled += CelullarDownloadToggleSwitch_Toggled;
+            SendInfoToggleSwitch.Toggled += SendInfoToggleSwitch_Toggled;
+            LimitedConnectionToggleSwitch.Toggled += CelullarDownloadToggleSwitch_Toggled;
             WhatsNextNotification.Toggled += WhatsNextNotification_Toggled;
-            WhatsNextNotificationSuppressPopup.Toggled += WhatsNextNotificationSuppressPopup_Toggled;
             TapToResumeSwitch.Toggled += TapToResumeSwitch_Toggled;
-            SendScrobble.Toggled += SendScrobble_Toggled;
+            SendScrobbleToggleSwitch.Toggled += SendScrobble_Toggled;
             TimerBox.TextChanged += TimerBox_TextChanged;
             try
             {
@@ -226,6 +203,53 @@ namespace AudictiveMusicUWP.Gui.Pages
             catch
             {
 
+            }
+
+            try
+            {
+                Package package = Package.Current;
+                PackageId packageId = package.Id;
+                PackageVersion version = packageId.Version;
+                appName.Text = package.DisplayName;
+                appVersion.Text = string.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build);
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void ColorSettingsItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplicationSettings.ThemeColorPreference = ColorSettingsItem.SelectedIndex;
+            UpdateDropDownItemAdditionalInfo(ColorSettingsItem);
+
+            if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.AlbumColor)
+            {
+                ApplicationSettings.CurrentThemeColor = ImageHelper.GetColorFromHex(ApplicationSettings.CurrentSong.HexColor);
+            }
+            else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.AccentColor)
+            {
+                ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentSystemAccentColor;
+            }
+            else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.CustomColor)
+            {
+                ApplicationSettings.CurrentThemeColor = ApplicationSettings.CustomThemeColor;
+                SetSelectedColor();
+            }
+            else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.NoColor)
+            {
+                ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentAppThemeColor(PageHelper.MainPage.RequestedTheme == ElementTheme.Dark);
+            }
+
+            CustomColorSettingsSection.Visibility = ApplicationSettings.ThemeColorPreference == 2 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void SetSelectedColor()
+        {
+            foreach (ThemeColor tc in ColorsList)
+            {
+                tc.IsSelected = tc.Color == ApplicationSettings.CurrentThemeColor;
             }
         }
 
@@ -317,108 +341,50 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void LightRadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values["AppTheme"] = 1;
+            ApplicationSettings.AppTheme = 1;
             this.RequestedTheme = ElementTheme.Light;
             PageHelper.MainPage.SetAppTheme();
         }
 
         private void DarkRadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values["AppTheme"] = 0;
-            this.RequestedTheme = ElementTheme.Dark;
-            PageHelper.MainPage.SetAppTheme();
-        }
-
-        private void StartupPage_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //var item = StartupPage.SelectedItem as ComboBoxItem;
-            //if (item != null)
-            //    ApplicationData.Current.LocalSettings.Values["StartupPage"] = item.Tag.ToString();
-            //else
-            //    ApplicationData.Current.LocalSettings.Values["StartupPage"] = "Artists";
+            
         }
 
         private void LockScreenToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values["Lockscreen"] = LockScreenToggleSwitch.IsOn;
+            ApplicationSettings.LockscreenEnabled = LockScreenToggleSwitch.IsOn;
         }
 
         private void CelullarDownloadToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values["CelullarDownload"] = celullarDownloadToggleSwitch.IsOn;
+            ApplicationSettings.CellularDownloadEnabled = LimitedConnectionToggleSwitch.IsOn;
         }
 
-        private void UseBlurImageCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        private void SendInfoToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values["LockscreenBlur"] = false;
-        }
-
-        private void UseBlurImageCheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            ApplicationData.Current.LocalSettings.Values["LockscreenBlur"] = true;
-        }
-
-        private void sendInfoNo_Click(object sender, RoutedEventArgs e)
-        {
-            if (sendInfoYes.IsChecked == true)
-                sendInfoYes.IsChecked = false;
-            else
-                sendInfoNo.IsChecked = true;
-
-            celullarDownloadToggleSwitch.IsEnabled = false;
-            ApplicationData.Current.LocalSettings.Values["Download"] = sendInfoYes.IsChecked == true;
-        }
-
-        private void sendInfoYes_Click(object sender, RoutedEventArgs e)
-        {
-            if (sendInfoNo.IsChecked == true)
-                sendInfoNo.IsChecked = false;
-            else
-                sendInfoYes.IsChecked = true;
-
-            celullarDownloadToggleSwitch.IsEnabled = true;
-            ApplicationData.Current.LocalSettings.Values["Download"] = sendInfoYes.IsChecked == true;
-        }
-
-        private void WhatsNextNotificationSuppressPopup_Toggled(object sender, RoutedEventArgs e)
-        {
-            ApplicationData.Current.LocalSettings.Values["WhatsNextNotificationSuppressPopup"] = WhatsNextNotificationSuppressPopup.IsOn;
+            ApplicationSettings.DownloadEnabled = SendInfoToggleSwitch.IsOn;
+            LimitedConnectionToggleSwitch.IsEnabled = SendInfoToggleSwitch.IsOn;
         }
 
         private void WhatsNextNotification_Toggled(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values["WhatsNextNotification"] = WhatsNextNotification.IsOn;
-
-            if (WhatsNextNotification.IsOn)
-                WhatsNextNotificationSuppressPopup.Visibility = Visibility.Visible;
-            else
-                WhatsNextNotificationSuppressPopup.Visibility = Visibility.Collapsed;
+            ApplicationSettings.NextSongInActionCenterEnabled = WhatsNextNotification.IsOn;
         }
 
         private void TapToResumeSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values["DisplayTapToResumeToast"] = TapToResumeSwitch.IsOn;
+            ApplicationSettings.TapToResumeNotificationEnabled = TapToResumeSwitch.IsOn;
         }
 
         private void SendScrobble_Toggled(object sender, RoutedEventArgs e)
         {
-            ApplicationSettings.IsScrobbleEnabled = SendScrobble.IsOn;
+            ApplicationSettings.IsScrobbleEnabled = SendScrobbleToggleSwitch.IsOn;
         }
 
 
 
         #endregion
-
-        private async void FindYourMusic_Click(object sender, RoutedEventArgs e)
-        {
-            PageHelper.MainPage.Frame.Navigate(typeof(PreparingCollection));
-            PageHelper.MainPage.Frame.BackStack.Clear();
-        }
-
-        private void Prospectum_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private async void WindowsColorSettings_Click(object sender, RoutedEventArgs e)
         {
@@ -428,14 +394,6 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void About_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(About));
-        }
-
-        private void ChooseLibraryBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (PageHelper.MainPage != null)
-            {
-                PageHelper.MainPage.CreateLibraryPicker();
-            }
         }
 
         private void SettingsGroup_Click(object sender, EventArgs e)
@@ -472,92 +430,94 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
         }
 
-        public void GoToView(SettingsPageContent value)
-        {
-            Debug.WriteLine("SELECIONADO: " + value.ToString());
+        //public void GoToView(SettingsPageContent value)
+        //{
+        //    Debug.WriteLine("SELECIONADO: " + value.ToString());
 
-            Grid selected = null;
+        //    Grid selected = null;
 
-            if (value == SettingsPageContent.AppInfo)
-            {
-                selected = appInfoSection;
-            }
-            else if (value == SettingsPageContent.DataManagement)
-            {
-                selected = dataManagementSection;
+        //    if (value == SettingsPageContent.AppInfo)
+        //    {
+        //        selected = appInfoSection;
+        //    }
+        //    else if (value == SettingsPageContent.DataManagement)
+        //    {
+        //        selected = dataManagementSection;
 
-                LoadStorageInfo();
-            }
-            else if (value == SettingsPageContent.Feedback)
-            {
-                selected = feedbackSection;
-            }
-            else if (value == SettingsPageContent.Permissions)
-            {
-                selected = permissionsSection;
-            }
-            else if (value == SettingsPageContent.Playback)
-            {
-                selected = playbackSection;
-            }
-            else if (value == SettingsPageContent.Personalization)
-            {
-                selected = personalizationSection;
-            }
-            else if (value == SettingsPageContent.Menu)
-            {
-                Back();
-                return;
-            }
+        //        LoadStorageInfo();
+        //    }
+        //    else if (value == SettingsPageContent.Feedback)
+        //    {
+        //        selected = feedbackSection;
+        //    }
+        //    else if (value == SettingsPageContent.Permissions)
+        //    {
+        //        selected = permissionsSection;
+        //    }
+        //    else if (value == SettingsPageContent.Playback)
+        //    {
+        //        selected = playbackSection;
+        //    }
+        //    else if (value == SettingsPageContent.Personalization)
+        //    {
+        //        selected = personalizationSection;
+        //    }
+        //    else if (value == SettingsPageContent.Menu)
+        //    {
+        //        Back();
+        //        return;
+        //    }
 
-            if (selected == null)
-                return;
+        //    if (selected == null)
+        //        return;
 
-            selected.IsHitTestVisible = true;
-            selected.Opacity = 1;
+        //    selected.IsHitTestVisible = true;
+        //    selected.Opacity = 1;
 
-            foreach (Grid g in frameContent.Children)
-            {
-                if (g != selected)
-                {
-                    g.IsHitTestVisible = false;
-                    g.Opacity = 0;
-                }
-            }
+        //    foreach (Grid g in frameContent.Children)
+        //    {
+        //        if (g != selected)
+        //        {
+        //            g.IsHitTestVisible = false;
+        //            g.Opacity = 0;
+        //        }
+        //    }
 
-            Storyboard sb = new Storyboard();
+        //    Storyboard sb = new Storyboard();
 
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-                EnableDependentAnimation = false,
-            };
+        //    DoubleAnimation da = new DoubleAnimation()
+        //    {
+        //        To = 0,
+        //        Duration = TimeSpan.FromMilliseconds(300),
+        //        EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
+        //        EnableDependentAnimation = false,
+        //    };
 
-            Storyboard.SetTarget(da, pageFrameTranslate);
-            Storyboard.SetTargetProperty(da, "X");
+        //    Storyboard.SetTarget(da, pageFrameTranslate);
+        //    Storyboard.SetTargetProperty(da, "X");
 
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = -PageWidth / 3,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-                EnableDependentAnimation = false,
-            };
+        //    DoubleAnimation da1 = new DoubleAnimation()
+        //    {
+        //        To = -PageWidth / 3,
+        //        Duration = TimeSpan.FromMilliseconds(300),
+        //        EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
+        //        EnableDependentAnimation = false,
+        //    };
 
-            Storyboard.SetTarget(da1, menuTranslate);
-            Storyboard.SetTargetProperty(da1, "X");
+        //    Storyboard.SetTarget(da1, menuTranslate);
+        //    Storyboard.SetTargetProperty(da1, "X");
 
-            sb.Children.Add(da);
-            sb.Children.Add(da1);
+        //    sb.Children.Add(da);
+        //    sb.Children.Add(da1);
 
-            sb.Begin();
-        }
+        //    sb.Begin();
+        //}
 
         private async void LoadStorageInfo()
         {
+            await Task.Delay(200);
+            storageInfoLoaded = true;
             storageProgressBar.IsActive = true;
 
             if (ApplicationSettings.IsCollectionLoaded)
@@ -567,11 +527,11 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             artistsSize.Text = albumsSize.Text = otherSize.Text = allSize.Text = string.Empty;
 
-            Task.Run(async () =>
+            await Task.Run(async () =>
             {
                 StorageFolder appFolder = ApplicationData.Current.LocalFolder;
 
-                int appSize = await Package.Current.InstalledLocation.CalculateSize() + await appFolder.CalculateSize();
+                int installSize = await Package.Current.InstalledLocation.CalculateSize();
 
                 StorageFolder artists = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Artists", CreationCollisionOption.OpenIfExists);
                 int artSize = await artists.CalculateSize();
@@ -579,14 +539,12 @@ namespace AudictiveMusicUWP.Gui.Pages
                 StorageFolder covers = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Covers", CreationCollisionOption.OpenIfExists);
                 int albSize = await covers.CalculateSize();
 
-                int othSize = appSize - (artSize + albSize);
-
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
                     artistsSize.Text = artSize + " MB";
                     albumsSize.Text = albSize + " MB";
-                    otherSize.Text = othSize + " MB";
-                    allSize.Text = appSize + " MB";
+                    otherSize.Text = installSize + " MB";
+                    allSize.Text = installSize + albSize + artSize + " MB";
 
                     storageProgressBar.IsActive = false;
                 });
@@ -627,39 +585,96 @@ namespace AudictiveMusicUWP.Gui.Pages
             sb.Begin();
         }
 
-        private void freeSpace_Click(object sender, RoutedEventArgs e)
+        private async void joinTelegramButton_Click(object sender, RoutedEventArgs e)
         {
-
+            await Launcher.LaunchUriAsync(new Uri("https://t.me/audictivemusic", UriKind.Absolute));
         }
 
-        private void freeSpaceDoneButton_Click(object sender, RoutedEventArgs e)
+        private async void getTelegramButton_Click(object sender, RoutedEventArgs e)
         {
-            ApplicationData.Current.LocalSettings.Values["FreeSpaceArtistsImages"] = freeSpaceArtistsCheckBox.IsChecked;
-            ApplicationData.Current.LocalSettings.Values["FreeSpaceCoversImages"] = freeSpaceCoversCheckBox.IsChecked;
+            string uri;
+            if (ApplicationInfo.Current.GetDeviceFormFactorType() == ApplicationInfo.DeviceFormFactorType.Phone)
+                uri = "https://www.microsoft.com/store/productId/9WZDNCRDZHS0";
+            else
+                uri = "https://www.microsoft.com/store/productId/9NZTWSQNTD0S";
 
-            freeSpaceFlyout.Hide();
+            await Launcher.LaunchUriAsync(new Uri(uri, UriKind.Absolute));
         }
 
-        private void rescanImages_Click(object sender, RoutedEventArgs e)
+        private async void OpenPageTransition_Completed(object sender, object e)
         {
-
+            LoadSettings();
+            if (this.NavMode != NavigationMode.Back)
+            {
+                await Task.Delay(200);
+                HandleNavigation();
+            }
         }
 
-        private async void rateButton_Click(object sender, RoutedEventArgs e)
+        private void HandleNavigation()
+        {
+            if (this.NavigationPath == "scrobble")
+            {
+                PlaybackNotificationSection.CurrentState = SettingsSection.State.Expanded;
+            }
+            else if (this.NavigationPath == "timer")
+            {
+                PlaybackNotificationSection.CurrentState = SettingsSection.State.Expanded;
+            }
+        }
+
+        private void TimerButton_Click(object sender, RoutedEventArgs e)
+        {
+            int number = Convert.ToInt32(TimerBox.Text);
+            SetPlaybackTimer(number);
+        }
+
+        private void SetPlaybackTimer(int minutes)
+        {
+            long starterTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            ApplicationSettings.PlaybackTimerDuration = minutes;
+            ApplicationSettings.PlaybackTimerStartTime = starterTime;
+            TimerBox.IsEnabled = TimerButton.IsEnabled = false;
+        }
+
+        private void TimerCancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            CancelPlaybackTimer();
+        }
+
+        private void CancelPlaybackTimer()
+        {
+            TimerBox.IsEnabled = true;
+            ApplicationSettings.PlaybackTimerDuration = 0;
+            ApplicationSettings.PlaybackTimerStartTime = 0;
+            TimerBox.Text = "";
+        }
+
+        private void Themes_Click(object sender, RoutedEventArgs e)
+        {
+            PageHelper.MainPage.Navigate(typeof(ThemeSelector));
+        }
+
+        private void MoreThemesSettingsItem_ItemClick(object sender, RoutedEventArgs e)
+        {
+            PageHelper.MainPage.Navigate(typeof(ThemeSelector));
+        }
+
+        private async void RateAppSettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(
-    new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
+new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
         }
 
-        private async void supportButton_Click(object sender, RoutedEventArgs e)
+        private async void SupportSettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
             var mailto = new Uri("mailto:?to=audictivemusic@outlook.com&subject=Audictive Music 10 Support&body=\n\n\n\nAudictive Music: " + ApplicationInfo.Current.AppVersion);
             await Launcher.LaunchUriAsync(mailto);
         }
 
-        private async void donateButton_Click(object sender, RoutedEventArgs e)
+        private async void DonateSettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
-            donateButton.IsEnabled = false;
+            DonateSettingsItem.IsEnabled = false;
 
             if (ApplicationInfo.Current.HasInternetConnection)
             {
@@ -671,7 +686,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
                     ComboBox box = new ComboBox()
                     {
-                        Margin = new Thickness(10,10,10,0),
+                        Margin = new Thickness(10, 10, 10, 0),
                         HorizontalAlignment = HorizontalAlignment.Stretch,
                     };
 
@@ -680,7 +695,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                     {
                         IsEnabled = false,
                         Content = ApplicationInfo.Current.Resources.GetString("Proceed"),
-                        Margin = new Thickness(10,10,10,0),
+                        Margin = new Thickness(10, 10, 10, 0),
                         HorizontalAlignment = HorizontalAlignment.Stretch,
                     };
 
@@ -739,96 +754,149 @@ ApplicationInfo.Current.Resources.GetString("AskForDonationMessage"),
 
             }
 
-            donateButton.IsEnabled = true;
+            DonateSettingsItem.IsEnabled = true;
+
         }
 
-
-        private async void joinTelegramButton_Click(object sender, RoutedEventArgs e)
+        private void ChooseLibrarySettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("https://t.me/audictivemusic", UriKind.Absolute));
-        }
-
-        private async void getTelegramButton_Click(object sender, RoutedEventArgs e)
-        {
-            string uri;
-            if (ApplicationInfo.Current.GetDeviceFormFactorType() == ApplicationInfo.DeviceFormFactorType.Phone)
-                uri = "https://www.microsoft.com/store/productId/9WZDNCRDZHS0";
-            else
-                uri = "https://www.microsoft.com/store/productId/9NZTWSQNTD0S";
-
-            await Launcher.LaunchUriAsync(new Uri(uri, UriKind.Absolute));
-        }
-
-        private void OpenPageTransition_Completed(object sender, object e)
-        {
-            LoadSettings();
-            HandleNavigation();
-        }
-
-        private void HandleNavigation()
-        {
-            string path = NavigationHelper.GetParameter(this.NavigationArguments, "path");
-
-            if (path == "personalization")
+            if (PageHelper.MainPage != null)
             {
-                this.CurrentView = SettingsPageContent.Personalization;
-            }
-            else if (path == "dataManagement")
-            {
-                this.CurrentView = SettingsPageContent.DataManagement;
-            }
-            else if (path == "permissions")
-            {
-                this.CurrentView = SettingsPageContent.Permissions;
-            }
-            else if (path == "playback")
-            {
-                this.CurrentView = SettingsPageContent.Playback;
-            }
-            else if (path == "feedback")
-            {
-                this.CurrentView = SettingsPageContent.Feedback;
-            }
-            else if (path == "appInfo")
-            {
-                this.CurrentView = SettingsPageContent.AppInfo;
-            }
-            else if (path == "menu")
-            {
-                this.CurrentView = SettingsPageContent.Menu;
+                PageHelper.MainPage.CreateLibraryPicker();
             }
         }
 
-        private void TimerButton_Click(object sender, RoutedEventArgs e)
+        private void FindMusicSettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
-            int number = Convert.ToInt32(TimerBox.Text);
-            SetPlaybackTimer(number);
+            Button setButton = new Button()
+            {
+                Content = ApplicationInfo.Current.Resources.GetString("ProceedAnyway"),
+                Margin = new Thickness(10, 10, 10, 0),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+            };
+
+            setButton.Click += (s, a) =>
+            {
+                PageHelper.MainPage.Frame.Navigate(typeof(PreparingCollection));
+                PageHelper.MainPage.Frame.BackStack.Clear();
+            };
+
+            Grid.SetColumn(setButton, 1);
+
+            PageHelper.MainPage.Notification.SetContent(ApplicationInfo.Current.Resources.GetString("ReloadCollectionWarningTitle"),
+ApplicationInfo.Current.Resources.GetString("ReloadCollectionWarningContent"),
+"", new System.Collections.Generic.List<UIElement>() { setButton });
+
+            PageHelper.MainPage.Notification.Show();
+
         }
 
-        private void SetPlaybackTimer(int minutes)
+        private void BackgroundPreferencesSettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
-            long starterTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            ApplicationSettings.PlaybackTimerDuration = minutes;
-            ApplicationSettings.PlaybackTimerStartTime = starterTime;
-            TimerBox.IsEnabled = TimerButton.IsEnabled = false;
+            FlyoutBase.ShowAttachedFlyout(BackgroundPreferencesSettingsItem);
         }
 
-        private void TimerCancelButton_Click(object sender, RoutedEventArgs e)
+        private void BackgroundPreferencesSettingsItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            CancelPlaybackTimer();
+            ApplicationSettings.ThemeBackgroundPreference = BackgroundPreferencesSettingsItem.SelectedIndex;
+            UpdateDropDownItemAdditionalInfo(BackgroundPreferencesSettingsItem);
         }
 
-        private void CancelPlaybackTimer()
+        private void UpdateDropDownItemAdditionalInfo(SettingsItemDropDownList dropDownList)
         {
-            TimerBox.IsEnabled = true;
-            ApplicationSettings.PlaybackTimerDuration = 0;
-            ApplicationSettings.PlaybackTimerStartTime = 0;
-            TimerBox.Text = "";
+            ListBoxItem item = dropDownList.Items[dropDownList.SelectedIndex] as ListBoxItem;
+            if (item != null)
+            {
+                dropDownList.AdditionalInfo = item.Content.ToString();
+            }
         }
 
-        private void Themes_Click(object sender, RoutedEventArgs e)
+        private void AppThemeSettingsItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(ThemeSelector));
+            ApplicationSettings.AppTheme = AppThemeSettingsItem.SelectedIndex;
+
+            UpdateDropDownItemAdditionalInfo(AppThemeSettingsItem);
+
+            PageHelper.MainPage.SetAppTheme();
+        }
+
+        private void PrepareColorsList()
+        {
+            if (loadedColors)
+                return;
+
+            colorsList.ItemsSource = ColorsList;
+
+            foreach (string str in colors)
+            {
+                ThemeColor color = new ThemeColor();
+                color.Color = ImageHelper.GetColorFromHex(str);
+                color.IsSelected = false;
+                ColorsList.Add(color);
+            }
+
+            loadedColors = true;
+        }
+
+
+        private void colorsList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var color = e.ClickedItem as ThemeColor;
+            color.IsSelected = true;
+
+            ApplicationSettings.CurrentThemeColor = color.Color;
+
+            SetSelectedColor();
+        }
+
+        private void CustomColorSettingsSection_CurrentStateChanged(object sender, RoutedEventArgs e)
+        {
+            PrepareColorsList();
+
+            if (CustomColorSettingsSection.CurrentState == State.Expanded)
+            {
+                if (colorsList.ItemsSource == null)
+                {
+                    colorsList.ItemsSource = ColorsList;
+                }
+            }
+        }
+
+        private async void PlaybackNotificationSection_ExpandCompleted(object sender)
+        {
+            if (string.IsNullOrWhiteSpace(this.NavigationArguments) == false && handledNavigation == false && this.NavMode != NavigationMode.Back)
+            {
+                if (this.NavigationPath == "scrobble")
+                {
+                    await Task.Delay(200);
+                    menuScroll.ScrollToElement(SendScrobbleSettingsItem);
+                    SendScrobbleSettingsItem.Focus(FocusState.Keyboard);
+                }
+                else if (this.NavigationPath == "timer")
+                {
+                    await Task.Delay(200);
+                    menuScroll.ScrollToElement(TimerBox);
+                    TimerBox.Focus(FocusState.Keyboard);
+                }
+            }
+            handledNavigation = true;
+        }
+
+        private void CustomColorSettingsSection_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            colorsList.MaxWidth = e.NewSize.Width - 30;
+        }
+
+        private void DataManagementSection_ExpandCompleted(object sender)
+        {
+            Debug.WriteLine("EXPAND ANIMATION COMPLETED! LET'S LOAD STORAGE INFO!!");
+            if (storageInfoLoaded == false)
+                LoadStorageInfo();
+        }
+
+        private void StorageProgressBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("PROGRESS BAR LOADED!!");
         }
     }
 }

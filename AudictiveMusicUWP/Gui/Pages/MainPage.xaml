@@ -15,7 +15,7 @@
         </TransitionCollection>
     </Page.Transitions>
 
-    <Grid Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+    <Grid Background="{ThemeResource DefaultPageBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <!--<RowDefinition Height="48" />-->

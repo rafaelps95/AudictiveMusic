@@ -132,18 +132,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" x:Uid="ThemeOptions" Text="Opções do tema:" Margin="12" FontSize="20" FontWeight="Thin" />
-
-                    <ComboBox Grid.Row="1" x:Name="backgroundPreference" HeaderTemplate="{StaticResource WrapHeaderTemplate}" x:Uid="ThemeGeneralBackground" Margin="12">
-                        <ComboBox.Items>
-                            <ComboBoxItem x:Uid="ThemeGeneralBackgroundAlbum" />
-                            <ComboBoxItem x:Uid="ThemeGeneralBackgroundArtist" />
-                        </ComboBox.Items>
-                    </ComboBox>
-
-                    <TextBlock Grid.Row="2" x:Uid="ThemeGeneralBackgroundLabel" Margin="12,0,12,12" TextWrapping="WrapWholeWords" FontSize="12" Opacity="0.7" />
-
-                    <Grid x:Name="blurOptions" Grid.Row="3">
+                    <Grid x:Name="blurOptions" Grid.Row="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -152,7 +141,7 @@
                         <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Uid="ThemeBlurAmountLabel" Margin="12,0,12,12" Text="Níveis elevados podem reduzir o desempenho do aplicativo." TextWrapping="WrapWholeWords" FontSize="12" Opacity="0.7" />
                     </Grid>
 
-                    <Grid x:Name="cleanOptions" Grid.Row="3">
+                    <Grid x:Name="cleanOptions" Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -160,7 +149,7 @@
 
                     </Grid>
 
-                    <Grid x:Name="materialOptions" Grid.Row="3">
+                    <Grid x:Name="materialOptions" Grid.Row="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -176,7 +165,7 @@
 
                     </Grid>
 
-                    <Grid x:Name="neonOptions" Grid.Row="3">
+                    <Grid x:Name="neonOptions" Grid.Row="4">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -184,51 +173,6 @@
 
                     </Grid>
                 </Grid>
-
-                
-
-                <Grid Grid.Row="4" x:Name="themeColorOptions" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" x:Uid="ThemeAccentColor" Text="Cor de destaque:" Margin="12" FontSize="20" FontWeight="Thin" />
-
-                    <ComboBox x:Name="colorPreference" Grid.Row="1" Margin="12">
-                        <ComboBox.Items>
-                            <ComboBoxItem x:Uid="ThemeAccentColorAlbum" Content="Usar cor do álbum" />
-                            <ComboBoxItem x:Uid="ThemeAccentColorSystem" Content="Usar cor de destaque (sistema)" />
-                            <ComboBoxItem x:Uid="ThemeAccentColorCustom" Content="Usar cor personalizada" />
-                            <ComboBoxItem x:Uid="NoColor" Content="Não usar cor" />
-                        </ComboBox.Items>
-                    </ComboBox>
-
-                    <GridView Grid.Row="2" IsItemClickEnabled="True" Visibility="Collapsed" ItemClick="colorsList_ItemClick" Padding="10,0,30,30" SelectionMode="None" x:Name="colorsList" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled">
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid MaximumRowsOrColumns="8" Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
-                        <GridView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Height="45" Width="45">
-                                    <Grid.Background>
-                                        <SolidColorBrush Color="{Binding Color}" />
-                                    </Grid.Background>
-                                    <Grid Background="#66000000" Visibility="{Binding IsSelected, Converter={StaticResource boolToVisibilityConverter}}">
-                                        <Border BorderBrush="White" BorderThickness="4">
-                                            <TextBlock Text="" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Symbol" Foreground="White" />
-                                        </Border>
-                                    </Grid>
-                                </Grid>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                    </GridView>
-                </Grid>
-
-
             </Grid>
 
                 <!--<Button Grid.Row="2" Margin="0,0,20,80" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="" Background="{ThemeResource SystemControlHighlightAccentBrush}" Click="shuffleButton_Click" FontSize="32" FontFamily="Segoe UI Symbol" Width="80" Height="80" Style="{StaticResource CircleButtonStyle}" />-->

@@ -48,40 +48,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             try
             {
-                //if (e.NewSize.Height < (contentGrid.RenderSize.Height + 20))
-                //{
-                //    contentGrid.VerticalAlignment = VerticalAlignment.Stretch;
-                //}
-                //else
-                //{
-                //    contentGrid.VerticalAlignment = VerticalAlignment.Center;
-                //}
-
-                //if (e.NewSize.Width >= 500)
-                //    contentGrid.Width = double.NaN;
-                //else
-                    contentGrid.Width = e.NewSize.Width;
-
-                if (e.NewSize.Width < 510)
-                {
-                    rateButton.MaxWidth = 55;
-                }
-                else if (e.NewSize.Width >= 510 && e.NewSize.Width < 610)
-                {
-                    rateButton.MaxWidth = 900;
-                }
-                else if (e.NewSize.Width >= 610 && e.NewSize.Width < 710)
-                {
-                    rateButton.MaxWidth = 900;
-                }
-                else if (e.NewSize.Width >= 710 && e.NewSize.Width < 810)
-                {
-                    rateButton.MaxWidth = 900;
-                }
-                else
-                {
-                    rateButton.MaxWidth = 900;
-                }
+                contentGrid.Width = e.NewSize.Width;
             }
             catch
             {

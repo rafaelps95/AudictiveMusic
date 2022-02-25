@@ -1706,7 +1706,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             mfi2.Click += (s,a) =>
             {
-                PageHelper.MainPage.Navigate(typeof(Settings), "path=playback");
+                PageHelper.MainPage.Navigate(typeof(Settings), "path=timer");
             };
 
             mf.Items.Add(mfi2);

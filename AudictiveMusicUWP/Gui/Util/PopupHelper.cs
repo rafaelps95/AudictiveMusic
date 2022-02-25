@@ -44,9 +44,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item1.Click += (s, a) =>
                 {
-                    List<string> songs = new List<string>();
-                    songs.Add(song.SongURI);
-                    MessageService.SendMessageToBackground(new SetPlaylistMessage(songs));
+                    PlayerController.Play(song);
                 };
 
                 menu.Items.Add(item1);
@@ -57,21 +55,9 @@ namespace AudictiveMusicUWP.Gui.Util
                     Tag = "",
                     Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
-                item2.Click += async (s, a) =>
+                item2.Click += (s, a) =>
                 {
-                    List<string> songs = new List<string>();
-                    songs.Add(song.SongURI);
-
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(songs));
-
-                    //if (PageHelper.NowPlaying != null)
-                    //{
-                    //    PageHelper.NowPlaying.ClearPlaylist();
-
-                    //    MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.AskPlaylist));
-                    //    await Task.Delay(200);
-                    //    PageHelper.NowPlaying.UpdatePlayerInfo(CustomPlaylistsHelper.CurrentTrackPath);
-                    //}
+                    PlayerController.AddToPlaylist(song);
                 };
 
                 menu.Items.Add(item2);
@@ -102,21 +88,9 @@ namespace AudictiveMusicUWP.Gui.Util
                     Tag = "\uEA52",
                     Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
-                item4.Click += async (s, a) =>
+                item4.Click += (s, a) =>
                 {
-                    List<string> songs = new List<string>();
-                    songs.Add(song.SongURI);
-
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(songs, true));
-
-                    //if (PageHelper.NowPlaying != null)
-                    //{
-                    //    PageHelper.NowPlaying.ClearPlaylist();
-
-                    //    MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.AskPlaylist));
-                    //    await Task.Delay(200);
-                    //    PageHelper.NowPlaying.UpdatePlayerInfo(CustomPlaylistsHelper.CurrentTrackPath);
-                    //}
+                    PlayerController.AddToPlaylist(song, true);
                 };
 
                 menu.Items.Add(item4);
@@ -228,10 +202,6 @@ namespace AudictiveMusicUWP.Gui.Util
             else if (type == MediaItemType.Album)
             {
                 Album album = mediaItem as Album;
-                List<Song> songs = Ctr_Song.Current.GetSongsByAlbum(album);
-                List<string> list = new List<string>();
-                foreach (Song s in songs)
-                    list.Add(s.SongURI);
 
                 MenuFlyoutItem item1 = new MenuFlyoutItem()
                 {
@@ -241,7 +211,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item1.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+                    PlayerController.Play(album);
                 };
 
                 menu.Items.Add(item1);
@@ -254,7 +224,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item2.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(list));
+                    PlayerController.AddToPlaylist(album);
                 };
 
                 menu.Items.Add(item2);
@@ -269,7 +239,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     if (PageHelper.MainPage != null)
                     {
-                        PageHelper.MainPage.CreateAddToPlaylistPopup(list);
+                        PageHelper.MainPage.CreateAddToPlaylistPopup(album);
                     }
                 };
 
@@ -283,7 +253,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item4.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(list, true));
+                    PlayerController.AddToPlaylist(album, true);
                 };
 
                 menu.Items.Add(item4);
@@ -327,10 +297,6 @@ namespace AudictiveMusicUWP.Gui.Util
             else if (type == MediaItemType.Artist)
             {
                 Artist artist = mediaItem as Artist;
-                List<Song> songs = Ctr_Song.Current.GetSongsByArtist(artist);
-                List<string> list = new List<string>();
-                foreach (Song s in songs)
-                    list.Add(s.SongURI);
 
                 MenuFlyoutItem item1 = new MenuFlyoutItem()
                 {
@@ -340,7 +306,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item1.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+                    PlayerController.Play(artist);
                 };
 
                 menu.Items.Add(item1);
@@ -355,7 +321,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item2.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(list));
+                    PlayerController.AddToPlaylist(artist);
                 };
 
                 menu.Items.Add(item2);
@@ -370,7 +336,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     if (PageHelper.MainPage != null)
                     {
-                        PageHelper.MainPage.CreateAddToPlaylistPopup(list);
+                        PageHelper.MainPage.CreateAddToPlaylistPopup(artist);
                     }
                 };
 
@@ -384,7 +350,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item4.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(list, true));
+                    PlayerController.AddToPlaylist(artist, true);
                 };
 
                 menu.Items.Add(item4);
@@ -412,18 +378,7 @@ namespace AudictiveMusicUWP.Gui.Util
             //SE O MENU FOR DO TIPO FOLDER
             else if (type == MediaItemType.Folder)
             {
-                List<string> list = new List<string>();
-
-                FolderItem item = mediaItem as FolderItem;
-
-                StorageFolder subFolder = await StorageFolder.GetFolderFromPathAsync(item.Path);
-                var subFolderItems = await StorageHelper.ReadFolder(subFolder);
-
-                foreach (StorageFile f in subFolderItems)
-                {
-                    if (StorageHelper.IsMusicFile(f.Path))
-                        list.Add(f.Path);
-                }
+                FolderItem folder = mediaItem as FolderItem;
 
                 MenuFlyoutItem item1 = new MenuFlyoutItem()
                 {
@@ -433,7 +388,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item1.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+                    PlayerController.Play(folder);
                 };
 
                 menu.Items.Add(item1);
@@ -448,7 +403,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item2.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(list));
+                    PlayerController.AddToPlaylist(folder);
                 };
 
                 menu.Items.Add(item2);
@@ -463,7 +418,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     if (PageHelper.MainPage != null)
                     {
-                        PageHelper.MainPage.CreateAddToPlaylistPopup(list);
+                        PageHelper.MainPage.CreateAddToPlaylistPopup(folder);
                     }
                 };
 
@@ -477,7 +432,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item4.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(list, true));
+                    PlayerController.AddToPlaylist(folder, true);
                 };
 
                 menu.Items.Add(item4);
@@ -492,7 +447,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item5.Click += async (s, a) =>
                 {
-                    if (await page.ShareMediaItem(item, type) == false)
+                    if (await page.ShareMediaItem(folder, type) == false)
                     {
                         MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
                         await md.ShowAsync();
@@ -514,7 +469,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item1.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new SetPlaylistMessage(playlist.Songs));
+                    PlayerController.Play(playlist);
                 };
 
                 menu.Items.Add(item1);
@@ -527,18 +482,9 @@ namespace AudictiveMusicUWP.Gui.Util
                     Tag = "",
                     Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
-                item2.Click += async (s, a) =>
+                item2.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(playlist.Songs));
-
-                    //if (PageHelper.NowPlaying != null)
-                    //{
-                    //    PageHelper.NowPlaying.ClearPlaylist();
-
-                    //    MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.AskPlaylist));
-                    //    await Task.Delay(200);
-                    //    PageHelper.NowPlaying.UpdatePlayerInfo(CustomPlaylistsHelper.CurrentTrackPath);
-                    //}
+                    PlayerController.AddToPlaylist(playlist);
                 };
 
                 menu.Items.Add(item2);
@@ -550,18 +496,9 @@ namespace AudictiveMusicUWP.Gui.Util
                     Tag = "\uEA52",
                     Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
-                item3.Click += async (s, a) =>
+                item3.Click += (s, a) =>
                 {
-                    MessageService.SendMessageToBackground(new AddSongsToPlaylist(playlist.Songs, true));
-
-                    //if (PageHelper.NowPlaying != null)
-                    //{
-                    //    PageHelper.NowPlaying.ClearPlaylist();
-
-                    //    MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.AskPlaylist));
-                    //    await Task.Delay(200);
-                    //    PageHelper.NowPlaying.UpdatePlayerInfo(CustomPlaylistsHelper.CurrentTrackPath);
-                    //}
+                    PlayerController.AddToPlaylist(playlist, true);
                 };
 
                 menu.Items.Add(item3);
@@ -689,7 +626,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi2.Click += (s, a) =>
                     {
-                        PageHelper.MainPage.Navigate(typeof(Settings), "path=playback");
+                        PageHelper.MainPage.Navigate(typeof(Settings), "path=scrobble");
                     };
 
                     mf.Items.Add(mfi2);

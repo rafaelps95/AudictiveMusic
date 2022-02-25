@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClassLibrary.Control;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,23 +17,22 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace BackgroundAudioShared
+namespace ClassLibrary.Helpers
 {
     public static class PlaylistHelper
     {
-        public static List<string> CurrentPlaylist = new List<string>();
 
         public static string TrackByIndex(int index)
         {
-            if (CurrentPlaylist.Count > 0)
-                return CurrentPlaylist[index];
+            if (NowPlaying.Current.Songs.Count > 0)
+                return NowPlaying.Current.Songs[index];
             else
                 return "LISTA VAZIA!!";
         }
 
         public async static Task SaveCurrentPlaylist()
         {
-            if (CurrentPlaylist.Count == 0)
+            if (NowPlaying.Current.Songs.Count == 0)
             {
                 StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("LastPlayback.xml", CreationCollisionOption.OpenIfExists);
                 await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
@@ -47,7 +47,7 @@ namespace BackgroundAudioShared
             ELE.SetAttribute("Name", "LastPlayback");
             DOC.AppendChild(ELE);
 
-            foreach (string file in CurrentPlaylist)
+            foreach (string file in NowPlaying.Current.Songs)
             {
                 XmlElement x = DOC.CreateElement("Song");
                 x.InnerText = file;

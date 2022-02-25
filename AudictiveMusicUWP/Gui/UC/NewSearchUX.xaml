@@ -30,19 +30,24 @@
         <!--<Rectangle Width="2" Fill="Red" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Stretch" />-->
 
         <Grid x:Name="resultsGrid" MaxWidth="500" Margin="10" Grid.Row="1" Opacity="0" IsHitTestVisible="False">
-            <ScrollViewer x:Name="resultsScroll" Tapped="ResultsScroll_Tapped" Background="Transparent" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer x:Name="resultsScroll" Background="Transparent" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Rectangle Grid.RowSpan="3" Tapped="DismissArea_Tapped" IsHitTestVisible="False" Fill="Transparent"/>
+                    <Rectangle Grid.RowSpan="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Tapped="DismissArea_Tapped" Fill="Transparent" />
 
-                    <TextBlock x:Name="NoResults" Visibility="Collapsed" x:Uid="NoResults" Margin="12" Text="Nenhum resultado foi encontrado" TextAlignment="Center" TextWrapping="Wrap" />
+                    <Border x:Name="NoResults" Visibility="Collapsed" Margin="10" CornerRadius="10" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" BorderBrush="{ThemeResource SystemControlBackgroundChromeMediumBrush}" BorderThickness="1">
+                        <Grid Margin="10">
+                            <TextBlock x:Uid="NoResults" Margin="12" Text="Nenhum resultado foi encontrado" TextAlignment="Center" TextWrapping="Wrap" />
+                        </Grid>
+                    </Border>
 
                     <Border x:Name="artists" Visibility="Collapsed" Margin="10" CornerRadius="10" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" BorderBrush="{ThemeResource SystemControlBackgroundChromeMediumBrush}" BorderThickness="1">
                         <Grid Margin="10">

@@ -16,12 +16,11 @@
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>AudictiveMusicUWP_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>
-    </PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>AudictiveMusicUWP_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>C07B596FD204C76B4E976DDA2CFB6973A5562E92</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
@@ -123,11 +122,23 @@
     <Compile Include="Gui\Pages\LFM\TopMediaPage.xaml.cs">
       <DependentUpon>TopMediaPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\UC\SettingsItemDropDownList.xaml.cs">
+      <DependentUpon>SettingsItemDropDownList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\UC\SettingsItemSeparator.xaml.cs">
+      <DependentUpon>SettingsItemSeparator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\UC\SettingsSection.xaml.cs">
+      <DependentUpon>SettingsSection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\UC\ModernProgressBar.xaml.cs">
       <DependentUpon>ModernProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\UC\NewSearchUX.xaml.cs">
       <DependentUpon>NewSearchUX.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\UC\SettingsItem.xaml.cs">
+      <DependentUpon>SettingsItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\UC\WebServiceButton.xaml.cs">
       <DependentUpon>WebServiceButton.xaml</DependentUpon>
@@ -135,6 +146,7 @@
     <Compile Include="Gui\Util\AlbumItemHelper.cs" />
     <Compile Include="Gui\Util\LongPressEventArgs.cs" />
     <Compile Include="Gui\Util\Converters.cs" />
+    <Compile Include="Gui\Util\PlayerController.cs" />
     <Compile Include="Purchase\PurchaseHelper.cs" />
     <Compile Include="Gui\Pages\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
@@ -350,6 +362,7 @@
     <Content Include="Assets\Themes\material.png" />
     <Content Include="Assets\Themes\modern.png" />
     <Content Include="Assets\tileTallLogo.png" />
+    <None Include="AudictiveMusicUWP_StoreKey.pfx" />
     <None Include="AudictiveMusicUWP_TemporaryKey.pfx" />
     <PRIResource Include="Keys.resw" />
     <None Include="Package.StoreAssociation.xml" />
@@ -566,6 +579,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Pages\StartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\UC\SettingsItemDropDownList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\UC\SettingsItemSeparator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\UC\SettingsSection.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\UC\SettingsItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

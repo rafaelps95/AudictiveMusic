@@ -1,4 +1,5 @@
-﻿using ClassLibrary.Entities;
+﻿using ClassLibrary.Dao;
+using ClassLibrary.Entities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -239,41 +240,9 @@ namespace ClassLibrary.Helpers
         }
 
 
-        public static async Task<List<string>> GetLastPlaylistFromFile()
+        public static List<string> GetLastPlaylistFromFile()
         {
-            IStorageItem lastPlaylistItem = await ApplicationData.Current.LocalFolder.TryGetItemAsync("LastPlayback.xml");
-
-            if (lastPlaylistItem != null)
-            {
-                XmlDocument doc = new XmlDocument();
-
-                string content = await FileIO.ReadTextAsync(lastPlaylistItem as StorageFile);
-
-                if (content != null && string.IsNullOrWhiteSpace(content) == false)
-                {
-                    doc.LoadXml(content);
-
-                    List<string> list = new List<string>();
-
-                    var elements = doc.GetElementsByTagName("Song");
-
-                    for (int i = 0; i < elements.Count; i++)
-                    {
-                        XmlElement element = elements[i] as XmlElement;
-                        list.Add(element.InnerText);
-                    }
-
-                    return list;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
+            return Dao_NowPlaying.LoadPlaylist();
         }
     }
 }

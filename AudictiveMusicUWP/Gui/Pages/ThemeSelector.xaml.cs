@@ -3,6 +3,7 @@ using ClassLibrary.Helpers;
 using ClassLibrary.Themes;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -20,19 +21,15 @@ namespace AudictiveMusicUWP.Gui.Pages
     /// </summary>
     public sealed partial class ThemeSelector : Page
     {
+        private string[] colors = new string[] { "#FFFFB900", "#FFFF8C00", "#FFF7630C", "#FFCA5010", "#FFDA3B01", "#FFEF6950", "#FFD13438", "#FFFF4343", "#FFE74856", "#FFE81123", "#FFEA005E", "#FFC30052", "#FFE3008C", "#FFBF0077", "#FFC239B3", "#FF9A0089", "#FF0078D7", "#FF0063B1", "#FF8E8CD8", "#FF6B69D6", "#FF8764B8", "#FF744DA9", "#FFB146C2", "#FF881798", "#FF0099BC", "#FF2D7D9A", "#FF00B7C3", "#FF038387", "#FF00B294", "#FF018574", "#FF00CC6A", "#FF10893E", "#FF7A7574", "#FF5D5A58", "#FF68768A", "#FF515C6B", "#FF567C73", "#FF486860", "#FF498205", "#FF107C10", "#FF767676", "#FF4C4A48", "#FF69797E", "#FF4A5459", "#FF647C64", "#FF525E54", "#FF847545", "#FF7E735F" };
+        private ObservableCollection<ThemeColor> ColorsList = new ObservableCollection<ThemeColor>();
+
         private NavigationMode NavMode
         {
             get;
             set;
         }
 
-        public enum ThemeColorSource
-        {
-            AlbumColor = 0,
-            AccentColor = 1,
-            CustomColor = 2,
-            NoColor = 3
-        }
 
         public ThemeSelector()
         {
@@ -54,46 +51,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             LoadThemes();
             LoadThemeSettings(ApplicationSettings.NowPlayingTheme);
-
-            backgroundPreference.SelectedIndex = ApplicationSettings.ThemeBackgroundPreference;
-            colorPreference.SelectedIndex = ApplicationSettings.ThemeColorPreference;
-
-            colorsList.Visibility = ApplicationSettings.ThemeColorPreference == 2 ? Visibility.Visible : Visibility.Collapsed;
-
-
-            backgroundPreference.SelectionChanged += BackgroundPreference_SelectionChanged;
-            colorPreference.SelectionChanged += ColorPreference_SelectionChanged;
             OpenPage(NavMode == NavigationMode.Back);
-        }
-
-        private void BackgroundPreference_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ApplicationSettings.ThemeBackgroundPreference = backgroundPreference.SelectedIndex;
-        }
-
-        private void ColorPreference_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ApplicationSettings.ThemeColorPreference = colorPreference.SelectedIndex;
-
-            if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.AlbumColor)
-            {
-                ApplicationSettings.CurrentThemeColor = ImageHelper.GetColorFromHex(ApplicationSettings.CurrentSong.HexColor);
-            }
-            else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.AccentColor)
-            {
-                ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentSystemAccentColor;
-            }
-            else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.CustomColor)
-            {
-                ApplicationSettings.CurrentThemeColor = ApplicationSettings.CustomThemeColor;
-                LoadColors();
-            }
-            else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.NoColor)
-            {
-                ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentAppThemeColor(PageHelper.MainPage.RequestedTheme == ElementTheme.Dark);
-            }
-
-            colorsList.Visibility = ApplicationSettings.ThemeColorPreference == 2 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void LoadThemes()
@@ -104,20 +62,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             };
 
             themesList.ItemsSource = themes;
-
-            LoadColors();
-        }
-
-        private void LoadColors()
-        {
-            List<ThemeColor> brushes = new List<ThemeColor>();
-
-            foreach (var color in typeof(Colors).GetRuntimeProperties())
-            {
-                brushes.Add(new ThemeColor() { Color = (Color)color.GetValue(null) });
-            }
-
-            colorsList.ItemsSource = brushes;
         }
 
         private void OpenPage(bool reload)
@@ -159,8 +103,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                     ThemeBlurAmount.ValueChanged -= ThemeBlurAmount_ValueChanged;
                     ThemeBlurAmount.ValueChanged += ThemeBlurAmount_ValueChanged;
 
-                    themeColorOptions.Visibility = Visibility.Visible;
-
                     break;
 
                 case Theme.Clean:
@@ -171,8 +113,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                     materialOptions.Visibility = Visibility.Collapsed;
                     modernOptions.Visibility = Visibility.Collapsed;
                     neonOptions.Visibility = Visibility.Collapsed;
-
-                    themeColorOptions.Visibility = Visibility.Visible;
 
                     break;
 
@@ -185,12 +125,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                     modernOptions.Visibility = Visibility.Collapsed;
                     neonOptions.Visibility = Visibility.Collapsed;
 
-                    themeColorOptions.Visibility = Visibility.Visible;
-                    //ApplicationSettings.CustomThemeColor = ImageHelper.GetColorFromHex("#FFDC572E");
-                    //ApplicationSettings.ThemeColorPreference = 2;
-
-                    //themeColorOptions.Visibility = Visibility.Collapsed;
-
                     break;
 
                 case Theme.Modern:
@@ -202,8 +136,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                     materialOptions.Visibility = Visibility.Collapsed;
                     neonOptions.Visibility = Visibility.Collapsed;
 
-                    themeColorOptions.Visibility = Visibility.Visible;
-
                     break;
 
                 case Theme.Neon:
@@ -214,8 +146,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                     cleanOptions.Visibility = Visibility.Collapsed;
                     materialOptions.Visibility = Visibility.Collapsed;
                     modernOptions.Visibility = Visibility.Collapsed;
-
-                    themeColorOptions.Visibility = Visibility.Visible;
 
                     break;
 
@@ -247,16 +177,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             themesList.ItemsSource = list;
 
             LoadThemeSettings(theme.Theme);
-        }
-
-        private void colorsList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var color = e.ClickedItem as ThemeColor;
-            color.IsSelected = true;
-
-            ApplicationSettings.CurrentThemeColor = color.Color;
-
-            LoadColors();
         }
     }
 }

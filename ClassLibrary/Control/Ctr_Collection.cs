@@ -70,6 +70,8 @@ namespace ClassLibrary.Control
                 ProgressChanged.Invoke(Convert.ToInt16(currentValue), true);
             }
 
+            SongDao.AddSongs(listOfSongs);
+
             ProgressChanged.Invoke(100, false);
 
             ApplicationSettings.IsCollectionLoaded = true;
@@ -93,6 +95,7 @@ namespace ClassLibrary.Control
             if (ApplicationSettings.IsCollectionLoaded)
             {
                 List<Song> currentSongs = SongDao.GetSongs(false);
+                List<Song> newSongs = new List<Song>();
                 List<string> folderSongs = new List<string>();
                 if (currentSongs != null)
                 {
@@ -146,7 +149,11 @@ namespace ClassLibrary.Control
                                 aux = await CreateSongObjectByFile(file, listOfSongs);
 
                                 changed = true;
-                                listOfSongs.Add(aux);
+                                if (aux != null)
+                                {
+                                    listOfSongs.Add(aux);
+                                    newSongs.Add(aux);
+                                }
                             }
                         }
                     }
@@ -154,6 +161,8 @@ namespace ClassLibrary.Control
                     {
 
                     }
+
+                    SongDao.AddSongs(newSongs);
 
                     try
                     {
@@ -281,7 +290,7 @@ namespace ClassLibrary.Control
                     HexColor = hexColor
                 };
 
-                SongDao.AddSong(song);
+                //SongDao.AddSong(song);
             }
             catch
             {

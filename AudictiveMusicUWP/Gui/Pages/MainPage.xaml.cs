@@ -1,6 +1,7 @@
 ﻿using AudictiveMusicUWP.Gui.UC;
 using AudictiveMusicUWP.Gui.Util;
 using BackgroundAudioShared.Messages;
+using ClassLibrary;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
@@ -41,8 +42,12 @@ namespace AudictiveMusicUWP.Gui.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-
+        /// <summary>
+        /// Horizontal offset (left or right) based on content.
+        /// Used to display the search bar/button correctly when the search UI is minimized
+        /// </summary>
         private double searchUIOffset = (double)0;
+
         private bool MainFrameNavigating = false;
         public ActionableNotification Notification { get => notice; }
 
@@ -70,12 +75,16 @@ namespace AudictiveMusicUWP.Gui.Pages
         }
 
 
+        // COMPONENTS NEEDED TO BLUR THE SURFACES (IN-APP BLUR OR GLASS-LIKE EFFECT)
         private CompositionEffectBrush _brush;
         private Compositor _compositor;
         private SpriteVisual footerBlurSprite;
         private SpriteVisual backgroundHostSprite;
         private SpriteVisual menuHostSprite;
         private SpriteVisual titleBarHostSprite;
+
+
+
         private CoreApplicationViewTitleBar coreTitleBar;
         public LastFmLoginControl lastFmLoginControl;
         private NewSearchUX searchUI;
@@ -110,6 +119,11 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
             //Window.Current.CoreWindow.CharacterReceived += CoreWindow_CharacterReceived;
+        }
+
+        private void SearchUI_UIDismissed(object sender)
+        {
+            RemoveSearchUI();
         }
 
         private void ApplicationSettings_CurrentThemeColorChanged()
@@ -155,7 +169,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             await md.ShowAsync();
         }
 
-        private async void Current_Activated(object sender, WindowActivatedEventArgs e)
+        private void Current_Activated(object sender, WindowActivatedEventArgs e)
         {
             if (e.WindowActivationState != CoreWindowActivationState.Deactivated)
             {
@@ -888,15 +902,47 @@ namespace AudictiveMusicUWP.Gui.Pages
             Application.Current.Exit();
         }
 
-        public async void CreateAddToPlaylistPopup(List<string> songs)
+        public async void CreateAddToPlaylistPopup(object content)
         {
             playlistPicker = new PlaylistPicker();
 
             customPopupsArea.Children.Add(playlistPicker);
 
             List<Playlist> playlists = await CustomPlaylistsHelper.GetPlaylists();
+            List<string> list = new List<string>();
 
-            playlistPicker.Set(playlists, songs);
+
+            if (content.GetType() == typeof(Artist))
+            {
+                Artist artist = content as Artist;
+                List<Song> songs = Ctr_Song.Current.GetSongsByArtist(artist);
+                foreach (Song s in songs)
+                    list.Add(s.SongURI);
+            }
+            else if (content.GetType() == typeof(Album))
+            {
+                Album album = content as Album;
+                List<Song> songs = Ctr_Song.Current.GetSongsByAlbum(album);
+                foreach (Song s in songs)
+                    list.Add(s.SongURI);
+            }
+            else if (content.GetType() == typeof(Song))
+            {
+                Song song = content as Song;
+                list.Add(song.SongURI);
+            }
+            else if (content.GetType() == typeof(FolderItem))
+            {
+                List<string> songsInFolder = await Ctr_FolderItem.GetSongs(content as FolderItem);
+                list.AddRange(songsInFolder);
+            }
+            else if (content.GetType() == typeof(List<string>))
+            {
+                var l = content as List<string>;
+                list.AddRange(l);
+            }
+
+            playlistPicker.Set(playlists, list);
 
             customPopupsArea.Visibility = Visibility.Visible;
         }
@@ -907,7 +953,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 return;
 
             searchUI = new NewSearchUX();
-
+            searchUI.UIDismissed += SearchUI_UIDismissed;
             searchContainer.Children.Add(searchUI);
 
             searchContainer.Visibility = Visibility.Visible;

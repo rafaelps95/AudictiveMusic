@@ -59,7 +59,6 @@
                     <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" />
                 </Grid.Background>
                 <TextBlock x:Name="pageTitle" x:Uid="AboutTitle" Text="Sobre" VerticalAlignment="Center" Margin="12,0" FontWeight="Bold" FontSize="25" />
-                <Button Grid.Row="0" Grid.Column="1" Height="48" Tag="" x:Name="rateButton" x:Uid="RateApp" Click="rateButton_Click" Style="{StaticResource SideMenuButtonStyle}" />
             </Grid>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" ZoomMode="Disabled">
                 <Grid x:Name="contentGrid" VerticalAlignment="Center" MaxWidth="400">

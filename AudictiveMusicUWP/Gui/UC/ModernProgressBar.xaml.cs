@@ -28,7 +28,10 @@ namespace AudictiveMusicUWP.Gui.UC
             get { return (bool)GetValue(IsActiveProperty); }
             set { SetValue(IsActiveProperty, value);
                 if (value)
+                {
+                    SetClip();
                     BeginAnimating();
+                }
                 else
                     StopAnimating();
             }
@@ -39,7 +42,6 @@ namespace AudictiveMusicUWP.Gui.UC
             DependencyProperty.Register("IsActive", typeof(bool), typeof(ModernProgressBar), new PropertyMetadata(false));
 
 
-
         public ModernProgressBar()
         {
             this.InitializeComponent();
@@ -47,8 +49,11 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void Root_Loaded(object sender, RoutedEventArgs e)
         {
-            smallRectangleTranslate.X = smallRectangle.ActualWidth * -1;
-            bigRectangleTranslate.X = bigRectangle.ActualWidth * -1;
+            smallRectangleTranslate.X = smallRectangle.Width * -1;
+            bigRectangleTranslate.X = bigRectangle.Width * -1;
+
+            SetClip();
+
 
             if (IsActive)
                 BeginAnimating();
@@ -117,8 +122,8 @@ namespace AudictiveMusicUWP.Gui.UC
             if (sb != null)
                 sb.Stop();
 
-            smallRectangleTranslate.X = smallRectangle.ActualWidth * -1;
-            bigRectangleTranslate.X = bigRectangle.ActualWidth * -1;
+            smallRectangleTranslate.X = smallRectangle.Width * -1;
+            bigRectangleTranslate.X = bigRectangle.Width * -1;
         }
 
         private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -127,9 +132,19 @@ namespace AudictiveMusicUWP.Gui.UC
                 return;
 
             StopAnimating();
-            smallRectangleTranslate.X = smallRectangle.ActualWidth * -1;
-            bigRectangleTranslate.X = bigRectangle.ActualWidth * -1;
+            smallRectangleTranslate.X = smallRectangle.Width * -1;
+            bigRectangleTranslate.X = bigRectangle.Width * -1;
+
+            SetClip();
+
             BeginAnimating();
+        }
+
+        private void SetClip()
+        {
+            RectangleGeometry rectangle = new RectangleGeometry();
+            rectangle.Rect = new Rect(0, 0, this.ActualWidth, this.ActualHeight);
+            border.Clip = rectangle;
         }
     }
 }

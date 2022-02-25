@@ -1,6 +1,7 @@
 ﻿using BackgroundAudioShared;
 using BackgroundAudioShared.Messages;
 using ClassLibrary.Control;
+using ClassLibrary.Dao;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
 using IF.Lastfm.Core.Api.Helpers;
@@ -88,18 +89,18 @@ namespace BackgroundAudioAgent
             //NotifyUser();
         }
 
-        private async void Task_Completed(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
+        private void Task_Completed(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
-            await SavePlaybackState();
+            SavePlaybackState();
             deferral.Complete();
         }
 
-        private async void Instance_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        private void Instance_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
             //if (reason == BackgroundTaskCancellationReason.SystemPolicy)
             //    return;
 
-            await SavePlaybackState();
+            SavePlaybackState();
 
             //if (reason == BackgroundTaskCancellationReason.IdleTask || reason == BackgroundTaskCancellationReason.ExecutionTimeExceeded || reason == BackgroundTaskCancellationReason.SystemPolicy)
             //{
@@ -112,10 +113,17 @@ namespace BackgroundAudioAgent
             deferral.Complete();
         }
 
-        private async Task SavePlaybackState()
+        private void SavePlaybackState()
         {
             ToastNotificationManager.History.Remove("next");
             //BadgeUpdateManager.CreateBadgeUpdaterForApplication("App").Clear();
+
+            ApplicationSettings.PlaybackLastPosition = BackgroundMediaPlayer.Current.PlaybackSession.Position.TotalMilliseconds;
+
+            Dao_NowPlaying.SavePlaylist();
+
+            if (NowPlaying.Current.Songs.Count > 0)
+                NotifyUser();
 
             BackgroundMediaPlayer.Current.CurrentStateChanged -= Current_CurrentStateChanged;
             BackgroundMediaPlayer.Current.MediaEnded -= Current_MediaEnded;
@@ -128,13 +136,6 @@ namespace BackgroundAudioAgent
 
             // immediately set not running
             backgroundTaskStarted.Reset();
-
-            ApplicationSettings.PlaybackLastPosition = BackgroundMediaPlayer.Current.PlaybackSession.Position.TotalMilliseconds;
-
-            await PlaylistHelper.SaveCurrentPlaylist();
-
-            if (PlaylistHelper.CurrentPlaylist.Count > 0)
-                NotifyUser();
         }
 
         private void NotifyUser()
@@ -251,7 +252,7 @@ namespace BackgroundAudioAgent
 
             try
             {
-                if (ApplicationSettings.CurrentTrackIndex == PlaylistHelper.CurrentPlaylist.Count - 1)
+                if (ApplicationSettings.CurrentTrackIndex == NowPlaying.Current.Songs.Count - 1)
                 {
                     if (ApplicationData.Current.LocalSettings.Values.ContainsKey("RepeatMode"))
                     {
@@ -263,7 +264,7 @@ namespace BackgroundAudioAgent
                 }
                 else
                 {
-                    if (ApplicationSettings.CurrentTrackIndex < PlaylistHelper.CurrentPlaylist.Count - 1)
+                    if (ApplicationSettings.CurrentTrackIndex < NowPlaying.Current.Songs.Count - 1)
                     {
                         JumpToIndex(ApplicationSettings.CurrentTrackIndex + 1, 0);
                     }
@@ -328,7 +329,7 @@ namespace BackgroundAudioAgent
             if (ignoreLastPlayback)
                 resume = false;
             else
-                resume = await ResumeLastPlayback();
+                resume = ResumeLastPlayback();
 
             if (resume == false)
             {
@@ -347,7 +348,7 @@ namespace BackgroundAudioAgent
                 // VERIFICA SE É A ÚLTIMA MÚSICA DA LISTA
                 // SE NÃO FOR, VAI PARA A PRÓXIMA
                 // SE FOR, PULA PARA A PRIMEIRA
-                if (ApplicationSettings.CurrentTrackIndex < PlaylistHelper.CurrentPlaylist.Count - 1)
+                if (ApplicationSettings.CurrentTrackIndex < NowPlaying.Current.Songs.Count - 1)
                 {
                     JumpToIndex(ApplicationSettings.CurrentTrackIndex + 1, 0);
                 }
@@ -377,7 +378,7 @@ namespace BackgroundAudioAgent
                 {
                     if (ApplicationSettings.CurrentTrackIndex == 0)
                     {
-                        JumpToIndex(PlaylistHelper.CurrentPlaylist.Count - 1, 0);
+                        JumpToIndex(NowPlaying.Current.Songs.Count - 1, 0);
                     }
                     else
                     {
@@ -402,44 +403,44 @@ namespace BackgroundAudioAgent
                     return;
 
                 // Quantidade de músicas ANTES de adicionar as músicas.
-                int playlistCount = PlaylistHelper.CurrentPlaylist.Count;
+                int playlistCount = NowPlaying.Current.Songs.Count;
 
                 string prev, next = string.Empty;
 
                 if (addSongsToPlaylist.AsNext == false)
                 {
-                    PlaylistHelper.CurrentPlaylist.AddRange(addSongsToPlaylist.SongsToAdd);
+                    NowPlaying.Current.Songs.AddRange(addSongsToPlaylist.SongsToAdd);
                 }
                 else
                 {
-                    if (PlaylistHelper.CurrentPlaylist.Count == 0)
+                    if (NowPlaying.Current.Songs.Count == 0)
                     {
-                        PlaylistHelper.CurrentPlaylist.InsertRange(0, addSongsToPlaylist.SongsToAdd);
+                        NowPlaying.Current.Songs.InsertRange(0, addSongsToPlaylist.SongsToAdd);
                     }
                     else
                     {
-                        PlaylistHelper.CurrentPlaylist.InsertRange(ApplicationSettings.CurrentTrackIndex + 1, addSongsToPlaylist.SongsToAdd);
+                        NowPlaying.Current.Songs.InsertRange(ApplicationSettings.CurrentTrackIndex + 1, addSongsToPlaylist.SongsToAdd);
                     }                    
                 }
 
-                if (PlaylistHelper.CurrentPlaylist.Count == 1)
+                if (NowPlaying.Current.Songs.Count == 1)
                 {
-                    ApplicationData.Current.LocalSettings.Values["PreviousSong"] = PlaylistHelper.CurrentPlaylist[0];
-                    ApplicationData.Current.LocalSettings.Values["NextSong"] = PlaylistHelper.CurrentPlaylist[0];
+                    ApplicationData.Current.LocalSettings.Values["PreviousSong"] = NowPlaying.Current.Songs[0];
+                    ApplicationData.Current.LocalSettings.Values["NextSong"] = NowPlaying.Current.Songs[0];
                 }
                 else
                 {
                     if (ApplicationSettings.CurrentTrackIndex > 0)
-                        prev = PlaylistHelper.CurrentPlaylist[ApplicationSettings.CurrentTrackIndex - 1];
+                        prev = NowPlaying.Current.Songs[ApplicationSettings.CurrentTrackIndex - 1];
                     else
-                        prev = PlaylistHelper.CurrentPlaylist[PlaylistHelper.CurrentPlaylist.Count - 1];
+                        prev = NowPlaying.Current.Songs[NowPlaying.Current.Songs.Count - 1];
 
                     ApplicationData.Current.LocalSettings.Values["PreviousSong"] = prev;
 
-                    if (ApplicationSettings.CurrentTrackIndex < PlaylistHelper.CurrentPlaylist.Count - 1)
-                        next = PlaylistHelper.CurrentPlaylist[ApplicationSettings.CurrentTrackIndex + 1];
+                    if (ApplicationSettings.CurrentTrackIndex < NowPlaying.Current.Songs.Count - 1)
+                        next = NowPlaying.Current.Songs[ApplicationSettings.CurrentTrackIndex + 1];
                     else
-                        next = PlaylistHelper.CurrentPlaylist[0];
+                        next = NowPlaying.Current.Songs[0];
 
                     ApplicationData.Current.LocalSettings.Values["NextSong"] = next;
                 }
@@ -460,7 +461,7 @@ namespace BackgroundAudioAgent
                 }
 
                 if (ApplicationSettings.AppState == AppState.Active)
-                    MessageService.SendMessageToForeground(new PlaylistMessage(PlaylistHelper.CurrentPlaylist));
+                    MessageService.SendMessageToForeground(new PlaylistMessage(NowPlaying.Current.Songs));
             }
 
             SetPlaylistMessage setPlaylistMessage;
@@ -503,7 +504,7 @@ namespace BackgroundAudioAgent
 
                         if (ApplicationSettings.AppState == AppState.Active
                             )
-                            MessageService.SendMessageToForeground(new PlaylistMessage(PlaylistHelper.CurrentPlaylist));
+                            MessageService.SendMessageToForeground(new PlaylistMessage(NowPlaying.Current.Songs));
                         break;
 
                     case BackgroundAudioShared.Messages.Action.Resume:
@@ -519,38 +520,38 @@ namespace BackgroundAudioAgent
                         break;
 
                     case BackgroundAudioShared.Messages.Action.Shuffle:
-                        if (PlaylistHelper.CurrentPlaylist.Count == 0)
+                        if (NowPlaying.Current.Songs.Count == 0)
                             return;
 
-                        string playingSong = PlaylistHelper.CurrentPlaylist[ApplicationSettings.CurrentTrackIndex];
+                        string playingSong = NowPlaying.Current.Songs[ApplicationSettings.CurrentTrackIndex];
 
                         List<string> ShuffleList = new List<string>();
 
-                        foreach (string file in PlaylistHelper.CurrentPlaylist)
+                        foreach (string file in NowPlaying.Current.Songs)
                         {
                             if (file != playingSong)
                                 ShuffleList.Add(file);
                         }
 
-                        PlaylistHelper.CurrentPlaylist.Clear();
+                        NowPlaying.Current.Songs.Clear();
 
                         //ShuffleToggleButton.IsChecked = true;
                         await ShuffleList.Shuffle();
 
-                        PlaylistHelper.CurrentPlaylist.Add(playingSong);
+                        NowPlaying.Current.Songs.Add(playingSong);
 
                         ApplicationData.Current.LocalSettings.Values["CurrentTrackIndex"] = 0;
 
                         foreach (string s in ShuffleList)
                         {
-                            PlaylistHelper.CurrentPlaylist.Add(s);
+                            NowPlaying.Current.Songs.Add(s);
                         }
 
                         await ToastManager(0);
 
                         if (ApplicationSettings.AppState == AppState.Active)
                         {
-                            MessageService.SendMessageToForeground(new PlaylistMessage(PlaylistHelper.CurrentPlaylist));
+                            MessageService.SendMessageToForeground(new PlaylistMessage(NowPlaying.Current.Songs));
                             MessageService.SendMessageToForeground(new CurrentTrackMessage(playingSong, 0));
                         }
 
@@ -580,15 +581,15 @@ namespace BackgroundAudioAgent
             EditPlaylistMessage editPlaylistMessage;
             if (MessageService.TryParseMessage(e.Data, out editPlaylistMessage))
             {
-                var item = PlaylistHelper.CurrentPlaylist[editPlaylistMessage.TrackIndex];
+                var item = NowPlaying.Current.Songs[editPlaylistMessage.TrackIndex];
                 int i = ApplicationSettings.CurrentTrackIndex;
 
                 switch (editPlaylistMessage.Mode)
                 {
                     case Mode.Remove:
 
-                        int playlistCount = PlaylistHelper.CurrentPlaylist.Count;
-                        PlaylistHelper.CurrentPlaylist.RemoveAt(editPlaylistMessage.TrackIndex);
+                        int playlistCount = NowPlaying.Current.Songs.Count;
+                        NowPlaying.Current.Songs.RemoveAt(editPlaylistMessage.TrackIndex);
 
                         // SE A MÚSICA REMOVIDA FOR ANTES DA MÚSICA QUE ESTÁ TOCANDO -- PS: SE A MÚSICA REMOVIDA FOR DEPOIS DA ATUAL, NADA A FAZER
                         if (ApplicationSettings.CurrentTrackIndex > editPlaylistMessage.TrackIndex)
@@ -651,9 +652,9 @@ namespace BackgroundAudioAgent
                             ApplicationSettings.CurrentTrackIndex = editPlaylistMessage.NewIndex;
                         }
 
-                        string song = PlaylistHelper.CurrentPlaylist[editPlaylistMessage.TrackIndex];
-                        PlaylistHelper.CurrentPlaylist.RemoveAt(editPlaylistMessage.TrackIndex);
-                        PlaylistHelper.CurrentPlaylist.Insert(editPlaylistMessage.NewIndex, song);
+                        string song = NowPlaying.Current.Songs[editPlaylistMessage.TrackIndex];
+                        NowPlaying.Current.Songs.RemoveAt(editPlaylistMessage.TrackIndex);
+                        NowPlaying.Current.Songs.Insert(editPlaylistMessage.NewIndex, song);
 
                         break;
                 }
@@ -664,7 +665,7 @@ namespace BackgroundAudioAgent
                 {
                     i = ApplicationSettings.CurrentTrackIndex;
 
-                    MessageService.SendMessageToForeground(new CurrentTrackMessage(PlaylistHelper.CurrentPlaylist[ApplicationSettings.CurrentTrackIndex], ApplicationSettings.CurrentTrackIndex));
+                    MessageService.SendMessageToForeground(new CurrentTrackMessage(NowPlaying.Current.Songs[ApplicationSettings.CurrentTrackIndex], ApplicationSettings.CurrentTrackIndex));
 
                 }
             }
@@ -684,7 +685,7 @@ namespace BackgroundAudioAgent
 
         private async void ClearPlayback()
         {
-            PlaylistHelper.CurrentPlaylist.Clear();
+            NowPlaying.Current.Songs.Clear();
 
             smtc.DisplayUpdater.MusicProperties.Title = string.Empty;
             smtc.DisplayUpdater.MusicProperties.Artist = string.Empty;
@@ -704,12 +705,12 @@ namespace BackgroundAudioAgent
                 MessageService.SendMessageToForeground(new ActionMessage(BackgroundAudioShared.Messages.Action.ClearPlayback));
         }
 
-        private async Task<bool> ResumeLastPlayback()
+        private bool ResumeLastPlayback()
         {
             IsLoadingPlaylist = true;
 
             bool result;
-            List<string> list = await CustomPlaylistsHelper.GetLastPlaylistFromFile();
+            List<string> list = CustomPlaylistsHelper.GetLastPlaylistFromFile();
             int index = ApplicationSettings.CurrentTrackIndex;
             double milliseconds = ApplicationSettings.PlaybackLastPosition;
 
@@ -736,15 +737,15 @@ namespace BackgroundAudioAgent
             if (playlist.Count == 0)
                 return;
 
-            PlaylistHelper.CurrentPlaylist.Clear();
+            NowPlaying.Current.Songs.Clear();
 
-            PlaylistHelper.CurrentPlaylist.AddRange(playlist);
+            NowPlaying.Current.Songs.AddRange(playlist);
 
             JumpToIndex(index, position);
 
             IsLoadingPlaylist = false;
             if (ApplicationSettings.AppState == AppState.Active)
-                MessageService.SendMessageToForeground(new PlaylistMessage(PlaylistHelper.CurrentPlaylist));
+                MessageService.SendMessageToForeground(new PlaylistMessage(NowPlaying.Current.Songs));
         }
 
         private void JumpToIndex(int index, double position)
@@ -752,26 +753,26 @@ namespace BackgroundAudioAgent
             try
             {
                 ApplicationSettings.CurrentTrackIndex = index;
-                ApplicationSettings.CurrentTrackPath = PlaylistHelper.CurrentPlaylist[index];
+                ApplicationSettings.CurrentTrackPath = NowPlaying.Current.Songs[index];
                 if (ApplicationSettings.AppState == AppState.Active)
                 {
-                    MessageService.SendMessageToForeground(new CurrentTrackMessage(PlaylistHelper.CurrentPlaylist[index], index));
+                    MessageService.SendMessageToForeground(new CurrentTrackMessage(NowPlaying.Current.Songs[index], index));
                 }
                 SetMediaSource(index, position);
 
                 string prev, next = string.Empty;
 
                 if (index > 0)
-                    prev = PlaylistHelper.CurrentPlaylist[index - 1];
+                    prev = NowPlaying.Current.Songs[index - 1];
                 else
-                    prev = PlaylistHelper.CurrentPlaylist[PlaylistHelper.CurrentPlaylist.Count - 1];
+                    prev = NowPlaying.Current.Songs[NowPlaying.Current.Songs.Count - 1];
 
                 ApplicationData.Current.LocalSettings.Values["PreviousSong"] = prev;
 
-                if (index < PlaylistHelper.CurrentPlaylist.Count - 1)
-                    next = PlaylistHelper.CurrentPlaylist[index + 1];
+                if (index < NowPlaying.Current.Songs.Count - 1)
+                    next = NowPlaying.Current.Songs[index + 1];
                 else
-                    next = PlaylistHelper.CurrentPlaylist[0];
+                    next = NowPlaying.Current.Songs[0];
 
                 ApplicationData.Current.LocalSettings.Values["NextSong"] = next;
             }
@@ -1042,7 +1043,7 @@ namespace BackgroundAudioAgent
             ResourceLoader res = new ResourceLoader();
             try
             {
-                if (PlaylistHelper.CurrentPlaylist.Count == 1 || currentTrackIndex == PlaylistHelper.CurrentPlaylist.Count - 1)
+                if (NowPlaying.Current.Songs.Count == 1 || currentTrackIndex == NowPlaying.Current.Songs.Count - 1)
                 {
                     ToastNotificationHistory n = ToastNotificationManager.History;
                     n.Clear("App");
@@ -1062,17 +1063,17 @@ namespace BackgroundAudioAgent
                 string prev;
                 string next;
 
-                if (PlaylistHelper.CurrentPlaylist.Count > 1)
+                if (NowPlaying.Current.Songs.Count > 1)
                 {
                     if (currentTrackIndex > 0)
-                        prev = PlaylistHelper.CurrentPlaylist[currentTrackIndex - 1];
+                        prev = NowPlaying.Current.Songs[currentTrackIndex - 1];
                     else
-                        prev = PlaylistHelper.CurrentPlaylist[PlaylistHelper.CurrentPlaylist.Count - 1];
+                        prev = NowPlaying.Current.Songs[NowPlaying.Current.Songs.Count - 1];
 
-                    if (currentTrackIndex < PlaylistHelper.CurrentPlaylist.Count - 1)
-                        next = PlaylistHelper.CurrentPlaylist[currentTrackIndex + 1];
+                    if (currentTrackIndex < NowPlaying.Current.Songs.Count - 1)
+                        next = NowPlaying.Current.Songs[currentTrackIndex + 1];
                     else
-                        next = PlaylistHelper.CurrentPlaylist[0];
+                        next = NowPlaying.Current.Songs[0];
 
                     ApplicationData.Current.LocalSettings.Values["PreviousSong"] = prev;
                     ApplicationData.Current.LocalSettings.Values["NextSong"] = next;
@@ -1082,12 +1083,12 @@ namespace BackgroundAudioAgent
                     return;
                 }
 
-                if (currentTrackIndex < PlaylistHelper.CurrentPlaylist.Count - 1)
+                if (currentTrackIndex < NowPlaying.Current.Songs.Count - 1)
                 {
 
-                    if (NextSong != PlaylistHelper.CurrentPlaylist[currentTrackIndex + 1])
+                    if (NextSong != NowPlaying.Current.Songs[currentTrackIndex + 1])
                     {
-                        NextSong = PlaylistHelper.CurrentPlaylist[currentTrackIndex + 1];
+                        NextSong = NowPlaying.Current.Songs[currentTrackIndex + 1];
                         Song s = Ctr_Song.Current.GetSong(new Song() { SongURI = NextSong });
 
                         if (s != null)
@@ -1186,13 +1187,13 @@ namespace BackgroundAudioAgent
         {
             try
             {
-                StorageFile mediaFile = await StorageFile.GetFileFromPathAsync(PlaylistHelper.CurrentPlaylist[index]);
+                StorageFile mediaFile = await StorageFile.GetFileFromPathAsync(NowPlaying.Current.Songs[index]);
 
                 MediaSource source = MediaSource.CreateFromStorageFile(mediaFile);
                 BackgroundMediaPlayer.Current.Source = source;
                 BackgroundMediaPlayer.Current.PlaybackSession.Position = TimeSpan.FromMilliseconds(position);
 
-                UpdateUVCOnNewTrack(PlaylistHelper.CurrentPlaylist[index]);
+                UpdateUVCOnNewTrack(NowPlaying.Current.Songs[index]);
             }
             catch (Exception ex)
             {

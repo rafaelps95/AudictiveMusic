@@ -29,6 +29,9 @@ namespace AudictiveMusicUWP.Gui.UC
 {
     public sealed partial class NewSearchUX : UserControl
     {
+        public delegate void UIDismissedEventArgs(object sender);
+        public event UIDismissedEventArgs UIDismissed;
+
         //private bool stretchBar = false;
         private bool anyResult = false;
 
@@ -195,6 +198,12 @@ namespace AudictiveMusicUWP.Gui.UC
             this.keyPressTimer = 0;
         }
 
+        /// <summary>
+        /// Sets the horizontal offset (left or right) based on content.
+        /// Used to display the search bar/button correctly when the search UI is minimized.
+        /// The offset is NOT applied when the search UI is open or centralized.
+        /// </summary>
+        /// <param name="offset"></param>
         public void SetOffset(double offset)
         {
             boxOffset = offset;
@@ -218,6 +227,11 @@ namespace AudictiveMusicUWP.Gui.UC
             }
         }
 
+        /// <summary>
+        /// Sets the horizontal alignment of the control when the search UI is minimized.
+        /// The UI is always centralized when its SearchMode is set to Open.
+        /// </summary>
+        /// <param name="sbp">Horizontal alignment of the control while minimized</param>
         public void SetSearchBarPlacement(SearchPlacement sbp)
         {
             placement = sbp;
@@ -256,6 +270,9 @@ namespace AudictiveMusicUWP.Gui.UC
             SearchMode = SearchPaneMode.Open;
         }
 
+        /// <summary>
+        /// Applies an animation to place the search bar correctly in the center of the page
+        /// </summary>
         private void OpenSearchPane()
         {
             searchButton.Visibility = Visibility.Collapsed;
@@ -330,10 +347,12 @@ namespace AudictiveMusicUWP.Gui.UC
             sb.Begin();
         }
 
+        /// <summary>
+        /// Returns the necessary offset to center the bar into the page
+        /// </summary>
         private double GetTranslateXToCenter()
         {
             double center = this.PaneWidth / 2;
-            //double x = center - boxOffset - (this.SearchBoxWidth / 2);
             double x = center - (this.SearchBoxWidth / 2);
 
             if (placement == SearchPlacement.Left)
@@ -344,6 +363,9 @@ namespace AudictiveMusicUWP.Gui.UC
                 return 0;
         }
 
+        /// <summary>
+        /// Applies an animation to restore its original position
+        /// </summary>
         private void CloseSearchPane()
         {
             if (IsCompact)
@@ -406,6 +428,9 @@ namespace AudictiveMusicUWP.Gui.UC
             ClearResults();
         }
 
+        /// <summary>
+        /// Prepares the UI to be cleaned
+        /// </summary>
         private void ClearResults()
         {
             ResetSearch();
@@ -419,6 +444,7 @@ namespace AudictiveMusicUWP.Gui.UC
         private void DismissArea_Tapped(object sender, TappedRoutedEventArgs e)
         {
             SearchMode = SearchPaneMode.Closed;
+            UIDismissed?.Invoke(this);
         }
 
 
@@ -517,12 +543,6 @@ namespace AudictiveMusicUWP.Gui.UC
 
             }
         }
-
-        private void Lfm_DownloadCompleted(Artist artist)
-        {
-
-        }
-
 
         private void albumsList_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -820,6 +840,8 @@ namespace AudictiveMusicUWP.Gui.UC
                 e.Handled = false;
             else
                 SearchMode = SearchPaneMode.Closed;
+
+            UIDismissed?.Invoke(this);
         }
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)

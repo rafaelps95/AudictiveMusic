@@ -312,7 +312,7 @@ namespace ClassLibrary.Helpers
             {
                 object value = ReadSettingsValue("NowPlayingTheme");
                 if (value == null)
-                    return Theme.Material;
+                    return Theme.Modern;
                 else
                 {
                     Theme t = (Theme)Enum.Parse(typeof(Theme), value.ToString());
@@ -561,15 +561,16 @@ namespace ClassLibrary.Helpers
         {
             get
             {
-                object value = ReadSettingsValue("WhatsNextNotificationSuppressPopup");
-                if (value == null)
-                    return true;
-                else
-                    return (bool)value;
+                //object value = ReadSettingsValue("WhatsNextNotificationSuppressPopup");
+                //if (value == null)
+                //    return true;
+                //else
+                //    return (bool)value;
+                return true;
             }
             set
             {
-                SaveSettingsValue("WhatsNextNotificationSuppressPopup", value);
+                //SaveSettingsValue("WhatsNextNotificationSuppressPopup", value);
             }
         }
 

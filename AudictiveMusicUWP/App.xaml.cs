@@ -257,7 +257,7 @@ namespace AudictiveMusicUWP
             //    }
             //}
 
-            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(320, 400));
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(350, 400));
 
             return rootFrame;
         }

@@ -27,11 +27,6 @@ namespace ClassLibrary.Control
             }
         }
 
-        public void AddSong(Song song)
-        {
-            SongDao.AddSong(song);
-        }
-
         public List<Song> GetSongs(bool sort)
         {
             return SongDao.GetSongs(sort);

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AudictiveMusicUWP.Gui.UC"
+    xmlns:converter="using:AudictiveMusicUWP.Gui.Util"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -17,6 +18,8 @@
     </Page.Transitions>
 
     <Page.Resources>
+        <converter:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+
         <Storyboard x:Key="OpenPageTransition" Completed="OpenPageTransition_Completed">
             <DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetName="layoutRootScale" Storyboard.TargetProperty="ScaleX" EnableDependentAnimation="False">
                 <DoubleAnimation.EasingFunction>
@@ -73,34 +76,216 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <!--<TextBlock Text="" FontSize="200" Margin="-80" Opacity="0.05" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="2" />-->
-            <TextBlock x:Name="pageTitle" x:Uid="Settings" Text="Configurações" VerticalAlignment="Center" Margin="12,0" FontWeight="Bold" FontSize="25" />
+            <TextBlock x:Name="pageTitle" x:Uid="Settings" Text="Configurações" VerticalAlignment="Center" Margin="15,0" FontWeight="Bold" FontSize="25" />
             <Grid Grid.Row="1">
-                <!--<Grid.Background>
-                    <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" />
-                </Grid.Background>-->
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="menuTranslate" X="0" />
                 </Grid.RenderTransform>
                 <ScrollViewer x:Name="menuScroll" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" ZoomMode="Disabled">
                     <Grid x:Name="content" HorizontalAlignment="Left" VerticalAlignment="Stretch">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition />
+                                </TransitionCollection>
+                            </StackPanel.ChildrenTransitions>
 
-                        </Grid.RowDefinitions>
-                        <local:SettingsGroup x:Uid="PersonalizationMenuItem" ReferencesTo="Personalization" PointerEntered="SettingsGroup_PointerEntered" PointerPressed="SettingsGroup_PointerEntered" PointerExited="SettingsGroup_PointerExited" PointerReleased="SettingsGroup_PointerExited" IsRevealEnabled="True" VerticalAlignment="Top" Grid.Row="0" HorizontalAlignment="Stretch" Icon="" Title="Personalization" Subtitle="Tema do aplicativo, transparência e tela de bloqueio" Click="SettingsGroup_Click" />
-                        <local:SettingsGroup x:Uid="DataManagementMenuItem" ReferencesTo="DataManagement" PointerEntered="SettingsGroup_PointerEntered" PointerPressed="SettingsGroup_PointerEntered" PointerExited="SettingsGroup_PointerExited" PointerReleased="SettingsGroup_PointerExited" IsRevealEnabled="True" VerticalAlignment="Top" Grid.Row="1" HorizontalAlignment="Stretch" Icon="" Title="Gerenciamento de dados" Subtitle="Gerencie sua biblioteca" Click="SettingsGroup_Click" />
-                        <local:SettingsGroup x:Uid="PermissionsMenuItem" ReferencesTo="Permissions" PointerEntered="SettingsGroup_PointerEntered" PointerPressed="SettingsGroup_PointerEntered" PointerExited="SettingsGroup_PointerExited" PointerReleased="SettingsGroup_PointerExited" IsRevealEnabled="True" VerticalAlignment="Top" Grid.Row="2" HorizontalAlignment="Stretch" Icon="" Title="Permissões" Subtitle="Envio de informações e download" Click="SettingsGroup_Click" />
-                        <local:SettingsGroup x:Uid="NotificationsMenuItem" ReferencesTo="Playback" PointerEntered="SettingsGroup_PointerEntered" PointerPressed="SettingsGroup_PointerEntered" PointerExited="SettingsGroup_PointerExited" PointerReleased="SettingsGroup_PointerExited" IsRevealEnabled="True" VerticalAlignment="Top" Grid.Row="3" HorizontalAlignment="Stretch" Icon="" Title="Notificações" Subtitle="Gerencie as notificações de reprodução" Click="SettingsGroup_Click" />
-                        <local:SettingsGroup x:Uid="FeedbackMenuItem" ReferencesTo="Feedback" PointerEntered="SettingsGroup_PointerEntered" PointerPressed="SettingsGroup_PointerEntered" PointerExited="SettingsGroup_PointerExited" PointerReleased="SettingsGroup_PointerExited" IsRevealEnabled="True" VerticalAlignment="Top" Grid.Row="4" HorizontalAlignment="Stretch" Icon="" Title="Comentários" Subtitle="Envie comentários sobre esta versão" Click="SettingsGroup_Click" />
-                        <local:SettingsGroup x:Uid="AppInfoMenuItem" ReferencesTo="AppInfo" PointerEntered="SettingsGroup_PointerEntered" PointerPressed="SettingsGroup_PointerEntered" PointerExited="SettingsGroup_PointerExited" PointerReleased="SettingsGroup_PointerExited" IsRevealEnabled="True" VerticalAlignment="Top" Grid.Row="5" HorizontalAlignment="Stretch" Icon="" Title="Informações do aplicativo" Subtitle="Versão do aplicativo e avaliação" Click="SettingsGroup_Click"  Margin="0,0,0,60" />
+                            <local:SettingsSection Margin="0,0,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="PersonalizationSection" x:Uid="PersonalizationMenuItem" Icon="" Title="Personalization">
+                                <local:SettingsItemDropDownList x:Name="AppThemeSettingsItem" x:Uid="AppThemeSettingsItem" Icon="" IconSize="16">
+                                    <local:SettingsItemDropDownList.Items>
+                                        <ListBoxItem x:Uid="AppThemeDark" />
+                                        <ListBoxItem x:Uid="AppThemeLight" />
+                                    </local:SettingsItemDropDownList.Items>
+                                </local:SettingsItemDropDownList>
+                                
+                                <local:SettingsItemSeparator Visibility="{Binding ElementName=LockScreenSettingsItem, Path=Visibility}" />
+                                
+                                <local:SettingsItem x:Name="LockScreenSettingsItem" x:Uid="LockScreenSettingsItem" Icon="" IconSize="16">
+                                    <ToggleSwitch x:Name="LockScreenToggleSwitch" />
+                                </local:SettingsItem>
+                                
+                                <local:SettingsItemSeparator />
+
+                                <local:SettingsItemDropDownList x:Name="BackgroundPreferencesSettingsItem" x:Uid="BackgroundPreferencesSettingsItem" Icon="" IconSize="16">
+                                    <local:SettingsItemDropDownList.Items>
+                                        <ListBoxItem x:Uid="ThemeGeneralBackgroundAlbum" />
+                                        <ListBoxItem x:Uid="ThemeGeneralBackgroundArtist" />
+                                    </local:SettingsItemDropDownList.Items>
+                                </local:SettingsItemDropDownList>
+                                
+                                <local:SettingsItemSeparator />
+
+                                <local:SettingsItemDropDownList x:Name="ColorSettingsItem" x:Uid="ColorSettingsItem" Icon="" IconSize="16">
+                                    <local:SettingsItemDropDownList.Items>
+                                        <ListBoxItem x:Uid="ThemeAccentColorAlbum" Content="Usar cor do álbum" />
+                                        <ListBoxItem x:Uid="ThemeAccentColorSystem" Content="Usar cor de destaque (sistema)" />
+                                        <ListBoxItem x:Uid="ThemeAccentColorCustom" Content="Usar cor personalizada" />
+                                        <ListBoxItem x:Uid="NoColor" Content="Não usar cor" />
+                                    </local:SettingsItemDropDownList.Items>
+                                </local:SettingsItemDropDownList>
+
+                                <local:SettingsSection x:Name="CustomColorSettingsSection" x:Uid="CustomColorSettingsSection" SizeChanged="CustomColorSettingsSection_SizeChanged" Margin="-2,5" CurrentStateChanged="CustomColorSettingsSection_CurrentStateChanged" Icon="" IconSize="16" Visibility="Collapsed">
+                                    <GridView IsItemClickEnabled="True" ItemClick="colorsList_ItemClick" Padding="5,10" SelectionMode="None" x:Name="colorsList" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled">
+                                        <GridView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <ItemsWrapGrid MaximumRowsOrColumns="8" Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </GridView.ItemsPanel>
+                                        <GridView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Border BorderThickness="2" Height="44" Width="44" CornerRadius="3">
+                                                        <Border.Background>
+                                                            <SolidColorBrush Color="{Binding Color}" />
+                                                        </Border.Background>
+                                                        <Border.BorderBrush>
+                                                            <SolidColorBrush Color="{Binding Color}" />
+                                                        </Border.BorderBrush>
+                                                    </Border>
+                                                    <Border BorderBrush="{ThemeResource ApplicationForegroundThemeBrush}" BorderThickness="2" CornerRadius="3" Visibility="{Binding IsSelected, Converter={StaticResource boolToVisibilityConverter}}">
+                                                        <Border Background="{ThemeResource ApplicationForegroundThemeBrush}" Height="20" Width="20" VerticalAlignment="Top" HorizontalAlignment="Right">
+                                                            <TextBlock Text="" FontSize="12" IsTextScaleFactorEnabled="False" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" Foreground="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+                                                        </Border>
+                                                    </Border>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </GridView.ItemTemplate>
+                                    </GridView>
+                                </local:SettingsSection>
+                                
+                                <local:SettingsItemSeparator />
+
+                                <local:SettingsItem x:Name="MoreThemesSettingsItem" x:Uid="MoreThemesSettingsItem" IsClickable="True" ItemClick="MoreThemesSettingsItem_ItemClick" />
+                            </local:SettingsSection>
+                            
+                            <local:SettingsSection Margin="0,0,0,5" ExpandCompleted="DataManagementSection_ExpandCompleted" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="DataManagementSection" x:Uid="DataManagementMenuItem" Icon="" Title="Gerenciamento de dados">
+                                <local:SettingsItem x:Name="FindMusicSettingsItem" x:Uid="FindMusicSettingsItem" IsClickable="True" ItemClick="FindMusicSettingsItem_ItemClick" Icon="" IconSize="16" />
+                                <local:SettingsItemSeparator Visibility="{Binding ElementName=ChooseLibrarySettingsItem, Path=Visibility}" />
+                                <local:SettingsItem x:Name="ChooseLibrarySettingsItem" x:Uid="ChooseLibrarySettingsItem" Visibility="Collapsed" Icon="" IconSize="16" IsClickable="True" ItemClick="ChooseLibrarySettingsItem_ItemClick" />
+                                <StackPanel Margin="25,12,25,12" Orientation="Horizontal">
+                                    <TextBlock x:Uid="SongsFound" Text="Músicas encontradas:" />
+                                    <TextBlock Grid.Column="1" Margin="12,0,0,0" x:Name="songsFound" />
+                                </StackPanel>
+                                <local:SettingsItemSeparator />
+                                <Grid Margin="25,12,25,12">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" x:Uid="StorageUsage" Text="Uso do aplicativo" Margin="0,0,12,12" FontSize="20" FontWeight="Thin" />
+                                    <TextBlock Grid.Row="1" Grid.Column="0" x:Uid="ArtistsPics" Margin="0,0,12,12" Text="Fotos dos artistas:" />
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Margin="12,0,12,12" x:Name="artistsSize" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" x:Uid="AlbumsCovers" Margin="0,0,12,12" Text="Capas dos álbuns:" />
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Margin="12,0,12,12" x:Name="albumsSize" />
+                                    <TextBlock Grid.Row="3" Grid.Column="0" x:Uid="OtherData" Margin="0,0,12,12" Text="Outros dados:" />
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Margin="12,0,12,12" x:Name="otherSize" />
+                                    <TextBlock Grid.Row="4" Grid.Column="0" x:Uid="Everything" Margin="0,0,12,0" Text="Tudo:" />
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Margin="12,0,12,0" x:Name="allSize" />
+                                    <local:ModernProgressBar Loaded="StorageProgressBar_Loaded" x:Name="storageProgressBar" Grid.Row="5" Grid.ColumnSpan="2" Height="2" VerticalAlignment="Top" IsActive="False" />
+                                </Grid>
+
+                            </local:SettingsSection>
+                            
+                            <local:SettingsSection Margin="0,0,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="PermissionsSection" x:Uid="PermissionsMenuItem" Icon="" Title="Permissions">
+                                <local:SettingsItem x:Name="SendInfoSettingsItem" Icon="" x:Uid="SendInfoSettingsItem" IconSize="16">
+                                    <ToggleSwitch x:Name="SendInfoToggleSwitch" />
+                                </local:SettingsItem>
+                                <local:SettingsItemSeparator />
+                                <local:SettingsItem x:Name="LimitedConnectionSettingsItem" x:Uid="LimitedConnectionSettingsItem" Icon="" IconSize="16">
+                                    <ToggleSwitch x:Name="LimitedConnectionToggleSwitch" />
+                                </local:SettingsItem>
+                            </local:SettingsSection>
+                            
+                            <local:SettingsSection Margin="0,0,0,5" ExpandCompleted="PlaybackNotificationSection_ExpandCompleted" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="PlaybackNotificationSection" x:Uid="NotificationsMenuItem" Icon="" Title="Playback">
+                                <local:SettingsItem x:Name="WhatsNextSettingsItem" x:Uid="WhatsNextSettingsItem">
+                                        <ToggleSwitch Name="WhatsNextNotification" />
+                                    </local:SettingsItem>
+                                <local:SettingsItemSeparator />
+                                <local:SettingsItem x:Name="TapToResumeSettingsItem" x:Uid="TapToResumeSettingsItem">
+                                        <ToggleSwitch x:Name="TapToResumeSwitch" />
+                                    </local:SettingsItem>
+                                <local:SettingsItemSeparator />
+                                <local:SettingsItem x:Name="SendScrobbleSettingsItem" x:Uid="SendScrobbleSettingsItem">
+                                    <ToggleSwitch x:Name="SendScrobbleToggleSwitch" />
+                                </local:SettingsItem>
+                                <local:SettingsItemSeparator />
+                                <Grid Margin="25,12,0,12">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" x:Uid="Timer" Text="Temporizador" Margin="0,0,12,0" FontSize="20" FontWeight="Thin" />
+                                    <TextBlock Grid.Row="1" x:Uid="TimerCaption" Margin="0,12,12,0" TextWrapping="Wrap" FontSize="12" Text="A música será pausada em algum momento após o intervalo especificado." />
+
+                                    <TextBox Grid.Row="2" x:Uid="TimerBox" IsEnabled="False" MaxLength="2" HorizontalAlignment="Left" x:Name="TimerBox" Header="Time (in minutes):" InputScope="Number" HeaderTemplate="{StaticResource WrapHeaderTemplate}" Margin="0,12,12,0" />
+                                    <TextBlock Grid.Row="3" x:Name="TimerBoxCaption" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,0,12,12" FontSize="12" Opacity="0.7" />
+                                    <Grid Grid.Row="4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button x:Name="TimerButton" x:Uid="TimerButton" IsEnabled="False" Content="Iniciar" Margin="0,12,12,0" Click="TimerButton_Click" />
+                                        <Button x:Name="TimerCancelButton" x:Uid="TimerCancelButton" IsEnabled="False" Grid.Column="1" Content="Cancelar" Margin="12,12,12,0" Click="TimerCancelButton_Click" />
+                                    </Grid>
+                                </Grid>
+
+                            </local:SettingsSection>
+                            
+                            <local:SettingsSection Margin="0,0,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="FeedbackSection" x:Uid="FeedbackMenuItem" Icon="" Title="Feedback">
+                                <local:SettingsItem x:Name="RateAppSettingsItem" x:Uid="RateAppSettingsItem" ItemClick="RateAppSettingsItem_ItemClick" IsClickable="True" Icon="" IconSize="16" />
+                                <local:SettingsItemSeparator />
+                                <!--<local:SettingsItem x:Name="SupportSettingsItem" x:Uid="SupportSettingsItem" ItemClick="SupportSettingsItem_ItemClick" IsClickable="True" Icon="" IconSize="16" />
+                                <local:SettingsItemSeparator />-->
+                                <local:SettingsItem x:Name="DonateSettingsItem" x:Uid="DonateSettingsItem" ItemClick="DonateSettingsItem_ItemClick" IsClickable="True" Icon="" IconSize="16" />
+                            </local:SettingsSection>
+                            
+                            <local:SettingsSection Margin="0,0,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="AboutSection" x:Uid="AppInfoMenuItem" Icon="" Title="About">
+                                <Grid x:Name="contentGrid" Margin="0,0,0,10" VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+
+                                    </Grid.RowDefinitions>
+
+                                    <Grid CornerRadius="5" Height="150" Width="150" Margin="20" HorizontalAlignment="Center">
+                                        <!--<Grid.Background>
+                            <SolidColorBrush x:Name="appColor" Color="#FFDC572E" />
+                        </Grid.Background>-->
+                                        <Image Source="ms-appx:///Assets/Logos/Fluent/AboutPageLogo.png" />
+                                    </Grid>
+                                    <TextBlock Grid.Row="1" TextAlignment="Center" TextWrapping="Wrap" x:Name="appName" FontWeight="Bold" FontSize="26" Text="Audictive Music" />
+                                    <TextBlock Grid.Row="2" TextAlignment="Center" TextWrapping="Wrap" x:Name="appVersion" Text="" />
+                                    <TextBlock Grid.Row="3" TextAlignment="Center" TextWrapping="Wrap" x:Name="appDeveloper" FontWeight="Bold" Text="Rafael Pedro da Silva" />
+                                    <TextBlock Grid.Row="4" TextAlignment="Center" TextWrapping="Wrap" x:Name="appRightsTitle" FontSize="20" Margin="0,40,0,0" x:Uid="ForDevelopers" Text="Para desenvolvedores" />
+                                    <TextBlock Grid.Row="5" TextAlignment="Center" TextWrapping="Wrap" Margin="0,10,0,-5" x:Name="appTagLibRight" FontWeight="Medium" Text="TagLib.Portable" />
+                                    <HyperlinkButton Grid.Row="6" HorizontalAlignment="Center" x:Name="appTagLibRightButton" NavigateUri="https://www.github.com/timheuer/taglib-sharp-portable" x:Uid="MoreInfo" Content="Mais informações..." />
+                                    <TextBlock Grid.Row="7" TextAlignment="Center" TextWrapping="Wrap" Margin="0,10,0,-5" FontWeight="Medium" Text="Inflatable Last.fm C# API" />
+                                    <HyperlinkButton Grid.Row="8" HorizontalAlignment="Center" NavigateUri="https://github.com/inflatablefriends/lastfm" x:Uid="MoreInfo" Content="Mais informações..." />
+
+                                </Grid>
+
+                            </local:SettingsSection>
+                        </StackPanel>
+
                     </Grid>
                 </ScrollViewer>
             </Grid>
@@ -110,7 +295,7 @@
                 </Grid.RenderTransform>
                 <ScrollViewer>
                     <Grid x:Name="frameContent">
-                        <Grid x:Name="personalizationSection" IsHitTestVisible="False" Opacity="0">
+                        <!--<Grid x:Name="personalizationSection" IsHitTestVisible="False" Opacity="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -127,37 +312,10 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.ColumnSpan="2" x:Uid="Personalization" Text="Personalization" Margin="12" FontSize="20" FontWeight="Thin" />
 
-                            <TextBlock Grid.Row="1" x:Uid="AppTheme" Text="Tema do aplicativo" TextWrapping="WrapWholeWords" Margin="12,12,12,12" />
+                           
+                        </Grid>-->
 
-                            <Grid Grid.Row="2" Margin="12,0,0,12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <RadioButton x:Name="darkRadioButton" x:Uid="AppThemeDark" Content="Dark" />
-                                <RadioButton x:Name="lightRadioButton" x:Uid="AppThemeLight" Grid.Column="1" Content="Light" />
-
-                            </Grid>
-                            <ToggleSwitch Grid.Row="3" Grid.ColumnSpan="2" x:Uid="LockScreenToggle" x:Name="LockScreenToggleSwitch" Header="Atualizar tela de bloqueio" Margin="12,12,12,12" />
-                            <Button Style="{StaticResource SideMenuButtonStyle}" x:Name="ThemesButton" Tag="" Content="Temas" Click="Themes_Click" Grid.Row="4" HorizontalAlignment="Stretch" />
-
-                            <!--<ComboBox Grid.Row="1" Grid.ColumnSpan="2" x:Name="ThemeComboBox" x:Uid="AppTheme" Margin="12,12,12,12" Header="App theme" HeaderTemplate="{StaticResource WrapHeaderTemplate}">
-                                <ComboBoxItem x:Uid="AppThemeDark" Content="Dark" />
-                                <ComboBoxItem x:Uid="AppThemeLight" Content="Light" />
-                                <ComboBoxItem x:Uid="AppThemeSystem" IsSelected="True" Content="Follow the system theme" />
-                            </ComboBox>-->
-                            <!--<HyperlinkButton Grid.Row="2" Grid.ColumnSpan="2" x:Uid="WindowsColorSettings" Content="Configurações de cor do Windows" Click="WindowsColorSettings_Click" Margin="12,0,12,12" />-->
-                            <!--<TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="12,12,12,0" x:Uid="SyncColorIn" Text="Sincronizar cor em:" />
-                            <CheckBox Grid.Row="4" Grid.ColumnSpan="2" x:Uid="SyncColorInMenu" x:Name="MenuColorCheckBox" Margin="12" Content="Menu lateral" />
-                            <CheckBox Grid.Row="5" Grid.ColumnSpan="2" x:Uid="SyncColorInTitleBar" x:Name="TitleBarColorCheckBox" Margin="12,0,12,12" Content="Barra de título" />
-                            <CheckBox Grid.Row="6" Grid.ColumnSpan="2" x:Uid="SyncColorInPlaybackBar" x:Name="PlaybackBarColorCheckBox" Margin="12,0,12,12" Content="Barra de reprodução" />
-                            <ToggleSwitch Grid.Row="7" Grid.ColumnSpan="2" x:Uid="AllowTransparency" x:Name="transparentEffectsToggleSwitch" Margin="12,12,12,0" Header="Habilitar efeitos de transparência" HeaderTemplate="{StaticResource WrapHeaderTemplate}" />
-                            <TextBlock Grid.Row="8" Grid.ColumnSpan="2" x:Uid="AllowTransparencyCaption" Margin="12,0,12,12" Text="Pode reduzir o desempenho do aplicativo. Alguns efeitos podem não estar habilitados em todos os dispositivos e podem precisar do Windows 10 Creators Update (1703)." TextWrapping="WrapWholeWords" FontSize="12" Opacity="0.7" />-->
-                            <!--<CheckBox Grid.Row="10" Grid.ColumnSpan="2" Visibility="Collapsed" x:Name="UseBlurImageCheckBox" Margin="12,12,12,12" Content="Usar imagem 'borrada' na tela de bloqueio" ContentTemplate="{StaticResource WrapHeaderTemplate}" />-->
-
-                        </Grid>
-
-                        <Grid x:Name="dataManagementSection" IsHitTestVisible="False" Opacity="0">
+                        <!--<Grid x:Name="dataManagementSection" IsHitTestVisible="False" Opacity="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -215,9 +373,9 @@
                             </Button>
                             <Button Grid.Row="12" Grid.ColumnSpan="2" Visibility="Collapsed" x:Uid="RescanImages" Content="Baixar as imagens dos artistas novamente" Click="rescanImages_Click" Margin="12,12,12,12" />
 
-                        </Grid>
+                        </Grid>-->
 
-                        <Grid x:Name="permissionsSection" IsHitTestVisible="False" Opacity="0">
+                        <!--<Grid x:Name="permissionsSection" IsHitTestVisible="False" Opacity="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -235,9 +393,9 @@
                             <ToggleButton Grid.Row="2" Grid.Column="1" x:Uid="NoBtn" IsChecked="True" x:Name="sendInfoNo" Click="sendInfoNo_Click" Content="Não" Margin="12" HorizontalAlignment="Stretch" />
                             <TextBlock Grid.Row="3" Grid.ColumnSpan="2" x:Uid="PermissionsDownloadLastFmCaption" Text="Não será possível exibir as imagens se você não nos der permissão." TextWrapping="WrapWholeWords" Margin="12,0,12,12" FontSize="12" Opacity="0.7" />
                             <ToggleSwitch Grid.Row="4" Grid.ColumnSpan="2" x:Uid="PermissionsDownloadCellular" x:Name="celullarDownloadToggleSwitch" Margin="12,12,12,12" Header="Permitir download em conexões limitadas" HeaderTemplate="{StaticResource WrapHeaderTemplate}" />
-                        </Grid>
+                        </Grid>-->
 
-                        <Grid x:Name="playbackSection" IsHitTestVisible="False" Opacity="0">
+                        <!--<Grid x:Name="playbackSection" IsHitTestVisible="False" Opacity="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -275,9 +433,9 @@
                                 <Button x:Name="TimerCancelButton" x:Uid="TimerCancelButton" IsEnabled="False" Grid.Column="1" Content="Cancelar" Margin="12,12,12,12" Click="TimerCancelButton_Click" />
                             </Grid>
 
-                        </Grid>
+                        </Grid>-->
 
-                        <Grid x:Name="feedbackSection" IsHitTestVisible="False" Opacity="0">
+                        <!--<Grid x:Name="feedbackSection" IsHitTestVisible="False" Opacity="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -292,7 +450,7 @@
                             <Button Grid.Row="2" Height="48" Tag="" x:Name="supportButton" x:Uid="ContactSupportMenu" Click="supportButton_Click" Style="{StaticResource SideMenuButtonStyle}" />
                             <Button Grid.Row="3" Height="48" Tag="" x:Name="donateButton" x:Uid="MakeDonationBtn" Click="donateButton_Click" Style="{StaticResource SideMenuButtonStyle}" />
 
-                        </Grid>
+                        </Grid>-->
 
                         <Grid x:Name="appInfoSection" IsHitTestVisible="False" Opacity="0">
                             <Grid.RowDefinitions>

@@ -126,7 +126,7 @@
   <data name="Albums.Text" xml:space="preserve">
     <value>Álbuns</value>
   </data>
-  <data name="AppTheme.Text" xml:space="preserve">
+  <data name="AppThemeSettingsItem.Text" xml:space="preserve">
     <value>Tema do aplicativo</value>
   </data>
   <data name="AppThemeDark.Content" xml:space="preserve">
@@ -189,8 +189,8 @@
   <data name="RateAndReview.Text" xml:space="preserve">
     <value>Avaliar na loja</value>
   </data>
-  <data name="RateApp.Content" xml:space="preserve">
-    <value>Avaliar na loja</value>
+  <data name="RateAppSettingsItem.Text" xml:space="preserve">
+    <value>Deixe um comentário na Microsoft Store</value>
   </data>
   <data name="ReloadCollection.Text" xml:space="preserve">
     <value>Atualizar coleção</value>
@@ -423,7 +423,7 @@
   <data name="ArtistsMenu.Content" xml:space="preserve">
     <value>Artistas</value>
   </data>
-  <data name="ContactSupportMenu.Content" xml:space="preserve">
+  <data name="SupportSettingsItem.Text" xml:space="preserve">
     <value>Fale com o suporte</value>
   </data>
   <data name="Menu.Content" xml:space="preserve">
@@ -462,7 +462,7 @@
   <data name="GeneralImprovements.Text" xml:space="preserve">
     <value>Melhorias gerais</value>
   </data>
-  <data name="MakeDonationBtn.Content" xml:space="preserve">
+  <data name="DonateSettingsItem.Text" xml:space="preserve">
     <value>Colabore com o desenvolvedor</value>
   </data>
   <data name="OtherFeatures.Text" xml:space="preserve">
@@ -567,7 +567,7 @@
   <data name="LoadCollectionNewItems.Text" xml:space="preserve">
     <value>Verificação rápida</value>
   </data>
-  <data name="LockScreenToggle.Header" xml:space="preserve">
+  <data name="LockScreenSettingsItem.Text" xml:space="preserve">
     <value>Atualizar imagem da tela de bloqueio</value>
   </data>
   <data name="LockScreenToggleCaption.Text" xml:space="preserve">
@@ -624,10 +624,10 @@
   <data name="TapToResume.Content" xml:space="preserve">
     <value>Toque para retomar</value>
   </data>
-  <data name="WhatsNextNotification.Header" xml:space="preserve">
+  <data name="WhatsNextSettingsItem.Text" xml:space="preserve">
     <value>Exibir a próxima música na central de ações</value>
   </data>
-  <data name="WhatsNextNotificationCaption.Text" xml:space="preserve">
+  <data name="WhatsNextSettingsItem.AdditionalInfo" xml:space="preserve">
     <value>Se ativado, o título e o artista da próxima música na fila de reprodução vão aparecer na central de ações.</value>
   </data>
   <data name="Feature1" xml:space="preserve">
@@ -801,7 +801,7 @@
   <data name="ColorOptionsCaption.Text" xml:space="preserve">
     <value>O esquema de cores do Audictive Music pode acompanhar a música em reprodução.</value>
   </data>
-  <data name="FindYourMusic.Content" xml:space="preserve">
+  <data name="FindMusicSettingsItem.Text" xml:space="preserve">
     <value>Recarregue sua coleção</value>
   </data>
   <data name="NoBtn.Content" xml:space="preserve">
@@ -810,10 +810,10 @@
   <data name="Permissions.Text" xml:space="preserve">
     <value>Permissões</value>
   </data>
-  <data name="PermissionsDownloadCellular.Header" xml:space="preserve">
+  <data name="LimitedConnectionSettingsItem.Text" xml:space="preserve">
     <value>Permitir o download através de conexões limitadas?</value>
   </data>
-  <data name="PermissionsDownloadLastFm.Text" xml:space="preserve">
+  <data name="SendInfoSettingsItem.Text" xml:space="preserve">
     <value>Permite que informações sejam enviadas à terceiros a fim de obter as imagens para os artistas?</value>
   </data>
   <data name="PermissionsDownloadLastFmCaption.Text" xml:space="preserve">
@@ -849,7 +849,7 @@
   <data name="PlaybackStoppedToastHeader" xml:space="preserve">
     <value>A reprodução parou</value>
   </data>
-  <data name="TapToResumeSwitchCaption.Text" xml:space="preserve">
+  <data name="TapToResumeSettingsItem.AdditionalInfo" xml:space="preserve">
     <value>Para proporcionar melhor experiência de uso, o Windows interrompe a reprodução após algum tempo ocioso para poupar recursos do sistema.</value>
   </data>
   <data name="ResumePlayback" xml:space="preserve">
@@ -915,7 +915,7 @@
   <data name="TryToFreeSpace.Content" xml:space="preserve">
     <value>Tente liberar espaço</value>
   </data>
-  <data name="ChooseLibraryBtn.Content" xml:space="preserve">
+  <data name="ChooseLibrarySettingsItem.Text" xml:space="preserve">
     <value>Escolha onde procurar suas músicas</value>
   </data>
   <data name="EmptyLibrary" xml:space="preserve">
@@ -927,7 +927,7 @@
   <data name="EmptyLibraryMobileTip" xml:space="preserve">
     <value>Oops... Não encontramos nada em sua coleção. Adicione suas músicas na pasta "Músicas" no armazenamento interno ou removível.</value>
   </data>
-  <data name="FindYourMusicCaption.Text" xml:space="preserve">
+  <data name="FindMusicSettingsItem.AdditionalInfo" xml:space="preserve">
     <value>Caso alguma de suas músicas for alterada por outro aplicativo, é necessário recarregar suas músicas para corrigir dados incorretos.</value>
   </data>
   <data name="ManageLibrary.Text" xml:space="preserve">
@@ -948,7 +948,7 @@
   <data name="StorageUsage.Text" xml:space="preserve">
     <value>Uso do aplicativo</value>
   </data>
-  <data name="TapToResumeSwitch.Header" xml:space="preserve">
+  <data name="TapToResumeSettingsItem.Text" xml:space="preserve">
     <value>Notificação para retomar a reprodução</value>
   </data>
   <data name="Collection.Text" xml:space="preserve">
@@ -1023,7 +1023,7 @@
   <data name="ScrobbleSettings" xml:space="preserve">
     <value>Configurações de scrobble</value>
   </data>
-  <data name="SendScrobble.Header" xml:space="preserve">
+  <data name="SendScrobbleSettingsItem.Text" xml:space="preserve">
     <value>Enviar suas reproduções ao Last.fm (Scrobble)</value>
   </data>
   <data name="SignIn.Content" xml:space="preserve">
@@ -1083,7 +1083,7 @@
   <data name="TimerMenu" xml:space="preserve">
     <value>Temporizador</value>
   </data>
-  <data name="ThemeAccentColor.Text" xml:space="preserve">
+  <data name="ColorSettingsItem.Text" xml:space="preserve">
     <value>Cor de destaque:</value>
   </data>
   <data name="ThemeAccentColorAlbum.Content" xml:space="preserve">
@@ -1101,7 +1101,7 @@
   <data name="ThemeBlurAmountLabel.Text" xml:space="preserve">
     <value>Níveis elevados podem diminuir o desempenho do aplicativo</value>
   </data>
-  <data name="ThemeGeneralBackground.Header" xml:space="preserve">
+  <data name="BackgroundPreferencesSettingsItem.Text" xml:space="preserve">
     <value>Escolha o que exibir no fundo:</value>
   </data>
   <data name="ThemeGeneralBackgroundAlbum.Content" xml:space="preserve">
@@ -1199,5 +1199,20 @@
   </data>
   <data name="NoColor.Content" xml:space="preserve">
     <value>Sem cor</value>
+  </data>
+  <data name="CustomColorSettingsSection.Title" xml:space="preserve">
+    <value>Cor personalizada</value>
+  </data>
+  <data name="MoreThemesSettingsItem.Text" xml:space="preserve">
+    <value>Mais opções de tema</value>
+  </data>
+  <data name="ProceedAnyway" xml:space="preserve">
+    <value>Prosseguir mesmo assim</value>
+  </data>
+  <data name="ReloadCollectionWarningContent" xml:space="preserve">
+    <value>Durante esse processo sua lista de favoritos será perdida. Isso levará algum tempo dependendo do tamanho de sua coleção.</value>
+  </data>
+  <data name="ReloadCollectionWarningTitle" xml:space="preserve">
+    <value>Deseja realmente recarregar sua coleção de músicas?</value>
   </data>
 </root>

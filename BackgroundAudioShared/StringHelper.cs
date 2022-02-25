@@ -15,7 +15,12 @@ namespace BackgroundAudioShared
 
         public static string EscapeString(string str)
         {
-            return str.Replace("&", "&amp;").Replace("\"", "&quot;").Replace("\'", "&apos;");
+            return str.Replace("&", "&amp;").Replace("\"", "&quot;").Replace("\'", "&apos;").Replace("'", "''");
+        }
+
+        public static string SqlEscapeString(string str)
+        {
+            return str.Replace("'", "''");
         }
     }
 }

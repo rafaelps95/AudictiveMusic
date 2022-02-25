@@ -7,9 +7,13 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="DefaultPageBackgroundBrush" Color="#F2F2F2" />
+                    <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#FBFBFB" />
                     <x:Boolean x:Key="IsDarkTheme">false</x:Boolean>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="DefaultPageBackgroundBrush" Color="#202020" />
+                    <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#2D2D2D" />
                     <x:Boolean x:Key="IsDarkTheme">true</x:Boolean>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Default">
