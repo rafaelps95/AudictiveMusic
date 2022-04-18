@@ -439,16 +439,13 @@ namespace AudictiveMusicUWP.Gui.Pages
                     list.Add(s.SongURI);
             }
 
-            MenuFlyout menu = new MenuFlyout()
-            {
-                MenuFlyoutPresenterStyle = Application.Current.Resources["MenuFlyoutModernStyle"] as Style,
-            };
+            MenuFlyout menu = new MenuFlyout();
 
             MenuFlyoutItem item1 = new MenuFlyoutItem()
             {
                 Text = ApplicationInfo.Current.Resources.GetString("Play"),
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item1.Click += (s, a) =>
             {
@@ -463,7 +460,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item2.Click += (s, a) =>
             {
@@ -476,7 +473,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item3.Click += (s, a) =>
             {
@@ -492,7 +489,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
                 Tag = "\uEA52",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item4.Click += (s, a) =>
             {
@@ -507,7 +504,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Text = ApplicationInfo.Current.Resources.GetString("Share"),
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item5.Click += async (s, a) =>
             {

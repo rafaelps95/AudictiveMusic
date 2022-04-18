@@ -27,6 +27,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <!--<Grid x:Name="TintGrid" Grid.ColumnSpan="2" Grid.RowSpan="3" Opacity="0.1" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" />-->
         <Grid x:Name="titleBar" Grid.ColumnSpan="2" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Canvas.ZIndex="2000" Loaded="titleBar_Loaded">
             <Grid x:Name="titleBarDragArea">
                 <Grid.Background>
@@ -59,7 +60,7 @@
                 <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" />
             </Grid.Background>
         </Grid>
-        <local:NavigationBar Grid.Column="0" x:Name="leftNavBar" Tint="#FFDC572E" IsBlurEnabled="False" Canvas.ZIndex="3" Visibility="Collapsed" Orientation="Vertical" ActionRequested="bottomNavBar_ActionRequested" Background="{ThemeResource SystemControlBackgroundAccentBrush}" HorizontalAlignment="Left" Width="65" Grid.Row="1" VerticalAlignment="Stretch" />
+        <local:NavigationBar Grid.Column="0" x:Name="leftNavBar" Tint="#FFDC572E" TintOpacity="0.6" IsBlurEnabled="False" Canvas.ZIndex="3" Visibility="Collapsed" Orientation="Vertical" ActionRequested="bottomNavBar_ActionRequested" HorizontalAlignment="Left" Width="65" Grid.Row="1" VerticalAlignment="Stretch" />
         <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" x:Name="searchContainer" Visibility="Collapsed" Canvas.ZIndex="2">
 
         </Grid>

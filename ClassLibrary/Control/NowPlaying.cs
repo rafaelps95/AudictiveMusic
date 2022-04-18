@@ -1,4 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using BackgroundAudioShared;
+using ClassLibrary.Entities;
+using ClassLibrary.Helpers;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
+using Windows.Data.Xml.Dom;
+using Windows.Storage;
+using Windows.UI.Notifications;
 
 namespace ClassLibrary.Control
 {
@@ -37,5 +45,118 @@ namespace ClassLibrary.Control
         public string Index;
         public double TrackPosition;
         public List<string> Songs = new List<string>();
+
+
+
+
+
+        /// <summary>
+        /// Toast notification helper
+        /// </summary>
+        /// <param name="currentTrackIndex">The index of the now playing track</param>
+        public void ToastManager(int currentTrackIndex)
+        {
+            //deferral = instance.GetDeferral();
+
+            ApplicationSettings.PreviousSong = string.Empty;
+            ApplicationSettings.NextSong = string.Empty;
+
+            ResourceLoader res = new ResourceLoader();
+            try
+            {
+                if (NowPlaying.Current.Songs.Count == 1 || currentTrackIndex == NowPlaying.Current.Songs.Count - 1)
+                {
+                    ToastNotificationHistory n = ToastNotificationManager.History;
+                    n.Clear("App");
+                }
+            }
+            catch
+            {
+
+            }
+
+            try
+            {
+                string prev;
+                string next;
+
+                if (NowPlaying.Current.Songs.Count > 1)
+                {
+                    if (currentTrackIndex > 0)
+                        prev = NowPlaying.Current.Songs[currentTrackIndex - 1];
+                    else
+                        prev = NowPlaying.Current.Songs[NowPlaying.Current.Songs.Count - 1];
+
+                    if (currentTrackIndex < NowPlaying.Current.Songs.Count - 1)
+                        next = NowPlaying.Current.Songs[currentTrackIndex + 1];
+                    else
+                        next = NowPlaying.Current.Songs[0];
+
+                    ApplicationSettings.PreviousSong = prev;
+                    ApplicationSettings.NextSong = next;
+                }
+                else
+                {
+                    return;
+                }
+
+                if (currentTrackIndex < NowPlaying.Current.Songs.Count - 1)
+                {
+
+                    ApplicationSettings.NextSong = NowPlaying.Current.Songs[currentTrackIndex + 1];
+                    Song s = Ctr_Song.Current.GetSong(new Song() { SongURI = ApplicationSettings.NextSong });
+
+                    if (s != null)
+                    {
+                        string nextArtist = s.Artist;
+                        string nextSong = s.Title;
+                        string albumID = s.AlbumID;
+
+
+                        if (ApplicationSettings.NextSongInActionCenterEnabled == false)
+                            return;
+
+
+                        bool suppressPopup = ApplicationSettings.NextSongInActionCenterSuppressPopup;
+
+                        string artistImagePath = "ms-appdata:///local/Artists/artist_" + StringHelper.RemoveSpecialChar(nextArtist) + ".jpg";
+                        string albumImagePath = "ms-appdata:///local/Covers/cover_" + albumID + ".jpg";
+
+                        string toastXML = "";
+                        toastXML += "<toast launch=\"action=none\" duration=\"short\">";
+                        if (suppressPopup == false)
+                            toastXML += "<audio silent=\"true\" />";
+
+                        toastXML += "<visual>";
+                        toastXML += "<binding template=\"ToastGeneric\">";
+                        toastXML += "<text hint-wrap=\"false\">" + res.GetString("WhatsNext") + "</text>";
+                        toastXML += "<text>" + StringHelper.EscapeString(nextSong) + "</text>";
+                        toastXML += "<text>" + StringHelper.EscapeString(nextArtist) + "</text>";
+                        toastXML += "<image placement=\"appLogoOverride\" hint-crop=\"circle\" src=\"" + albumImagePath + "\" />";
+                        //toastXML += "<image placement=\"hero\" src=\"" + artistImagePath + "\" />";
+                        toastXML += "</binding>";
+                        toastXML += "</visual>";
+                        toastXML += "<actions>";
+                        toastXML += "<action content=\"Pular essa música\" arguments=\"removeNextSong\" activationType=\"background\" />";
+                        toastXML += "</actions>";
+                        toastXML += "</toast>";
+
+                        XmlDocument toastXmlDoc = new XmlDocument();
+                        toastXmlDoc.LoadXml(toastXML);
+
+                        ToastNotification toast = new ToastNotification(toastXmlDoc);
+                        toast.Tag = "next";
+                        toast.SuppressPopup = suppressPopup;
+                        ToastNotificationManager.CreateToastNotifier("App").Show(toast);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            //}
+        }
+
     }
 }

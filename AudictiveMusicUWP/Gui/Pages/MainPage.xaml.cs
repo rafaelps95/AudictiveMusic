@@ -28,6 +28,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
@@ -406,9 +407,13 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         public async void UpdateThemeColor(Color newColor)
         {
+            ApplicationAccentColor appAccentColor = Application.Current.Resources["ApplicationAccentColor"] as ApplicationAccentColor;
+            appAccentColor.AccentColor = new SolidColorBrush(newColor);
+
             if (newColor.IsDarkColor())
             {
                 leftNavBar.RequestedTheme = bottomNavBar.RequestedTheme = ElementTheme.Dark;
+                appAccentColor.ForegroundColor = new SolidColorBrush(Colors.White);
 
                 if (ApplicationInfo.Current.IsMobile == false)
                 {
@@ -421,6 +426,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             else
             {
                 leftNavBar.RequestedTheme = bottomNavBar.RequestedTheme = ElementTheme.Light;
+                appAccentColor.ForegroundColor = new SolidColorBrush(Colors.Black);
 
                 if (ApplicationInfo.Current.IsMobile == false)
                 {

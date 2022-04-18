@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Store;
@@ -158,6 +159,32 @@ namespace AudictiveMusicUWP
                 else
                 {
                     rootFrame.Navigate(typeof(MainPage), arguments);
+                }
+
+                var toastTaskRegistered = false;
+                var toastTaskName = "NotificationActionBackgroundTask";
+
+
+                await BackgroundExecutionManager.RequestAccessAsync();
+
+                foreach (var task in BackgroundTaskRegistration.AllTasks)
+                {
+                    if (task.Value.Name == toastTaskName)
+                    {
+                        toastTaskRegistered = true;
+                        break;
+                    }
+                }
+
+                if (!toastTaskRegistered)
+                {
+                    var builder = new BackgroundTaskBuilder();
+
+                    builder.Name = toastTaskName;
+                    builder.TaskEntryPoint = "ToastBackgroundTask.NotificationActionBackgroundTask";
+                    builder.SetTrigger(new ToastNotificationActionTrigger());
+
+                    BackgroundTaskRegistration task = builder.Register();
                 }
             }
 

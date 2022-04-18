@@ -422,13 +422,13 @@
     <Grid>
         <Grid x:Name="backgroundContainer" Visibility="Collapsed" SizeChanged="backgroundContainer_SizeChanged" Loaded="backgroundContainer_Loaded">
             <Grid.Background>
-                <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" />
+                <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" Opacity="1" />
             </Grid.Background>
             <Grid x:Name="blurGrid" Opacity="0.4" />
         </Grid>
         <Grid x:Name="buttonsContainer">
             <Grid.Background>
-                <SolidColorBrush x:Name="buttonsContainerColor" Color="{Binding ElementName=root, Path=Tint}" Opacity="0.6" />
+                <SolidColorBrush x:Name="buttonsContainerColor" Color="{Binding ElementName=root, Path=Tint}" Opacity="{Binding ElementName=root, Path=TintOpacity}" />
             </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

@@ -57,6 +57,19 @@ namespace AudictiveMusicUWP.Gui.UC
         public static readonly DependencyProperty TintProperty =
             DependencyProperty.Register("Tint", typeof(Color), typeof(NavigationBar), new PropertyMetadata(Colors.Transparent));
 
+        public double TintOpacity
+        {
+            get { return ((double)GetValue(TintOpacityProperty)); }
+            set
+            {
+                SetValue(TintOpacityProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty TintOpacityProperty =
+            DependencyProperty.Register("TintOpacity", typeof(double), typeof(NavigationBar), new PropertyMetadata(0.6));
+
+
         public bool IsBlurEnabled
         {
             get { return ((bool)GetValue(IsBlurEnabledProperty)); }
@@ -155,12 +168,9 @@ namespace AudictiveMusicUWP.Gui.UC
                 backgroundSprite.Brush = _compositor.CreateHostBackdropBrush();
 
                 ElementCompositionPreview.SetElementChildVisual(blurGrid, backgroundSprite);
-
-                buttonsContainerColor.Opacity = 0.6;
             }
             else
             {
-                buttonsContainerColor.Opacity = 0.4;
             }
         }
 

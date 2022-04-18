@@ -1,12 +1,14 @@
 ﻿using ClassLibrary.Helpers;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace ClassLibrary.Entities
 {
-    public class Song
+    public class Song : INotifyPropertyChanged
     {
 
         public string Name
@@ -99,6 +101,21 @@ namespace ClassLibrary.Entities
             set; 
         }
 
+        private bool isSelected = false;
+
+        public bool IsPlaying
+        {
+            get
+            {
+                return isSelected;
+            }
+            set
+            {
+                isSelected = value;
+                OnPropertyChanged();
+            }
+        }
+
         public DateTime DateAdded 
         { 
             get; 
@@ -126,19 +143,11 @@ namespace ClassLibrary.Entities
             SongURI = string.Empty;
         }
 
-        //public void Set(string title, string artist, string album, string albumID,
-        //    string id, string year, string trackNumber, string genre, string path, string hexColor)
-        //{
-        //    Title = title;
-        //    Artist = artist;
-        //    Album = album;
-        //    AlbumID = albumID;
-        //    ID = id;
-        //    Year = year;
-        //    Track = trackNumber;
-        //    Genre = genre;
-        //    SongURI = path;
-        //    HexColor = hexColor;
-        //}
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

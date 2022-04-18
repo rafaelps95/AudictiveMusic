@@ -117,18 +117,15 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Grid Grid.Row="1" x:Name="selectionGrid" VerticalAlignment="Bottom" RequestedTheme="Dark" HorizontalAlignment="Right">
-                <Border x:Name="selectionBlur" SizeChanged="selectionBlur_SizeChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="30" />
-                <Border x:Name="selection" CornerRadius="30" Tapped="selection_Tapped">
-                    <Border.Background>
-                        <SolidColorBrush x:Name="selectionLabelBackground" Opacity="0.8" Color="{ThemeResource SystemChromeGrayColor}" />
-                    </Border.Background>
-                    <TextBlock Text="" x:Name="selectedItemsLabel" Visibility="Collapsed" VerticalAlignment="Center" Margin="20,0,80,0" FontSize="16" IsTextScaleFactorEnabled="False" FontWeight="Bold" />
-                </Border>
-                <Button Content="" x:Name="selectButton" HorizontalAlignment="Right" Click="selectButton_Click" FontSize="17" Style="{StaticResource CircleButtonStyle}" Width="60" Height="60">
-                    <Button.Background>
-                        <SolidColorBrush Color="{ThemeResource SystemChromeGrayColor}" />
-                    </Button.Background>
+            <Grid Grid.Row="1" x:Name="selectionGrid" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20,20,20,130">
+                <Grid Tapped="selection_Tapped">
+                    <Border x:Name="selection" CornerRadius="30" Background="{Binding AccentColorMediumBrush, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}">
+
+                    </Border>
+                    <TextBlock Text="" x:Name="selectedItemsLabel" Foreground="{Binding ForegroundColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" Visibility="Collapsed" VerticalAlignment="Center" Margin="20,0,80,0" FontSize="16" IsTextScaleFactorEnabled="False" FontWeight="Bold" />
+                </Grid>
+                <Button Content="" x:Name="selectButton" Foreground="{Binding ForegroundColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" HorizontalAlignment="Right" Click="selectButton_Click" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" FontSize="17" Style="{StaticResource CircleButtonStyle}" Width="60" Height="60">
+
                 </Button>
             </Grid>
 

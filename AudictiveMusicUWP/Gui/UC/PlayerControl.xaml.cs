@@ -659,11 +659,8 @@ namespace AudictiveMusicUWP.Gui.UC
                 aux = Ctr_Song.Current.GetSong(new Song() { SongURI = path });
                 if (aux != null)
                 {
+                    aux.IsPlaying = aux.SongURI == ApplicationSettings.CurrentTrackPath;
                     await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => playlist.Add(aux));
-                }
-                else
-                {
-
                 }
             }
 

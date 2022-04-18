@@ -40,64 +40,12 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private StorageFolder CurrentFolder { get; set; }
 
-        private CompositionEffectBrush _brush;
-        private Compositor _compositor;
-        private SpriteVisual selectionBlurSprite;
-        private SpriteVisual _hostSprite;
-        private SpriteVisual _hostSpritemenu;
-
         public FolderPage()
         {
             this.SizeChanged += FolderPage_SizeChanged;
-            this.Loaded += FolderPage_Loaded;
             this.SelectedItemsCount = 0;
 
-            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             this.InitializeComponent();
-        }
-
-        private void FolderPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (BuildInfo.BeforeAprilUpdate)
-                return;
-
-            selectionLabelBackground.Opacity = 0.5;
-
-            BlendEffectMode blendmode = BlendEffectMode.Overlay;
-
-            // Create a chained effect graph using a BlendEffect, blending color and blur
-            var graphicsEffect = new BlendEffect
-            {
-                Mode = blendmode,
-                Background = new ColorSourceEffect()
-                {
-                    Name = "Tint",
-                    Color = Colors.Transparent,
-                },
-
-                Foreground = new GaussianBlurEffect()
-                {
-                    Name = "Blur",
-                    Source = new CompositionEffectSourceParameter("Backdrop"),
-                    BlurAmount = 18.0f,
-                    BorderMode = EffectBorderMode.Hard,
-                }
-            };
-
-            var blurEffectFactory = _compositor.CreateEffectFactory(graphicsEffect,
-                new[] { "Blur.BlurAmount", "Tint.Color" });
-
-            // Create EffectBrush, BackdropBrush and SpriteVisual
-            _brush = blurEffectFactory.CreateBrush();
-
-            var destinationBrush = _compositor.CreateBackdropBrush();
-            _brush.SetSourceParameter("Backdrop", destinationBrush);
-
-            selectionBlurSprite = _compositor.CreateSpriteVisual();
-            selectionBlurSprite.Size = new Vector2((float)0, (float)0);
-            selectionBlurSprite.Brush = _brush;
-
-            ElementCompositionPreview.SetElementChildVisual(selectionBlur, selectionBlurSprite);
         }
 
         private void FolderPage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -425,16 +373,13 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (list.Count == 0)
                 return;
 
-            MenuFlyout menu = new MenuFlyout()
-            {
-                MenuFlyoutPresenterStyle = Application.Current.Resources["MenuFlyoutModernStyle"] as Style,
-            };
+            MenuFlyout menu = new MenuFlyout();
 
             MenuFlyoutItem item1 = new MenuFlyoutItem()
             {
                 Text = ApplicationInfo.Current.Resources.GetString("Play"),
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item1.Click += (s, a) =>
             {
@@ -449,7 +394,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item2.Click += (s, a) =>
             {
@@ -462,7 +407,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item3.Click += (s, a) =>
             {
@@ -478,7 +423,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
                 Tag = "\uEA52",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item4.Click += (s, a) =>
             {
@@ -493,7 +438,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Text = ApplicationInfo.Current.Resources.GetString("Share"),
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
             item5.Click += async (s, a) =>
             {
@@ -507,14 +452,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             menu.Items.Add(item5);
 
             menu.ShowAt(sender as FrameworkElement);
-        }
-
-        private void selectionBlur_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (selectionBlurSprite != null)
-            {
-                selectionBlurSprite.Size = e.NewSize.ToVector2();
-            }
         }
 
         private void selection_Tapped(object sender, TappedRoutedEventArgs e)

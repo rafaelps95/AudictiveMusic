@@ -523,37 +523,34 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void artistImage_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            MenuFlyout menu = new MenuFlyout()
-            {
-                MenuFlyoutPresenterStyle = Application.Current.Resources["MenuFlyoutModernStyle"] as Style,
-            };
+            MenuFlyout menu = new MenuFlyout();
 
             MenuFlyoutItem item1 = new MenuFlyoutItem()
             {
                 Text = "Ampliar",
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
 
             MenuFlyoutItem item2 = new MenuFlyoutItem()
             {
                 Text = "Salvar imagem",
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
 
             MenuFlyoutItem item3 = new MenuFlyoutItem()
             {
                 Text = "Compartilhar imagem",
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
 
             MenuFlyoutItem item4 = new MenuFlyoutItem()
             {
                 Text = "Buscar nova imagem",
                 Tag = "",
-                Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                
             };
 
             item1.Click += (s, a) =>

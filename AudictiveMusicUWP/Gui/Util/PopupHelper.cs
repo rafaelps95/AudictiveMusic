@@ -26,11 +26,8 @@ namespace AudictiveMusicUWP.Gui.Util
         {
             page = fwe;
 
-            MenuFlyout menu = new MenuFlyout()
-            {
-                MenuFlyoutPresenterStyle = Application.Current.Resources["MenuFlyoutModernStyle"] as Style,
-            };
-
+            MenuFlyout menu = new MenuFlyout();
+            menu.Placement = Windows.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Right;
             // SE O MENU FOR DO TIPO SONG
             if (type == MediaItemType.Song)
             {
@@ -40,7 +37,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Play"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item1.Click += (s, a) =>
                 {
@@ -53,7 +49,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item2.Click += (s, a) =>
                 {
@@ -66,7 +61,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item3.Click += (s, a) =>
                 {
@@ -86,7 +80,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
                     Tag = "\uEA52",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item4.Click += (s, a) =>
                 {
@@ -101,7 +94,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Share"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item5.Click += async (s, a) =>
                 {
@@ -114,10 +106,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                 menu.Items.Add(item5);
 
-                MenuFlyoutItem item6 = new MenuFlyoutItem()
-                {
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
-                };
+                MenuFlyoutItem item6 = new MenuFlyoutItem();
 
                 if (song.IsFavorite)
                 {
@@ -150,7 +139,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("GoToArtistString"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item7.Click += (s, a) =>
                 {
@@ -166,7 +154,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("GoToAlbumString"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item8.Click += (s, a) =>
                 {
@@ -184,19 +171,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
 
                 menu.Items.Add(item8);
-
-                //MenuFlyoutItem item6 = new MenuFlyoutItem()
-                //{
-                //    Text = "Editar",
-                //    Tag = "",
-                //    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
-                //};
-                //item6.Click += (s, a) =>
-                //{
-                //    PageHelper.MainPage.PageFrame.Navigate(typeof(TagEditor), song);
-                //};
-
-                //menu.Items.Add(item6);
             }
             // SE O MENU FOR DO TIPO ALBUM
             else if (type == MediaItemType.Album)
@@ -207,7 +181,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Play"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item1.Click += (s, a) =>
                 {
@@ -220,7 +193,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item2.Click += (s, a) =>
                 {
@@ -233,7 +205,6 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
                 };
                 item3.Click += (s, a) =>
                 {
@@ -249,7 +220,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
                     Tag = "\uEA52",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item4.Click += (s, a) =>
                 {
@@ -264,7 +235,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Share"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item5.Click += async (s, a) =>
                 {
@@ -281,7 +252,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("GoToArtistString"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item6.Click += (s, a) =>
                 {
@@ -302,7 +273,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Play"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item1.Click += (s, a) =>
                 {
@@ -317,7 +288,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item2.Click += (s, a) =>
                 {
@@ -330,7 +301,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item3.Click += (s, a) =>
                 {
@@ -346,7 +317,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
                     Tag = "\uEA52",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item4.Click += (s, a) =>
                 {
@@ -361,7 +332,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Share"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item5.Click += async (s, a) =>
                 {
@@ -384,7 +355,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Play"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item1.Click += (s, a) =>
                 {
@@ -399,7 +370,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item2.Click += (s, a) =>
                 {
@@ -412,7 +383,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item3.Click += (s, a) =>
                 {
@@ -428,7 +399,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
                     Tag = "\uEA52",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item4.Click += (s, a) =>
                 {
@@ -443,7 +414,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Share"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item5.Click += async (s, a) =>
                 {
@@ -465,7 +436,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Play"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item1.Click += (s, a) =>
                 {
@@ -480,7 +451,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item2.Click += (s, a) =>
                 {
@@ -494,7 +465,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
                     Tag = "\uEA52",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item3.Click += (s, a) =>
                 {
@@ -509,7 +480,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Share"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item4.Click += async (s, a) =>
                 {
@@ -528,7 +499,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("Delete"),
                     Tag = "",
-                    Style = Application.Current.Resources["ModernMenuFlyoutItem"] as Style,
+                    
                 };
                 item5.Click += async (s, a) =>
                 {
@@ -577,6 +548,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
             try
             {
+                menu.ShowAt(sender as FrameworkElement);
                 menu.ShowAt(sender as FrameworkElement, point);
             }
             catch

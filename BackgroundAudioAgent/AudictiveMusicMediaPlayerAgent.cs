@@ -28,7 +28,6 @@ namespace BackgroundAudioAgent
 {
     public sealed class AudictiveMusicMediaPlayerAgent : IBackgroundTask
     {
-        private string NextSong;
         private BackgroundTaskDeferral deferral;
         private SystemMediaTransportControls smtc;
         private IBackgroundTaskInstance instance;
@@ -42,7 +41,6 @@ namespace BackgroundAudioAgent
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             instance = taskInstance;
-            NextSong = string.Empty;
             IsLoadingPlaylist = false;
             smtc = BackgroundMediaPlayer.Current.SystemMediaTransportControls;
             smtc.ButtonPressed += smtc_ButtonPressed;
@@ -163,7 +161,7 @@ namespace BackgroundAudioAgent
                 ToastNotification toast = new ToastNotification(toastXmlDoc)
                 {
                     Tag = "tapToResume",
-                    SuppressPopup = false
+                    SuppressPopup = true
                 };
                 ToastNotificationManager.CreateToastNotifier("App").Show(toast);
             }
@@ -457,7 +455,7 @@ namespace BackgroundAudioAgent
                 // Se já havia uma reprodução em andamento, apenas atualiza a notificação na central de ações
                 else
                 {
-                    await ToastManager(ApplicationSettings.CurrentTrackIndex);
+                    NowPlaying.Current.ToastManager(ApplicationSettings.CurrentTrackIndex);
                 }
 
                 if (ApplicationSettings.AppState == AppState.Active)
@@ -481,26 +479,6 @@ namespace BackgroundAudioAgent
 
                     case BackgroundAudioShared.Messages.Action.AskPlaylist:
                         Debug.WriteLine("ACTION MESSAGE... ASK PLAYLIST...\nAppState: " + ApplicationSettings.AppState.ToString());
-
-                        //string toastXML = "<toast>" +
-                        //             "<visual>" +
-                        //               "<binding template=\"ToastGeneric\">" +
-                        //                 "<text>App State</text>" +
-                        //                 "<text>" +
-                        //                   State.ToString() +
-                        //                 "</text>" +
-                        //               "</binding>" +
-                        //             "</visual>" +
-                        //           "</toast>";
-
-                        //// load the template as XML document
-                        //var xmlDocument = new XmlDocument();
-                        //xmlDocument.LoadXml(toastXML);
-
-                        //// create the toast notification and show to user
-                        //var toastNotification = new ToastNotification(xmlDocument);
-                        //var notification = ToastNotificationManager.CreateToastNotifier("App");
-                        //notification.Show(toastNotification);
 
                         if (ApplicationSettings.AppState == AppState.Active
                             )
@@ -547,7 +525,7 @@ namespace BackgroundAudioAgent
                             NowPlaying.Current.Songs.Add(s);
                         }
 
-                        await ToastManager(0);
+                        NowPlaying.Current.ToastManager(0);
 
                         if (ApplicationSettings.AppState == AppState.Active)
                         {
@@ -659,7 +637,7 @@ namespace BackgroundAudioAgent
                         break;
                 }
 
-                await ToastManager(ApplicationSettings.CurrentTrackIndex);
+                NowPlaying.Current.ToastManager(ApplicationSettings.CurrentTrackIndex);
 
                 if (ApplicationSettings.AppState == AppState.Active)
                 {
@@ -1021,7 +999,7 @@ namespace BackgroundAudioAgent
 
                 UpdateLockScreen(song.AlbumID, artistFileName);
 
-                await ToastManager(ApplicationSettings.CurrentTrackIndex);
+                NowPlaying.Current.ToastManager(ApplicationSettings.CurrentTrackIndex);
             }
             catch (Exception ex)
             {
@@ -1029,117 +1007,6 @@ namespace BackgroundAudioAgent
             }
         }
 
-        /// <summary>
-        /// Toast notification helper
-        /// </summary>
-        /// <param name="currentTrackIndex">The index of the now playing track</param>
-        private async Task ToastManager(int currentTrackIndex)
-        {
-            //deferral = instance.GetDeferral();
-
-            ApplicationData.Current.LocalSettings.Values["PreviousSong"] = string.Empty;
-            ApplicationData.Current.LocalSettings.Values["NextSong"] = string.Empty;
-
-            ResourceLoader res = new ResourceLoader();
-            try
-            {
-                if (NowPlaying.Current.Songs.Count == 1 || currentTrackIndex == NowPlaying.Current.Songs.Count - 1)
-                {
-                    ToastNotificationHistory n = ToastNotificationManager.History;
-                    n.Clear("App");
-
-                    NextSong = "";
-                }
-            }
-            catch
-            {
-
-            }
-
-            //if (HasInternetAccess)
-            //{
-            try
-            {
-                string prev;
-                string next;
-
-                if (NowPlaying.Current.Songs.Count > 1)
-                {
-                    if (currentTrackIndex > 0)
-                        prev = NowPlaying.Current.Songs[currentTrackIndex - 1];
-                    else
-                        prev = NowPlaying.Current.Songs[NowPlaying.Current.Songs.Count - 1];
-
-                    if (currentTrackIndex < NowPlaying.Current.Songs.Count - 1)
-                        next = NowPlaying.Current.Songs[currentTrackIndex + 1];
-                    else
-                        next = NowPlaying.Current.Songs[0];
-
-                    ApplicationData.Current.LocalSettings.Values["PreviousSong"] = prev;
-                    ApplicationData.Current.LocalSettings.Values["NextSong"] = next;
-                }
-                else
-                {
-                    return;
-                }
-
-                if (currentTrackIndex < NowPlaying.Current.Songs.Count - 1)
-                {
-
-                    if (NextSong != NowPlaying.Current.Songs[currentTrackIndex + 1])
-                    {
-                        NextSong = NowPlaying.Current.Songs[currentTrackIndex + 1];
-                        Song s = Ctr_Song.Current.GetSong(new Song() { SongURI = NextSong });
-
-                        if (s != null)
-                        {
-                            string nextArtist = s.Artist;
-                            string nextSong = s.Title;
-                            string albumID = s.AlbumID;
-
-
-                            if (ApplicationSettings.NextSongInActionCenterEnabled == false)
-                                return;
-
-
-                            bool suppressPopup = ApplicationSettings.NextSongInActionCenterSuppressPopup;
-
-                            string artistImagePath = "ms-appdata:///local/Artists/artist_" + StringHelper.RemoveSpecialChar(nextArtist) + ".jpg";
-                            string albumImagePath = "ms-appdata:///local/Covers/cover_" + albumID + ".jpg";
-
-                            string toastXML = "";
-                            toastXML += "<toast launch=\"action=none\" duration=\"short\">";
-                            if (suppressPopup == false)
-                                toastXML += "<audio silent=\"true\" />";
-
-                            toastXML += "<visual>";
-                            toastXML += "<binding template=\"ToastGeneric\">";
-                            toastXML += "<text hint-wrap=\"false\">" + res.GetString("WhatsNext") + "</text>";
-                            toastXML += "<text>" + StringHelper.EscapeString(nextSong) + "</text>";
-                            toastXML += "<text>" + StringHelper.EscapeString(nextArtist) + "</text>";
-                            toastXML += "<image placement=\"appLogoOverride\" hint-crop=\"circle\" src=\"" + albumImagePath + "\" />";
-                            //toastXML += "<image placement=\"hero\" src=\"" + artistImagePath + "\" />";
-                            toastXML += "</binding>";
-                            toastXML += "</visual>";
-                            toastXML += "</toast>";
-
-                            XmlDocument toastXmlDoc = new XmlDocument();
-                            toastXmlDoc.LoadXml(toastXML);
-
-                            ToastNotification toast = new ToastNotification(toastXmlDoc);
-                            toast.Tag = "next";
-                            toast.SuppressPopup = suppressPopup;
-                            ToastNotificationManager.CreateToastNotifier("App").Show(toast);
-                        }
-                    }
-                }
-            }
-            catch
-            {
-
-            }
-            //}
-        }
 
 
 

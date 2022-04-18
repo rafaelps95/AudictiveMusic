@@ -477,6 +477,39 @@ namespace ClassLibrary.Helpers
             }
         }
 
+        public static string PreviousSong
+        {
+            get
+            {
+                object value = ReadSettingsValue("PreviousSong");
+                if (value == null)
+                    return "";
+                else
+                    return (string)value;
+            }
+            set
+            {
+                SaveSettingsValue("PreviousSong", value);
+            }
+        }
+
+        public static string NextSong
+        {
+            get
+            {
+                object value = ReadSettingsValue("NextSong");
+                if (value == null)
+                    return "";
+                else
+                    return (string)value;
+            }
+            set
+            {
+                SaveSettingsValue("NextSong", value);
+            }
+        }
+
+
         public static bool LockscreenEnabled
         {
             get
