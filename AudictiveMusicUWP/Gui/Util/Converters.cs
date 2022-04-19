@@ -3,6 +3,7 @@ using Windows.Globalization.NumberFormatting;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
 namespace AudictiveMusicUWP.Gui.Util
 {
@@ -145,6 +146,21 @@ namespace AudictiveMusicUWP.Gui.Util
             return null;
         }
     }
+
+    public class ForegroundByColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            Color color = (Color)value;
+            return color.IsDarkColor() ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
+    }
+
 
 
     public class FavoriteHeartConverter : IValueConverter

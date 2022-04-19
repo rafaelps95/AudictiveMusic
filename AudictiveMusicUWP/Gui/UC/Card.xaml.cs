@@ -89,7 +89,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void dotsButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            this.ShowPopupMenu(this.DataContext, sender, e.GetPosition((FrameworkElement)sender), this.ContextMode);
+            this.ShowPopupMenu(this.DataContext, sender, this.ContextMode, true, e.GetPosition((FrameworkElement)sender));
         }
     }
 }

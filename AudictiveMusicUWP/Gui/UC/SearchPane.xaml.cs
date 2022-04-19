@@ -171,7 +171,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void CreateAlbumPopup(Album album, object sender, Point point)
         {
-            this.ShowPopupMenu(album, sender, point, Enumerators.MediaItemType.Album);
+            this.ShowPopupMenu(album, sender, Enumerators.MediaItemType.Album, true, point);
         }
 
         private void playAlbumButton_Click(object sender, RoutedEventArgs e)
@@ -206,7 +206,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, point, Enumerators.MediaItemType.Song);
+            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
         }
 
         private void Artist_ImageOpened(object sender, RoutedEventArgs e)
@@ -347,7 +347,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void CreateArtistPopup(Artist artist, object sender, Point point)
         {
-            this.ShowPopupMenu(artist, sender, point, Enumerators.MediaItemType.Artist);
+            this.ShowPopupMenu(artist, sender, Enumerators.MediaItemType.Artist, true, point);
         }
 
         private void artistsList_ItemClick(object sender, ItemClickEventArgs e)

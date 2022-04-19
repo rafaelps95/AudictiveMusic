@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Border CornerRadius="8" RequestedTheme="Dark">
+    <Border CornerRadius="8">
         <Border.Background>
             <SolidColorBrush Color="{ThemeResource SystemChromeMediumColor}" />
         </Border.Background>
@@ -38,10 +38,10 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="" x:Name="textRow1" FontSize="16" FontWeight="Bold" TextTrimming="CharacterEllipsis" />
-                <TextBlock Text="" x:Name="textRow2" Grid.Row="1" FontSize="10" FontStyle="Italic" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="" x:Name="textRow1" Foreground="White" FontSize="16" FontWeight="Bold" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="" x:Name="textRow2" Foreground="White" Grid.Row="1" FontSize="10" FontStyle="Italic" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
 
-                <Button Style="{StaticResource CircleButtonStyle}" x:Name="dotsButton" Tapped="dotsButton_Tapped" FontSize="10" Height="30" Width="30" Content="" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0">
+                <Button Style="{StaticResource CircleButtonStyle}" Foreground="White" x:Name="dotsButton" Tapped="dotsButton_Tapped" FontSize="10" Height="30" Width="30" Content="" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0">
 
                 </Button>
 
@@ -55,7 +55,7 @@
 
                 </Border>
 
-                <Button Style="{StaticResource CircleButtonStyle}" x:Name="playButton" FontSize="20" Click="playButton_Click" Height="50" Width="50" Content="" Grid.Column="1" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0">
+                <Button Style="{StaticResource CircleButtonStyle}" Foreground="White" x:Name="playButton" FontSize="20" Click="playButton_Click" Height="50" Width="50" Content="" Grid.Column="1" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0">
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <LinearGradientBrush.RelativeTransform>

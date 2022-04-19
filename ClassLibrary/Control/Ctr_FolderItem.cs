@@ -11,13 +11,13 @@ namespace ClassLibrary.Control
 {
     public static class Ctr_FolderItem
     {
-        public static async Task<List<string>> GetSongs(FolderItem folder)
+        public static async Task<List<string>> GetSongs(FolderItem folderItem)
         {
             List<string> list = new List<string>();
-            StorageFolder subFolder = await StorageFolder.GetFolderFromPathAsync(folder.Path);
-            var subFolderItems = await StorageHelper.ReadFolder(subFolder);
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(folderItem.Path);
+            var files = await StorageHelper.ScanFolder(folder);
 
-            foreach (StorageFile f in subFolderItems)
+            foreach (StorageFile f in files)
             {
                 if (StorageHelper.IsMusicFile(f.Path))
                     list.Add(f.Path);

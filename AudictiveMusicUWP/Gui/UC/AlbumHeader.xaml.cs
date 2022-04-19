@@ -187,7 +187,7 @@ namespace AudictiveMusicUWP.Gui.UC
         private void moreButton_Click(object sender, RoutedEventArgs e)
         {
             if (PageHelper.MainPage != null)
-                PageHelper.MainPage.ShowPopupMenu(ALB, sender, new Point(0, 0), Enumerators.MediaItemType.Album);
+                PageHelper.MainPage.ShowPopupMenu(ALB, sender, Enumerators.MediaItemType.Album, true, new Point(0, 0));
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)

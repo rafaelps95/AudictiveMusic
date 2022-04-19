@@ -186,12 +186,12 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, point, Enumerators.MediaItemType.Song);
+            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
         }
 
         private void moreOptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowPopupMenu(Album, sender, new Point(0, 0), Enumerators.MediaItemType.Album);
+            this.ShowPopupMenu(Album, sender, Enumerators.MediaItemType.Album, true, new Point(0, 0));
         }
 
         private async void SongsList_ItemClick(object sender, ItemClickEventArgs e)

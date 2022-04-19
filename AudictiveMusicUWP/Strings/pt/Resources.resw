@@ -121,7 +121,7 @@
     <value>Sobre</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Adicionar à reprodução</value>
+    <value>Adicionar à fila</value>
   </data>
   <data name="Albums.Text" xml:space="preserve">
     <value>Álbuns</value>
@@ -280,7 +280,7 @@
     <value>Adicionar aos favoritos</value>
   </data>
   <data name="AddToNowPlaying.Text" xml:space="preserve">
-    <value>Adicionar à reprodução</value>
+    <value>Adicionar à fila</value>
   </data>
   <data name="AddToPlaylistMenu.Text" xml:space="preserve">
     <value>Adicionar à lista de reprodução...</value>

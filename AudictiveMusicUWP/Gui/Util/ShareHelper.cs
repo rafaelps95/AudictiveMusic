@@ -33,31 +33,15 @@ namespace AudictiveMusicUWP.Gui.Util
         {
             if (type == MediaItemType.Song)
             {
-                if (mediaItem.GetType() == typeof(Song))
+                Song song = mediaItem as Song;
+                StorageFile file = await StorageFile.GetFileFromPathAsync(song.SongURI);
+                if (file == null)
                 {
-                    Song song = mediaItem as Song;
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(song.SongURI);
-                    if (file == null)
-                    {
-                        filesToShare = null;
-                        return false;
-                    }
-
-                    filesToShare.Add(file);
+                    filesToShare = null;
+                    return false;
                 }
-                else
-                {
-                    // É LISTA DE STRING!!
-                    List<string> list = mediaItem as List<string>;
 
-                    foreach (string path in list)
-                    {
-                        StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-
-                        if (file != null)
-                            filesToShare.Add(file);
-                    }
-                }
+                filesToShare.Add(file);
             }
             else if (type == MediaItemType.Album)
             {
@@ -93,14 +77,30 @@ namespace AudictiveMusicUWP.Gui.Util
                 FolderItem item = mediaItem as FolderItem;
                 if (item.IsFolder)
                 {
-                    StorageFolder subFolder = await StorageFolder.GetFolderFromPathAsync(item.Path);
-                    var subFolderItems = await StorageHelper.ReadFolder(subFolder);
+                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
+                    var files = await StorageHelper.ScanFolder(folder);
 
-                    foreach (StorageFile f in subFolderItems)
+                    filesToShare.AddRange(files);
+                }
+                else
+                {
+                    if (StorageHelper.IsMusicFile(item.Path))
                     {
-                        if (StorageHelper.IsMusicFile(f.Path))
-                            filesToShare.Add(f);
+                        StorageFile file = await StorageFile.GetFileFromPathAsync(item.Path);
+                        filesToShare.Add(file);
                     }
+                }
+            }
+            else if (type == MediaItemType.ListOfStrings)
+            {
+                List<string> list = mediaItem as List<string>;
+
+                foreach (string path in list)
+                {
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+
+                    if (file != null)
+                        filesToShare.Add(file);
                 }
             }
             else if (type == MediaItemType.Playlist)
@@ -117,6 +117,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 }
             }
 
+
             if (filesToShare.Count == 0)
                 return false;
 
@@ -132,15 +133,8 @@ namespace AudictiveMusicUWP.Gui.Util
 
             if (MediaType == MediaItemType.Song)
             {
-                if (MediaItem.GetType() == typeof(Song))
-                {
                     Song song = MediaItem as Song;
                     request.Data.Properties.Title = song.Title + " " + ApplicationInfo.Current.Resources.GetString("By") + song.Artist;
-                }
-                else
-                {
-                    request.Data.Properties.Title = (MediaItem as List<string>).Count + " músicas";
-                }
                 //request.Data.Properties.Description = "Sharing a music file";
             }
             else if (MediaType == MediaItemType.Album)
@@ -157,6 +151,10 @@ namespace AudictiveMusicUWP.Gui.Util
             {
                 Playlist playlist = MediaItem as Playlist;
                 request.Data.Properties.Title = playlist.Name;
+            }
+            else if (MediaType == MediaItemType.ListOfStrings)
+            {
+                request.Data.Properties.Title = (MediaItem as List<string>).Count + ApplicationInfo.Current.Resources.GetString("SongPlural").ToLower();
             }
 
             request.Data.SetStorageItems(filesToShare);

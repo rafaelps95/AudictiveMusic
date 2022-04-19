@@ -749,7 +749,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, point, Enumerators.MediaItemType.Song);
+            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
         }
 
         //private void showMenu_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)

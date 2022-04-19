@@ -14,7 +14,8 @@ namespace ClassLibrary.Helpers
             Artist,
             Album,
             Playlist,
-            Folder
+            Folder,
+            ListOfStrings
         }
 
         public enum PageContextType

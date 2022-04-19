@@ -22,90 +22,95 @@ namespace AudictiveMusicUWP.Gui.Util
         private static ResourceLoader res = new ResourceLoader();
         private static object page;
 
-        public static async void ShowPopupMenu(this FrameworkElement fwe, object mediaItem, object sender, Point point, MediaItemType type)
+        public static void ShowPopupMenu(this FrameworkElement fwe, object mediaItem, object sender, MediaItemType mediaItemType, bool showAtPoint = false, Point point = default(Point))
         {
             page = fwe;
 
             MenuFlyout menu = new MenuFlyout();
             menu.Placement = Windows.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Right;
-            // SE O MENU FOR DO TIPO SONG
-            if (type == MediaItemType.Song)
+
+            MenuFlyoutItem item1 = new MenuFlyoutItem()
             {
-                Song song = Ctr_Song.Current.GetSong(mediaItem as Song);
+                Text = ApplicationInfo.Current.Resources.GetString("Play"),
+                Tag = "",
+            };
+            item1.Click += (s, a) =>
+            {
+                PlayerController.Play(mediaItem, mediaItemType);
+            };
 
-                MenuFlyoutItem item1 = new MenuFlyoutItem()
+            menu.Items.Add(item1);
+
+            MenuFlyoutItem item2 = new MenuFlyoutItem()
+            {
+                Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
+                Tag = "\uEA52",
+            };
+            item2.Click += (s, a) =>
+            {
+                PlayerController.AddToQueue(mediaItem, mediaItemType, true);
+            };
+
+            menu.Items.Add(item2);
+
+
+            menu.Items.Add(new MenuFlyoutSeparator());
+
+
+            MenuFlyoutItem item3 = new MenuFlyoutItem()
+            {
+                Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
+                Tag = "",
+            };
+            item3.Click += (s, a) =>
+            {
+                PlayerController.AddToQueue(mediaItem, mediaItemType);
+            };
+
+            menu.Items.Add(item3);
+
+            MenuFlyoutItem item4 = new MenuFlyoutItem()
+            {
+                Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
+                Tag = "",
+            };
+            item4.Click += async (s, a) =>
+            {
+                List<string> list = await PlayerController.FetchSongs(mediaItem, mediaItemType);
+
+                if (PageHelper.MainPage != null)
                 {
-                    Text = ApplicationInfo.Current.Resources.GetString("Play"),
-                    Tag = "",
-                };
-                item1.Click += (s, a) =>
+                    PageHelper.MainPage.CreateAddToPlaylistPopup(list);
+                }
+            };
+
+            menu.Items.Add(item4);
+
+
+            menu.Items.Add(new MenuFlyoutSeparator());
+
+
+            MenuFlyoutItem item5 = new MenuFlyoutItem()
+            {
+                Text = ApplicationInfo.Current.Resources.GetString("Share"),
+                Tag = "",
+            };
+            item5.Click += async (s, a) =>
+            {
+                if (await page.ShareMediaItem(mediaItem, mediaItemType) == false)
                 {
-                    PlayerController.Play(song);
-                };
+                    MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
+                    await md.ShowAsync();
+                }
+            };
 
-                menu.Items.Add(item1);
+            menu.Items.Add(item5);
 
-                MenuFlyoutItem item2 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
-                    Tag = "",
-                };
-                item2.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(song);
-                };
-
-                menu.Items.Add(item2);
-
-                MenuFlyoutItem item3 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
-                    Tag = "",
-                };
-                item3.Click += (s, a) =>
-                {
-                    List<string> songs = new List<string>();
-                    songs.Add(song.SongURI);
-
-                    if (PageHelper.MainPage != null)
-                    {
-                        PageHelper.MainPage.CreateAddToPlaylistPopup(songs);
-                    }
-                };
-
-                menu.Items.Add(item3);
-
-
-                MenuFlyoutItem item4 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
-                    Tag = "\uEA52",
-                };
-                item4.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(song, true);
-                };
-
-                menu.Items.Add(item4);
-
+            if (mediaItemType == MediaItemType.Song)
+            {
                 menu.Items.Add(new MenuFlyoutSeparator());
 
-                MenuFlyoutItem item5 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Share"),
-                    Tag = "",
-                };
-                item5.Click += async (s, a) =>
-                {
-                    if (await page.ShareMediaItem(song, type) == false)
-                    {
-                        MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
-                        await md.ShowAsync();
-                    }
-                };
-
-                menu.Items.Add(item5);
-
+                Song song = mediaItem as Song;
                 MenuFlyoutItem item6 = new MenuFlyoutItem();
 
                 if (song.IsFavorite)
@@ -134,6 +139,11 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
 
                 menu.Items.Add(item6);
+            }
+
+            if (mediaItemType == MediaItemType.Song || mediaItemType == MediaItemType.Album)
+            {
+                menu.Items.Add(new MenuFlyoutSeparator());
 
                 MenuFlyoutItem item7 = new MenuFlyoutItem()
                 {
@@ -143,417 +153,55 @@ namespace AudictiveMusicUWP.Gui.Util
                 item7.Click += (s, a) =>
                 {
                     Artist artist = new Artist();
-                    artist.Name = song.Artist;
+                    if (mediaItemType == MediaItemType.Album)
+                    {
+                        Album album = mediaItem as Album;
+                        artist.Name = album.Artist;
+                    }
+                    else
+                    {
+                        Song song = mediaItem as Song;
+                        artist.Name = song.Artist;
+                    }
 
                     PageHelper.MainPage?.Navigate(typeof(ArtistPage), artist);
                 };
 
                 menu.Items.Add(item7);
 
-                MenuFlyoutItem item8 = new MenuFlyoutItem()
+                if (mediaItemType != MediaItemType.Album)
                 {
-                    Text = ApplicationInfo.Current.Resources.GetString("GoToAlbumString"),
-                    Tag = "",
-                };
-                item8.Click += (s, a) =>
-                {
-                    Album album = new Album()
+
+                    MenuFlyoutItem item8 = new MenuFlyoutItem()
                     {
-                        Name = song.Album,
-                        Artist = song.Artist,
-                        AlbumID = song.AlbumID,
-                        Year = Convert.ToInt32(song.Year),
-                        Genre = song.Genre,
-                        HexColor = song.HexColor
+                        Text = ApplicationInfo.Current.Resources.GetString("GoToAlbumString"),
+                        Tag = "",
+                    };
+                    item8.Click += (s, a) =>
+                    {
+                        Song song = mediaItem as Song;
+                        Album album = new Album()
+                        {
+                            Name = song.Album,
+                            Artist = song.Artist,
+                            AlbumID = song.AlbumID,
+                            Year = Convert.ToInt32(song.Year),
+                            Genre = song.Genre,
+                            HexColor = song.HexColor
+                        };
+
+                        PageHelper.MainPage?.Navigate(typeof(AlbumPage), album);
                     };
 
-                    PageHelper.MainPage?.Navigate(typeof(AlbumPage), album);
-                };
-
-                menu.Items.Add(item8);
-            }
-            // SE O MENU FOR DO TIPO ALBUM
-            else if (type == MediaItemType.Album)
-            {
-                Album album = mediaItem as Album;
-
-                MenuFlyoutItem item1 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Play"),
-                    Tag = "",
-                };
-                item1.Click += (s, a) =>
-                {
-                    PlayerController.Play(album);
-                };
-
-                menu.Items.Add(item1);
-
-                MenuFlyoutItem item2 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
-                    Tag = "",
-                };
-                item2.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(album);
-                };
-
-                menu.Items.Add(item2);
-
-                MenuFlyoutItem item3 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
-                    Tag = "",
-                };
-                item3.Click += (s, a) =>
-                {
-                    if (PageHelper.MainPage != null)
-                    {
-                        PageHelper.MainPage.CreateAddToPlaylistPopup(album);
-                    }
-                };
-
-                menu.Items.Add(item3);
-
-                MenuFlyoutItem item4 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
-                    Tag = "\uEA52",
-                    
-                };
-                item4.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(album, true);
-                };
-
-                menu.Items.Add(item4);
-
-                menu.Items.Add(new MenuFlyoutSeparator());
-
-                MenuFlyoutItem item5 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Share"),
-                    Tag = "",
-                    
-                };
-                item5.Click += async (s, a) =>
-                {
-                    if (await page.ShareMediaItem(album, type) == false)
-                    {
-                        MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
-                        await md.ShowAsync();
-                    }
-                };
-
-                menu.Items.Add(item5);
-
-                MenuFlyoutItem item6 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("GoToArtistString"),
-                    Tag = "",
-                    
-                };
-                item6.Click += (s, a) =>
-                {
-                    Artist artist = new Artist();
-                    artist.Name = album.Artist;
-
-                    PageHelper.MainPage?.Navigate(typeof(ArtistPage), artist);
-                };
-
-                menu.Items.Add(item6);
-            }
-            // SE O MENU FOR DO TIPO ARTIST
-            else if (type == MediaItemType.Artist)
-            {
-                Artist artist = mediaItem as Artist;
-
-                MenuFlyoutItem item1 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Play"),
-                    Tag = "",
-                    
-                };
-                item1.Click += (s, a) =>
-                {
-                    PlayerController.Play(artist);
-                };
-
-                menu.Items.Add(item1);
-
-                menu.Items.Add(new MenuFlyoutSeparator());
-
-                MenuFlyoutItem item2 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
-                    Tag = "",
-                    
-                };
-                item2.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(artist);
-                };
-
-                menu.Items.Add(item2);
-
-                MenuFlyoutItem item3 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
-                    Tag = "",
-                    
-                };
-                item3.Click += (s, a) =>
-                {
-                    if (PageHelper.MainPage != null)
-                    {
-                        PageHelper.MainPage.CreateAddToPlaylistPopup(artist);
-                    }
-                };
-
-                menu.Items.Add(item3);
-
-                MenuFlyoutItem item4 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
-                    Tag = "\uEA52",
-                    
-                };
-                item4.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(artist, true);
-                };
-
-                menu.Items.Add(item4);
-
-                menu.Items.Add(new MenuFlyoutSeparator());
-
-                MenuFlyoutItem item5 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Share"),
-                    Tag = "",
-                    
-                };
-                item5.Click += async (s, a) =>
-                {
-                    if (await page.ShareMediaItem(artist, type) == false)
-                    {
-                        MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
-                        await md.ShowAsync();
-                    }
-                };
-
-                menu.Items.Add(item5);
-
-            }
-            //SE O MENU FOR DO TIPO FOLDER
-            else if (type == MediaItemType.Folder)
-            {
-                FolderItem folder = mediaItem as FolderItem;
-
-                MenuFlyoutItem item1 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Play"),
-                    Tag = "",
-                    
-                };
-                item1.Click += (s, a) =>
-                {
-                    PlayerController.Play(folder);
-                };
-
-                menu.Items.Add(item1);
-
-                menu.Items.Add(new MenuFlyoutSeparator());
-
-                MenuFlyoutItem item2 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
-                    Tag = "",
-                    
-                };
-                item2.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(folder);
-                };
-
-                menu.Items.Add(item2);
-
-                MenuFlyoutItem item3 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
-                    Tag = "",
-                    
-                };
-                item3.Click += (s, a) =>
-                {
-                    if (PageHelper.MainPage != null)
-                    {
-                        PageHelper.MainPage.CreateAddToPlaylistPopup(folder);
-                    }
-                };
-
-                menu.Items.Add(item3);
-
-                MenuFlyoutItem item4 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
-                    Tag = "\uEA52",
-                    
-                };
-                item4.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(folder, true);
-                };
-
-                menu.Items.Add(item4);
-
-                menu.Items.Add(new MenuFlyoutSeparator());
-
-                MenuFlyoutItem item5 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Share"),
-                    Tag = "",
-                    
-                };
-                item5.Click += async (s, a) =>
-                {
-                    if (await page.ShareMediaItem(folder, type) == false)
-                    {
-                        MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
-                        await md.ShowAsync();
-                    }
-                };
-
-                menu.Items.Add(item5);
-            }
-            // SE O MENU FOR DO TIPO PLAYLIST
-            else if (type == MediaItemType.Playlist)
-            {
-                Playlist playlist = mediaItem as Playlist;
-
-                MenuFlyoutItem item1 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Play"),
-                    Tag = "",
-                    
-                };
-                item1.Click += (s, a) =>
-                {
-                    PlayerController.Play(playlist);
-                };
-
-                menu.Items.Add(item1);
-
-                menu.Items.Add(new MenuFlyoutSeparator());
-
-                MenuFlyoutItem item2 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
-                    Tag = "",
-                    
-                };
-                item2.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(playlist);
-                };
-
-                menu.Items.Add(item2);
-
-
-                MenuFlyoutItem item3 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
-                    Tag = "\uEA52",
-                    
-                };
-                item3.Click += (s, a) =>
-                {
-                    PlayerController.AddToPlaylist(playlist, true);
-                };
-
-                menu.Items.Add(item3);
-
-                menu.Items.Add(new MenuFlyoutSeparator());
-
-                MenuFlyoutItem item4 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Share"),
-                    Tag = "",
-                    
-                };
-                item4.Click += async (s, a) =>
-                {
-                    if (await page.ShareMediaItem(playlist, type) == false)
-                    {
-                        MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
-                        await md.ShowAsync();
-                    }
-                };
-
-                menu.Items.Add(item4);
-
-                menu.Items.Add(new MenuFlyoutSeparator());
-
-                MenuFlyoutItem item5 = new MenuFlyoutItem()
-                {
-                    Text = ApplicationInfo.Current.Resources.GetString("Delete"),
-                    Tag = "",
-                    
-                };
-                item5.Click += async (s, a) =>
-                {
-                    MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("DeletePlaylistMessage"), ApplicationInfo.Current.Resources.GetString("DeletePlaylistMessageTitle"));
-                    md.Commands.Add(new UICommand(ApplicationInfo.Current.Resources.GetString("Yes"), async (t) =>
-                    {
-                        StorageFolder playlistsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Playlists", CreationCollisionOption.OpenIfExists);
-
-                        IStorageItem playlistItem = await playlistsFolder.TryGetItemAsync(playlist.PlaylistFileName);
-
-                        if (playlistItem != null)
-                        {
-                            try
-                            {
-                                await playlistItem.DeleteAsync(StorageDeleteOption.PermanentDelete);
-
-                                if (PageHelper.PlaylistPage != null)
-                                {
-                                    if (PageHelper.MainPage != null)
-                                        PageHelper.MainPage.GoBack();
-                                }
-                                else if (PageHelper.Playlists != null)
-                                {
-                                    PageHelper.Playlists.LoadPlaylists();
-                                }
-                            }
-                            catch
-                            {
-
-                            }
-                        }
-                    }));
-
-                    md.Commands.Add(new UICommand(ApplicationInfo.Current.Resources.GetString("No")));
-
-                    md.CancelCommandIndex = 1;
-                    md.DefaultCommandIndex = 1;
-
-                    await md.ShowAsync();
-
-                    
-                };
-
-                menu.Items.Add(item5);
+                    menu.Items.Add(item8);
+                }
             }
 
-            try
+            menu.ShowAt(sender as FrameworkElement);
+
+            if (showAtPoint)
             {
-                menu.ShowAt(sender as FrameworkElement);
                 menu.ShowAt(sender as FrameworkElement, point);
-            }
-            catch
-            {
-                menu.ShowAt(sender as FrameworkElement);
             }
         }
 

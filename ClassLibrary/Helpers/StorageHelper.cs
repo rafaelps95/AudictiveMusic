@@ -30,6 +30,34 @@ namespace ClassLibrary.Helpers
             return Convert.ToInt32(d);
         }
 
+        //private static List<string> files = new List<string>();
+
+        //public static List<string> GetAllFiles(StorageFolder folder)
+        //{
+        //    DeepScan(folder);
+
+        //    return files;
+        //}
+
+        //private static async void DeepScan(StorageFolder folder)
+        //{
+        //    StorageFolder fold = folder;
+
+        //    var items = await fold.GetItemsAsync();
+
+        //    foreach (var item in items)
+        //    {
+        //        if (item.GetType() == typeof(StorageFile))
+        //        {
+        //            if (IsMusicFile(item.Path))
+        //                files.Add(item.Path.ToString());
+        //        }
+        //        else
+        //            DeepScan(item as StorageFolder);
+        //    }
+        //}
+
+
         public static async Task<IReadOnlyList<IStorageItem>> ReadFolder(StorageFolder folder)
         {
             var items = await folder.GetItemsAsync();

@@ -195,7 +195,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, point, Enumerators.MediaItemType.Song);
+            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
         }
 
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
@@ -299,7 +299,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 listSongs.Add(song.SongURI);
             }
 
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(listSongs));
+            PlayerController.Play(listOfSongs, Enumerators.MediaItemType.ListOfStrings);
 
             DisableSelectionMode();
         }
@@ -321,7 +321,6 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void topMore_Click(object sender, RoutedEventArgs e)
         {
-
             List<string> list = new List<string>();
 
             foreach (Song song in SongsList.SelectedItems)
@@ -329,87 +328,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 list.Add(song.SongURI);
             }
 
-            MenuFlyout menu = new MenuFlyout();
-
-            MenuFlyoutItem item1 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("Play"),
-                Tag = "",
-                
-            };
-            item1.Click += (s, a) =>
-            {
-                MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
-            };
-
-            menu.Items.Add(item1);
-
-            menu.Items.Add(new MenuFlyoutSeparator());
-
-            MenuFlyoutItem item2 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
-                Tag = "",
-                
-            };
-            item2.Click += (s, a) =>
-            {
-                MessageService.SendMessageToBackground(new AddSongsToPlaylist(list));
-            };
-
-            menu.Items.Add(item2);
-
-            MenuFlyoutItem item3 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
-                Tag = "",
-                
-            };
-            item3.Click += (s, a) =>
-            {
-                if (PageHelper.MainPage != null)
-                {
-                    PageHelper.MainPage.CreateAddToPlaylistPopup(list);
-                }
-            };
-
-            menu.Items.Add(item3);
-
-            MenuFlyoutItem item4 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
-                Tag = "\uEA52",
-                
-            };
-            item4.Click += (s, a) =>
-            {
-                MessageService.SendMessageToBackground(new AddSongsToPlaylist(list, true));
-            };
-
-            menu.Items.Add(item4);
-
-            menu.Items.Add(new MenuFlyoutSeparator());
-
-            MenuFlyoutItem item5 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("Share"),
-                Tag = "",
-                
-            };
-            item5.Click += async (s, a) =>
-            {
-                if (await this.ShareMediaItem(list, Enumerators.MediaItemType.Song) == false)
-                {
-                    MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
-                    await md.ShowAsync();
-                }
-            };
-
-            menu.Items.Add(item5);
-
-            menu.ShowAt(sender as FrameworkElement);
-
-
+            this.ShowPopupMenu(list, sender, Enumerators.MediaItemType.ListOfStrings);
         }
 
         private void SemanticZoom_ViewChangeStarted(object sender, SemanticZoomViewChangedEventArgs e)

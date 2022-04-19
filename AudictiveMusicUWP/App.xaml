@@ -27,7 +27,7 @@
 
             <local:ApplicationAccentColor x:Key="ApplicationAccentColor"/>
             
-            <JumpListItemForegroundConverter x:Key="BackgroundConverter" Disabled="#FF444444" Enabled="{ThemeResource SystemControlHighlightAccentBrush}"/>
+            <JumpListItemForegroundConverter x:Key="ForegroundConverter" Disabled="#FF444444" Enabled="{ThemeResource SystemControlHighlightAccentBrush}"/>
 
             <DataTemplate x:Key="WrapHeaderTemplate">
                 <TextBlock Text="{Binding}" TextWrapping="Wrap" />
@@ -39,7 +39,7 @@
                 <Border Background="Transparent" Padding="5">
                     <Border Width="62" 
                         Height="62" Margin="0,0,0,0" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding Group.Key}" Foreground="{Binding Converter={StaticResource BackgroundConverter}}" FontWeight="SemiBold" FontSize="24" Padding="6" 
+                        <TextBlock Text="{Binding Group.Key}" Foreground="{Binding Converter={StaticResource ForegroundConverter}}" FontWeight="SemiBold" FontSize="24" Padding="6" 
                                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </Border>

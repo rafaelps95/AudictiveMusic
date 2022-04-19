@@ -161,20 +161,20 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private async void ItemsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            bool isAddedCall;
+            bool isAdded;
             int i = 0;
             IList<object> list;
             /// O EVENTO FOI CHAMADO PORQUE ITENS FORAM MARCADOS
             if (e.AddedItems.Count > 0)
             {
                 list = e.AddedItems;
-                isAddedCall = true;
+                isAdded = true;
             }
             /// O EVENTO FOI CHAMADO PORQUE ITENS FORAM DESMARCADOS
             else
             {
                 list = e.RemovedItems;
-                isAddedCall = false;
+                isAdded = false;
             }
 
             foreach (object obj in list)
@@ -186,7 +186,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 i += items.Count;
             }
 
-            if (isAddedCall)
+            if (isAdded)
                 this.SelectedItemsCount += i;
             else
                 this.SelectedItemsCount -= i;
@@ -265,7 +265,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, point, Enumerators.MediaItemType.Song);
+            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
         }
 
         private void ItemsList_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -296,13 +296,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 FolderItem item = obj as FolderItem;
                 if (item.IsFolder)
                 {
-                    StorageFolder subFolder = await StorageFolder.GetFolderFromPathAsync(item.Path);
-                    var subFolderItems = await StorageHelper.ScanFolder(subFolder);
-
-                    foreach (StorageFile f in subFolderItems)
-                    {
-                        list.Add(f.Path);
-                    }
+                    list.AddRange(await Ctr_FolderItem.GetSongs(item));
                 }
                 else
                 {
@@ -326,13 +320,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 FolderItem item = obj as FolderItem;
                 if (item.IsFolder)
                 {
-                    StorageFolder subFolder = await StorageFolder.GetFolderFromPathAsync(item.Path);
-                    var subFolderItems = await StorageHelper.ScanFolder(subFolder);
-
-                    foreach (StorageFile f in subFolderItems)
-                    {
-                        list.Add(f.Path);
-                    }
+                    list.AddRange(await Ctr_FolderItem.GetSongs(item));
                 }
                 else
                 {
@@ -355,13 +343,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 FolderItem item = obj as FolderItem;
                 if (item.IsFolder)
                 {
-                    StorageFolder subFolder = await StorageFolder.GetFolderFromPathAsync(item.Path);
-                    var subFolderItems = await StorageHelper.ScanFolder(subFolder);
-
-                    foreach (StorageFile f in subFolderItems)
-                    {
-                        list.Add(f.Path);
-                    }
+                    list.AddRange(await Ctr_FolderItem.GetSongs(item));
                 }
                 else
                 {
@@ -373,85 +355,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (list.Count == 0)
                 return;
 
-            MenuFlyout menu = new MenuFlyout();
-
-            MenuFlyoutItem item1 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("Play"),
-                Tag = "",
-                
-            };
-            item1.Click += (s, a) =>
-            {
-                MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
-            };
-
-            menu.Items.Add(item1);
-
-            menu.Items.Add(new MenuFlyoutSeparator());
-
-            MenuFlyoutItem item2 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
-                Tag = "",
-                
-            };
-            item2.Click += (s, a) =>
-            {
-                MessageService.SendMessageToBackground(new AddSongsToPlaylist(list));
-            };
-
-            menu.Items.Add(item2);
-
-            MenuFlyoutItem item3 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
-                Tag = "",
-                
-            };
-            item3.Click += (s, a) =>
-            {
-                if (PageHelper.MainPage != null)
-                {
-                    PageHelper.MainPage.CreateAddToPlaylistPopup(list);
-                }
-            };
-
-            menu.Items.Add(item3);
-
-            MenuFlyoutItem item4 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
-                Tag = "\uEA52",
-                
-            };
-            item4.Click += (s, a) =>
-            {
-                MessageService.SendMessageToBackground(new AddSongsToPlaylist(list, true));
-            };
-
-            menu.Items.Add(item4);
-
-            menu.Items.Add(new MenuFlyoutSeparator());
-
-            MenuFlyoutItem item5 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("Share"),
-                Tag = "",
-                
-            };
-            item5.Click += async (s, a) =>
-            {
-                if (await this.ShareMediaItem(list, Enumerators.MediaItemType.Song) == false)
-                {
-                    MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
-                    await md.ShowAsync();
-                }
-            };
-
-            menu.Items.Add(item5);
-
-            menu.ShowAt(sender as FrameworkElement);
+            this.ShowPopupMenu(list, sender, Enumerators.MediaItemType.ListOfStrings);
         }
 
         private void selection_Tapped(object sender, TappedRoutedEventArgs e)

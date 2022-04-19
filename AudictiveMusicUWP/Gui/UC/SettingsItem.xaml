@@ -885,10 +885,7 @@
             <TextBlock x:Name="additionalInfoTB" IsHitTestVisible="False" Visibility="Collapsed" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Margin="10,-10,10,15" Opacity="0.8" FontSize="12" TextWrapping="WrapWholeWords" Text="{Binding AdditionalInfo, ElementName=root}" />
 
             <Grid Name="Item" VerticalAlignment="Center" Grid.RowSpan="2" Grid.Column="2">
-                <!--<ComboBox Background="Green" Style="{StaticResource ComboBoxStyle}" IsDropDownOpen="True">
-                    <ComboBoxItem Content="hello" />
-                    <ComboBoxItem Content="world!" />
-                </ComboBox>-->
+
             </Grid>
 
             <TextBlock IsHitTestVisible="False" Visibility="{Binding ElementName=actionButton, Path=Visibility}" Grid.Column="3" Grid.RowSpan="2" FontFamily="Segoe MDL2 Assets" RenderTransformOrigin="0.5,0.5" FontSize="16" Text="" VerticalAlignment="Center" Margin="15,0,0,0" IsTextScaleFactorEnabled="False" />

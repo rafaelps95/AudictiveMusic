@@ -365,7 +365,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Song song = ((PreviewTile)sender).Tag as Song;
 
-                this.ShowPopupMenu(song, sender, e.GetPosition((PreviewTile)sender), Enumerators.MediaItemType.Song);
+                this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, e.GetPosition((PreviewTile)sender));
             }
         }
 
@@ -375,7 +375,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Song song = ((PreviewTile)sender).Tag as Song;
 
-                this.ShowPopupMenu(song, sender, e.GetPosition((PreviewTile)sender), Enumerators.MediaItemType.Song);
+                this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, e.GetPosition((PreviewTile)sender));
             }
         }
 
@@ -548,7 +548,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, point, Enumerators.MediaItemType.Song);
+            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
 
         }
 
