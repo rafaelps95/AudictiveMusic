@@ -1,4 +1,5 @@
-﻿using AudictiveMusicUWP.Gui.Util;
+﻿using AudictiveMusicUWP.Gui.UC;
+using AudictiveMusicUWP.Gui.Util;
 using BackgroundAudioShared.Messages;
 using ClassLibrary.Control;
 using ClassLibrary.Dao;
@@ -69,7 +70,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void Favorites_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            selectionGrid.Margin = new Thickness(20, 20, 20, ApplicationInfo.Current.FooterHeight + 20);
+
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -94,7 +95,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             List<Song> songs = Ctr_Song.Current.GetFavoriteSongs();
 
-            SongsList.ItemsSource = songs;
+            listView.ItemsSource = songs;
 
             progress.IsActive = false;
 
@@ -161,183 +162,14 @@ namespace AudictiveMusicUWP.Gui.Pages
             MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
         }
 
-        private void selectButton_Click(object sender, RoutedEventArgs e)
+        private void listView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (SongsList.SelectionMode == ListViewSelectionMode.None)
-                EnableSelectionMode();
-            else
-                DisableSelectionMode();
-        }
-
-        private void EnableSelectionMode()
-        {
-            selectButton.Content = "";
-            SongsList.SelectionMode = ListViewSelectionMode.Multiple;
-            SongsList.SelectionChanged += SongsList_SelectionChanged;
-            topAppBar.Visibility = Visibility.Visible;
-        }
-
-        private void DisableSelectionMode()
-        {
-            selectButton.Content = "";
-            SongsList.SelectedItem = null;
-            SongsList.SelectionChanged -= SongsList_SelectionChanged;
-            SongsList.SelectionMode = ListViewSelectionMode.None;
-            topAppBar.Visibility = Visibility.Collapsed;
-        }
-
-        private void topPlay_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> list = new List<string>();
-
-            foreach (object obj in SongsList.SelectedItems)
-            {
-                Song song = obj as Song;
-                list.Add(song.SongURI);
-            }
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
-
-            DisableSelectionMode();
-        }
-
-        private void topAdd_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> list = new List<string>();
-
-            foreach (Song song in SongsList.SelectedItems)
-            {
-                list.Add(song.SongURI);
-            }
-
-            PlaylistHelper.RequestPlaylistPicker(this, list);
-
-            DisableSelectionMode();
-        }
-
-        private void topMore_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> list = new List<string>();
-
-            foreach (object obj in SongsList.SelectedItems)
-            {
-                Song song = obj as Song;
-                list.Add(song.SongURI);
-            }
-
-            MenuFlyout menu = new MenuFlyout();
-
-            MenuFlyoutItem item1 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("Play"),
-                Tag = "",
-                
-            };
-            item1.Click += (s, a) =>
-            {
-                MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
-            };
-
-            menu.Items.Add(item1);
-
-            menu.Items.Add(new MenuFlyoutSeparator());
-
-            MenuFlyoutItem item2 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
-                Tag = "",
-                
-            };
-            item2.Click += (s, a) =>
-            {
-                MessageService.SendMessageToBackground(new AddSongsToPlaylist(list));
-            };
-
-            menu.Items.Add(item2);
-
-            MenuFlyoutItem item3 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
-                Tag = "",
-                
-            };
-            item3.Click += (s, a) =>
-            {
-                PlaylistHelper.RequestPlaylistPicker(this, list);
-            };
-
-            menu.Items.Add(item3);
-
-            MenuFlyoutItem item4 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
-                Tag = "\uEA52",
-                
-            };
-            item4.Click += (s, a) =>
-            {
-                MessageService.SendMessageToBackground(new AddSongsToPlaylist(list, true));
-            };
-
-            menu.Items.Add(item4);
-
-            menu.Items.Add(new MenuFlyoutSeparator());
-
-            MenuFlyoutItem item5 = new MenuFlyoutItem()
-            {
-                Text = ApplicationInfo.Current.Resources.GetString("Share"),
-                Tag = "",
-                
-            };
-            item5.Click += async (s, a) =>
-            {
-                if (await this.ShareMediaItem(list, Enumerators.MediaItemType.Song) == false)
-                {
-                    MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
-                    await md.ShowAsync();
-                }
-            };
-
-            menu.Items.Add(item5);
-
-            menu.ShowAt(sender as FrameworkElement);
-        }
-
-        private void SongsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (SongsList.SelectedItems.Count > 0)
-            {
-                topPlay.IsEnabled = topAdd.IsEnabled = topMore.IsEnabled = true;
-            }
-            else
-            {
-                topPlay.IsEnabled = topAdd.IsEnabled = topMore.IsEnabled = false;
-                selectedItemsLabel.Text = string.Empty;
-                selectedItemsLabel.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            int i = SongsList.SelectedItems.Count;
-
-            string s = i + " " + ApplicationInfo.Current.GetSingularPlural(i, "ItemSelected");
-
-            selectedItemsLabel.Text = s;
-            selectedItemsLabel.Visibility = Visibility.Visible;
-        }
-
-        private void SongsList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (SongsList.SelectionMode == ListViewSelectionMode.None)
+            if (listView.SelectionMode == ListViewSelectionMode.None)
             {
                 Song clickedSong = e.ClickedItem as Song;
 
                 MessageService.SendMessageToBackground(new SetPlaylistMessage(new List<string>() { clickedSong.SongURI }));
             }
-        }
-
-        private void selection_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            DisableSelectionMode();
         }
 
         private void ThisDeviceButton_Checked(object sender, RoutedEventArgs e)
@@ -359,5 +191,124 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             //thisDeviceButton.IsChecked = false;
         }
+
+
+
+
+
+
+
+        private void EnableSelectionMode()
+        {
+            Thickness padding = new Thickness(listView.Padding.Left, 70, listView.Padding.Right, listView.Padding.Bottom);
+            listView.Padding = padding;
+
+            listView.SelectionMode = ListViewSelectionMode.Multiple;
+            listView.SelectionChanged += listView_SelectionChanged;
+            selectionItemsBar.SelectionModeChanged -= SelectionItemsBar_SelectionModeChanged;
+            selectionItemsBar.SelectionMode = SelectedItemsBar.BarMode.Enabled;
+            selectionItemsBar.SelectionModeChanged += SelectionItemsBar_SelectionModeChanged;
+        }
+
+        private void DisableSelectionMode()
+        {
+            Thickness padding = new Thickness(listView.Padding.Left, 0, listView.Padding.Right, listView.Padding.Bottom);
+            listView.Padding = padding;
+
+            listView.SelectedItem = null;
+            listView.SelectionChanged -= listView_SelectionChanged;
+            listView.SelectionMode = ListViewSelectionMode.None;
+            selectionItemsBar.SelectionModeChanged -= SelectionItemsBar_SelectionModeChanged;
+            selectionItemsBar.SelectionMode = SelectedItemsBar.BarMode.Disabled;
+            selectionItemsBar.SelectionModeChanged += SelectionItemsBar_SelectionModeChanged;
+        }
+
+        private void ActivateSelecionMode(Album album)
+        {
+            if (listView.SelectedItems.Contains(album))
+                return;
+
+            ApplicationInfo.Current.VibrateDevice(25);
+            EnableSelectionMode();
+            listView.SelectedItems.Add(album);
+        }
+
+        private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int i = listView.SelectedItems.Count;
+            selectionItemsBar.SelectedItemsCount = i;
+
+            if (i == 0)
+            {
+                DisableSelectionMode();
+            }
+        }
+
+        private void SelectionItemsBar_ClearRequest(object sender, RoutedEventArgs e)
+        {
+            DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_SelectAllRequest(object sender, RoutedEventArgs e)
+        {
+            listView.SelectAll();
+        }
+
+        private void SelectionItemsBar_PlaySelected(object sender, SelectedItemsBar.PlayMode playMode)
+        {
+            List<string> list = new List<string>();
+
+            foreach (Song song in listView.SelectedItems)
+            {
+                list.Add(song.SongURI);
+            }
+
+            if (playMode == SelectedItemsBar.PlayMode.Play)
+                PlayerController.Play(list, Enumerators.MediaItemType.ListOfStrings);
+            else
+                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings, true);
+
+            DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_AddSelected(object sender, SelectedItemsBar.AddMode addMode)
+        {
+            List<string> list = new List<string>();
+
+            foreach (Song song in listView.SelectedItems)
+            {
+                list.Add(song.SongURI);
+            }
+
+            if (addMode == SelectedItemsBar.AddMode.AddToPlaylist)
+                PlaylistHelper.RequestPlaylistPicker(this, list);
+            else
+                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings);
+
+            DisableSelectionMode();
+        }
+
+        private async void SelectionItemsBar_ShareSelected(object sender, RoutedEventArgs e)
+        {
+            List<string> list = new List<string>();
+
+            foreach (Song song in listView.SelectedItems)
+            {
+                list.Add(song.SongURI);
+            }
+
+            await this.ShareMediaItem(list, Enumerators.MediaItemType.ListOfStrings);
+
+            DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_SelectionModeChanged(object sender, SelectedItemsBar.BarMode barMode)
+        {
+            if (barMode == SelectedItemsBar.BarMode.Disabled)
+                DisableSelectionMode();
+            else
+                EnableSelectionMode();
+        }
+
     }
 }

@@ -393,7 +393,6 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.PlayEverything));
             PlayerController.OpenPlayer(this);
-            //PageHelper.MainPage.OpenPlayer();
         }
 
         private void collectionButton_Click(object sender, RoutedEventArgs e)

@@ -56,6 +56,7 @@
             </Grid.RenderTransform>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="{ThemeResource IconFont}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
@@ -64,17 +65,11 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.Background>
-                    <SolidColorBrush Opacity="0.5" Color="{ThemeResource SystemChromeLowColor}" />
-                </Grid.Background>
+
                 <TextBlock x:Name="pageTitle" x:Uid="Favorites" VerticalAlignment="Center" Margin="12,0" Text="Songs" FontWeight="Bold" FontSize="25" TextTrimming="CharacterEllipsis" />
                 <Button Grid.Row="0" Grid.Column="2" Content="" x:Name="shuffleButton" Click="shuffleButton_Click" VerticalAlignment="Stretch" Width="55" FontFamily="{ThemeResource IconFont}" FontSize="16" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" />
 
-                <Grid Grid.Row="1" Grid.ColumnSpan="2" x:Name="topAppBar" Visibility="Collapsed">
+                <!--<Grid Grid.Row="1" Grid.ColumnSpan="2" x:Name="topAppBar" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
@@ -85,8 +80,10 @@
 
                     </StackPanel>
 
-                </Grid>
+                </Grid>-->
             </Grid>
+
+            <local:SelectedItemsBar Canvas.ZIndex="2" Grid.Row="1" Grid.ColumnSpan="2" SelectionModeChanged="SelectionItemsBar_SelectionModeChanged" PlaySelected="SelectionItemsBar_PlaySelected" AddSelected="SelectionItemsBar_AddSelected" ClearRequest="SelectionItemsBar_ClearRequest" SelectAllRequest="SelectionItemsBar_SelectAllRequest" ShareSelected="SelectionItemsBar_ShareSelected" x:Name="selectionItemsBar" Visibility="Visible" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
 
             <!--<StackPanel x:Name="navigationButtons" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <ToggleButton Style="{StaticResource NavigationHeaderToggleButtonStyle}" Content="Neste dispositivo" Checked="ThisDeviceButton_Checked" x:Name="thisDeviceButton" Click="ThisDeviceButton_Click" />
@@ -95,7 +92,7 @@
             <local:ModernProgressBar x:Name="progress" Grid.Row="1" Height="2" VerticalAlignment="Top" IsActive="True" />
 
 
-            <ListView Grid.Row="1" IsItemClickEnabled="True" ItemClick="SongsList_ItemClick" Padding="0,0,0,115" x:Name="SongsList" SelectionChanged="SongsList_SelectionChanged" SelectionMode="None" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
+            <ListView Grid.Row="1" Grid.RowSpan="2" IsItemClickEnabled="True" ItemClick="listView_ItemClick" Padding="0,0,0,115" x:Name="listView" SelectionChanged="listView_SelectionChanged" SelectionMode="None" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
                 <ListView.ItemContainerTransitions>
                     <TransitionCollection>
                         <RepositionThemeTransition />
@@ -121,18 +118,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
-            <Grid Grid.Row="1" x:Name="selectionGrid" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20,20,20,130">
-                <Grid Tapped="selection_Tapped">
-                    <Border x:Name="selection" CornerRadius="30" Background="{Binding AccentColorMediumBrush, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}">
-
-                    </Border>
-                    <TextBlock Text="" x:Name="selectedItemsLabel" Foreground="{Binding ForegroundColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" Visibility="Collapsed" VerticalAlignment="Center" Margin="20,0,80,0" FontSize="16" IsTextScaleFactorEnabled="False" FontWeight="Bold" />
-                </Grid>
-                <Button Content="" x:Name="selectButton" Foreground="{Binding ForegroundColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" HorizontalAlignment="Right" Click="selectButton_Click" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" FontSize="17" Style="{StaticResource CircleButtonStyle}" Width="60" Height="60">
-
-                </Button>
-            </Grid>
 
             <!--<Button Grid.Row="2" Margin="0,0,20,80" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="" Background="{ThemeResource SystemControlHighlightAccentBrush}" Click="shuffleButton_Click" FontSize="32" FontFamily="{ThemeResource IconFont}" Width="80" Height="80" Style="{StaticResource CircleButtonStyle}" />-->
         </Grid>

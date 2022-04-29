@@ -25,11 +25,5 @@ namespace AudictiveMusicUWP.Gui.Util
             get;
             set;
         }
-
-        public static MainPage MainPage
-        {
-            get;
-            set;
-        }
     }
 }

@@ -99,5 +99,10 @@ namespace AudictiveMusicUWP.Gui.Pages
             Playlist playlist = e.ClickedItem as Playlist;
             Frame.Navigate(typeof(PlaylistPage), playlist);
         }
+
+        private void FavoritesButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.Navigate(this, typeof(Favorites));
+        }
     }
 }

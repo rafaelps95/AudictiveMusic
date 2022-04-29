@@ -35,8 +35,11 @@ namespace AudictiveMusicUWP.Gui.UC
     public sealed partial class PlayerControl : UserControl
     {
         public delegate void ViewChangedEventArgs(DisplayMode mode);
+        public delegate void PlayerTooltipEventHandler(NextTooltip.Mode mode);
 
         public event ViewChangedEventArgs ViewChanged;
+        public event PlayerTooltipEventHandler TooltipRequested;
+        public event RoutedEventHandler TooltipDismissed;
 
         private bool IsPlaying
         {
@@ -1158,7 +1161,7 @@ namespace AudictiveMusicUWP.Gui.UC
             if (e.Pointer.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Mouse)
                 return;
 
-            PageHelper.MainPage.CreatePlayerTooltip(NextTooltip.Mode.Previous);
+            TooltipRequested?.Invoke(NextTooltip.Mode.Previous);
         }
 
         private void nextButton_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -1166,17 +1169,17 @@ namespace AudictiveMusicUWP.Gui.UC
             if (e.Pointer.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Mouse)
                 return;
 
-            PageHelper.MainPage.CreatePlayerTooltip(NextTooltip.Mode.Next);
+            TooltipRequested?.Invoke(NextTooltip.Mode.Next);
         }
 
         private void previousButton_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            PageHelper.MainPage.RemovePlayerTooltip();
+            TooltipDismissed?.Invoke(this, new RoutedEventArgs());
         }
 
         private void nextButton_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            PageHelper.MainPage.RemovePlayerTooltip();
+            TooltipDismissed?.Invoke(this, new RoutedEventArgs());
         }
 
         private void playPauseButton_Click(object sender, RoutedEventArgs e)
@@ -1637,7 +1640,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
             {
-                PageHelper.MainPage.CreatePlayerTooltip(NextTooltip.Mode.Previous);
+                TooltipRequested?.Invoke(NextTooltip.Mode.Previous);
             }
             else if (e.HoldingState == Windows.UI.Input.HoldingState.Completed)
             {
@@ -1645,7 +1648,7 @@ namespace AudictiveMusicUWP.Gui.UC
             }
             else
             {
-                PageHelper.MainPage.RemovePlayerTooltip();
+                TooltipDismissed?.Invoke(this, new RoutedEventArgs());
                 wasHolding = false;
             }
         }
@@ -1657,11 +1660,11 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
             {
-                PageHelper.MainPage.CreatePlayerTooltip(NextTooltip.Mode.Next);
+                TooltipRequested?.Invoke(NextTooltip.Mode.Next);
             }
             else
             {
-                PageHelper.MainPage.RemovePlayerTooltip();
+                TooltipDismissed?.Invoke(this, new RoutedEventArgs());
             }
         }
 

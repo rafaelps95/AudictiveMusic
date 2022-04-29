@@ -142,6 +142,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 {
                     SelectedItemsCountText = value + " " + ApplicationInfo.Current.GetSingularPlural(value, "ItemSelected");
                     playButton.IsEnabled = addNextButton.IsEnabled = addButton.IsEnabled = moreButton.IsEnabled = true;
+                    UpdateView();
                 }
                 else
                 {
@@ -295,6 +296,7 @@ namespace AudictiveMusicUWP.Gui.UC
             checkBox.Unchecked += CheckBox_Unchecked;
             shadowGrid.Visibility = checkBox.Visibility = buttonsArea.Visibility = moreButton.Visibility = Visibility.Visible;
             selectButton.Icon = "\uE624";
+            UpdateView();
         }
 
         private void DisableSelectionMode()

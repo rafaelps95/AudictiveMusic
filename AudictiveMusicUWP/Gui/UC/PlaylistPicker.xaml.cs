@@ -136,7 +136,6 @@ namespace AudictiveMusicUWP.Gui.UC
         private void blur_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             NavigationHelper.Back(this);
-            //PageHelper.MainPage.RemovePicker();
         }
 
         private void playlistsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -184,7 +183,6 @@ namespace AudictiveMusicUWP.Gui.UC
             if (result == true)
             {
                 NavigationHelper.Back(this);
-                //PageHelper.MainPage.RemovePicker();
             }
             else
             {

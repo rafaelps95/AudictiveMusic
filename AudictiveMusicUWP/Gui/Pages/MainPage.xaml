@@ -28,7 +28,7 @@
         </Grid.ColumnDefinitions>
 
         <!--<Grid x:Name="TintGrid" Grid.ColumnSpan="2" Grid.RowSpan="3" Opacity="0.1" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" />-->
-        <Grid x:Name="titleBar" Grid.ColumnSpan="2" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Canvas.ZIndex="2000" Loaded="titleBar_Loaded">
+        <Grid x:Name="titleBar" Grid.ColumnSpan="2" Canvas.ZIndex="2000" Loaded="titleBar_Loaded">
             <Grid x:Name="titleBarDragArea">
                 <Grid.Background>
                     <SolidColorBrush x:Name="titleBarBackgroundBrush" Color="#FFDC572E" Opacity="0.8" />
@@ -75,7 +75,7 @@
                     <SolidColorBrush x:Name="footerBackgroundColor" Color="#FFDC572E" Opacity="0.5" />
                 </Rectangle.Fill>
             </Rectangle>
-            <local:PlayerControl x:Name="player" ViewChanged="player_ViewChanged" HorizontalAlignment="Stretch" Margin="{Binding ElementName=MainFrame, Path=Margin}" VerticalAlignment="Stretch" />
+            <local:PlayerControl x:Name="player" TooltipRequested="Player_TooltipRequested" TooltipDismissed="Player_TooltipDismissed" ViewChanged="player_ViewChanged" HorizontalAlignment="Stretch" Margin="{Binding ElementName=MainFrame, Path=Margin}" VerticalAlignment="Stretch" />
             <local:NavigationBar x:Name="bottomNavBar" Visibility="Collapsed" Orientation="Horizontal" Height="50" ActionRequested="bottomNavBar_ActionRequested" VerticalAlignment="Bottom" />
         </Grid>
 

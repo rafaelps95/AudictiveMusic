@@ -508,7 +508,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                     if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
                         ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
 
-                    titleBar.RequestedTheme = ElementTheme.Dark;
+                    titleBar.Background = new SolidColorBrush(Colors.Black);
                 }
             }
             else
@@ -521,10 +521,12 @@ namespace AudictiveMusicUWP.Gui.Pages
                     if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
                         ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
 
-                    titleBar.RequestedTheme = ElementTheme.Light;
+                    titleBar.Background = new SolidColorBrush(Colors.White);
                 }
             }
 
+            BackButton.Foreground = appAccentColor.ForegroundColor;
+            titleBarTitle.Foreground = appAccentColor.ForegroundColor;
             //await Task.Delay(100);
 
             Storyboard sb = new Storyboard();
@@ -582,8 +584,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             base.OnNavigatedTo(e);
 
             SetAppTheme(ApplicationSettings.AppTheme);
-
-            PageHelper.MainPage = this;
 
             Collection.LoadCollectionChanges();
 
@@ -1354,7 +1354,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             customPopupsArea.Children.Add(lastFmLoginControl);
         }
 
-        public void CreatePlayerTooltip(NextTooltip.Mode mode)
+        private void CreatePlayerTooltip(NextTooltip.Mode mode)
         {
             if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.None)
                 return;
@@ -1421,7 +1421,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         }
 
-        public void RemovePlayerTooltip()
+        private void RemovePlayerTooltip()
         {
             if (nextTooltip != null)
             {
@@ -1514,6 +1514,16 @@ namespace AudictiveMusicUWP.Gui.Pages
         public void SearchUISetCompactMode(bool compact)
         {
             searchUI.IsCompact = compact;
+        }
+
+        private void Player_TooltipRequested(NextTooltip.Mode mode)
+        {
+            CreatePlayerTooltip(mode);
+        }
+
+        private void Player_TooltipDismissed(object sender, RoutedEventArgs e)
+        {
+            RemovePlayerTooltip();
         }
     }
 }

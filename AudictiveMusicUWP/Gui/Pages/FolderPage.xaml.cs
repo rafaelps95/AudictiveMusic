@@ -1,4 +1,5 @@
-﻿using AudictiveMusicUWP.Gui.Util;
+﻿using AudictiveMusicUWP.Gui.UC;
+using AudictiveMusicUWP.Gui.Util;
 using BackgroundAudioShared.Messages;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
@@ -50,28 +51,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void FolderPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //if (e.NewSize.Width < 510)
-            //{
-            //    refreshButton.MaxWidth = 55;
-            //}
-            //else if (e.NewSize.Width >= 510 && e.NewSize.Width < 610)
-            //{
-            //    refreshButton.MaxWidth = 900;
-            //}
-            //else if (e.NewSize.Width >= 610 && e.NewSize.Width < 710)
-            //{
-            //    refreshButton.MaxWidth = 900;
-            //}
-            //else if (e.NewSize.Width >= 710 && e.NewSize.Width < 810)
-            //{
-            //    refreshButton.MaxWidth = 900;
-            //}
-            //else
-            //{
-            //    refreshButton.MaxWidth = 900;
-            //}
 
-            selectionGrid.Margin = new Thickness(20, 20, 20, ApplicationInfo.Current.FooterHeight + 20);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -126,7 +106,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             source.OrderBy(f => f.IsFolder).OrderBy(f => f.Name);
 
-            ItemsList.ItemsSource = source;
+            listView.ItemsSource = source;
 
             OpenPage(NavMode == NavigationMode.Back);
         }
@@ -159,59 +139,59 @@ namespace AudictiveMusicUWP.Gui.Pages
             LoadFolder();
         }
 
-        private async void ItemsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //private async void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    bool isAdded;
+        //    int i = 0;
+        //    IList<object> list;
+        //    /// O EVENTO FOI CHAMADO PORQUE ITENS FORAM MARCADOS
+        //    if (e.AddedItems.Count > 0)
+        //    {
+        //        list = e.AddedItems;
+        //        isAdded = true;
+        //    }
+        //    /// O EVENTO FOI CHAMADO PORQUE ITENS FORAM DESMARCADOS
+        //    else
+        //    {
+        //        list = e.RemovedItems;
+        //        isAdded = false;
+        //    }
+
+        //    foreach (object obj in list)
+        //    {
+        //        FolderItem item = obj as FolderItem;
+
+        //        var items = Ctr_Song.Current.GetSongsByPath(item.Path);
+
+        //        i += items.Count;
+        //    }
+
+        //    if (isAdded)
+        //        this.SelectedItemsCount += i;
+        //    else
+        //        this.SelectedItemsCount -= i;
+
+        //    string s = this.SelectedItemsCount + " " + ApplicationInfo.Current.GetSingularPlural(i, "ItemSelected");
+
+        //    selectedItemsLabel.Text = s;
+
+        //    if (this.SelectedItemsCount > 0)
+        //    {
+        //        topPlay.IsEnabled = topAdd.IsEnabled = topMore.IsEnabled = true;
+
+        //        selectedItemsLabel.Visibility = Visibility.Visible;
+        //    }
+        //    else
+        //    {
+        //        topPlay.IsEnabled = topAdd.IsEnabled = topMore.IsEnabled = false;
+        //        selectedItemsLabel.Text = string.Empty;
+        //        selectedItemsLabel.Visibility = Visibility.Collapsed;
+        //    }
+        //}
+
+        private async void listView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            bool isAdded;
-            int i = 0;
-            IList<object> list;
-            /// O EVENTO FOI CHAMADO PORQUE ITENS FORAM MARCADOS
-            if (e.AddedItems.Count > 0)
-            {
-                list = e.AddedItems;
-                isAdded = true;
-            }
-            /// O EVENTO FOI CHAMADO PORQUE ITENS FORAM DESMARCADOS
-            else
-            {
-                list = e.RemovedItems;
-                isAdded = false;
-            }
-
-            foreach (object obj in list)
-            {
-                FolderItem item = obj as FolderItem;
-
-                var items = Ctr_Song.Current.GetSongsByPath(item.Path);
-
-                i += items.Count;
-            }
-
-            if (isAdded)
-                this.SelectedItemsCount += i;
-            else
-                this.SelectedItemsCount -= i;
-
-            string s = this.SelectedItemsCount + " " + ApplicationInfo.Current.GetSingularPlural(i, "ItemSelected");
-
-            selectedItemsLabel.Text = s;
-
-            if (this.SelectedItemsCount > 0)
-            {
-                topPlay.IsEnabled = topAdd.IsEnabled = topMore.IsEnabled = true;
-
-                selectedItemsLabel.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                topPlay.IsEnabled = topAdd.IsEnabled = topMore.IsEnabled = false;
-                selectedItemsLabel.Text = string.Empty;
-                selectedItemsLabel.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private async void ItemsList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (ItemsList.SelectionMode != ListViewSelectionMode.None)
+            if (listView.SelectionMode != ListViewSelectionMode.None)
                 return;
 
             FolderItem item = e.ClickedItem as FolderItem;
@@ -268,7 +248,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
         }
 
-        private void ItemsList_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        private void listView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
             var listViewItem = args.ItemContainer;
 
@@ -291,7 +271,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             List<string> list = new List<string>();
 
-            foreach (object obj in ItemsList.SelectedItems)
+            foreach (object obj in listView.SelectedItems)
             {
                 FolderItem item = obj as FolderItem;
                 if (item.IsFolder)
@@ -315,7 +295,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             List<string> list = new List<string>();
 
-            foreach (object obj in ItemsList.SelectedItems)
+            foreach (object obj in listView.SelectedItems)
             {
                 FolderItem item = obj as FolderItem;
                 if (item.IsFolder)
@@ -338,7 +318,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             List<string> list = new List<string>();
 
-            foreach (object obj in ItemsList.SelectedItems)
+            foreach (object obj in listView.SelectedItems)
             {
                 FolderItem item = obj as FolderItem;
                 if (item.IsFolder)
@@ -365,27 +345,156 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void selectButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ItemsList.SelectionMode == ListViewSelectionMode.None)
+            if (listView.SelectionMode == ListViewSelectionMode.None)
                 EnableSelectionMode();
             else
                 DisableSelectionMode();
         }
 
+
+
+
+
+
+
         private void EnableSelectionMode()
         {
-            selectButton.Content = "";
-            ItemsList.SelectionMode = ListViewSelectionMode.Multiple;
-            ItemsList.SelectionChanged += ItemsList_SelectionChanged;
-            topAppBar.Visibility = Visibility.Visible;
+            Thickness padding = new Thickness(listView.Padding.Left, 70, listView.Padding.Right, listView.Padding.Bottom);
+            listView.Padding = padding;
+
+            listView.SelectionMode = ListViewSelectionMode.Multiple;
+            listView.SelectionChanged += listView_SelectionChanged;
+            selectionItemsBar.SelectionModeChanged -= SelectionItemsBar_SelectionModeChanged;
+            selectionItemsBar.SelectionMode = SelectedItemsBar.BarMode.Enabled;
+            selectionItemsBar.SelectionModeChanged += SelectionItemsBar_SelectionModeChanged;
         }
 
         private void DisableSelectionMode()
         {
-            selectButton.Content = "";
-            ItemsList.SelectedItem = null;
-            ItemsList.SelectionChanged -= ItemsList_SelectionChanged;
-            ItemsList.SelectionMode = ListViewSelectionMode.None;
-            topAppBar.Visibility = Visibility.Collapsed;
+            Thickness padding = new Thickness(listView.Padding.Left, 0, listView.Padding.Right, listView.Padding.Bottom);
+            listView.Padding = padding;
+
+            listView.SelectedItem = null;
+            listView.SelectionChanged -= listView_SelectionChanged;
+            listView.SelectionMode = ListViewSelectionMode.None;
+            selectionItemsBar.SelectionModeChanged -= SelectionItemsBar_SelectionModeChanged;
+            selectionItemsBar.SelectionMode = SelectedItemsBar.BarMode.Disabled;
+            selectionItemsBar.SelectionModeChanged += SelectionItemsBar_SelectionModeChanged;
         }
+
+        private void ActivateSelecionMode(Album album)
+        {
+            if (listView.SelectedItems.Contains(album))
+                return;
+
+            ApplicationInfo.Current.VibrateDevice(25);
+            EnableSelectionMode();
+            listView.SelectedItems.Add(album);
+        }
+
+        private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int i = listView.SelectedItems.Count;
+            selectionItemsBar.SelectedItemsCount = i;
+
+            if (i == 0)
+            {
+                DisableSelectionMode();
+            }
+        }
+
+        private void SelectionItemsBar_ClearRequest(object sender, RoutedEventArgs e)
+        {
+            DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_SelectAllRequest(object sender, RoutedEventArgs e)
+        {
+            listView.SelectAll();
+        }
+
+        private async void SelectionItemsBar_PlaySelected(object sender, SelectedItemsBar.PlayMode playMode)
+        {
+            List<string> list = new List<string>();
+
+            foreach (object obj in listView.SelectedItems)
+            {
+                FolderItem item = obj as FolderItem;
+                if (item.IsFolder)
+                {
+                    list.AddRange(await Ctr_FolderItem.GetSongs(item));
+                }
+                else
+                {
+                    if (StorageHelper.IsMusicFile(item.Path))
+                        list.Add(item.Path);
+                }
+            }
+
+            if (playMode == SelectedItemsBar.PlayMode.Play)
+                PlayerController.Play(list, Enumerators.MediaItemType.ListOfStrings);
+            else
+                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings, true);
+
+            DisableSelectionMode();
+        }
+
+        private async void SelectionItemsBar_AddSelected(object sender, SelectedItemsBar.AddMode addMode)
+        {
+            List<string> list = new List<string>();
+
+            foreach (object obj in listView.SelectedItems)
+            {
+                FolderItem item = obj as FolderItem;
+                if (item.IsFolder)
+                {
+                    list.AddRange(await Ctr_FolderItem.GetSongs(item));
+                }
+                else
+                {
+                    if (StorageHelper.IsMusicFile(item.Path))
+                        list.Add(item.Path);
+                }
+            }
+
+            if (addMode == SelectedItemsBar.AddMode.AddToPlaylist)
+                PlaylistHelper.RequestPlaylistPicker(this, list);
+            else
+                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings);
+
+            DisableSelectionMode();
+        }
+
+        private async void SelectionItemsBar_ShareSelected(object sender, RoutedEventArgs e)
+        {
+            List<string> list = new List<string>();
+
+            foreach (object obj in listView.SelectedItems)
+            {
+                FolderItem item = obj as FolderItem;
+                if (item.IsFolder)
+                {
+                    list.AddRange(await Ctr_FolderItem.GetSongs(item));
+                }
+                else
+                {
+                    if (StorageHelper.IsMusicFile(item.Path))
+                        list.Add(item.Path);
+                }
+            }
+
+            await this.ShareMediaItem(list, Enumerators.MediaItemType.ListOfStrings);
+
+            DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_SelectionModeChanged(object sender, SelectedItemsBar.BarMode barMode)
+        {
+            if (barMode == SelectedItemsBar.BarMode.Disabled)
+                DisableSelectionMode();
+            else
+                EnableSelectionMode();
+        }
+
     }
 }
