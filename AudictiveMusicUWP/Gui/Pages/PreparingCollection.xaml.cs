@@ -70,8 +70,6 @@ namespace AudictiveMusicUWP.Gui.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-
-            PageHelper.PreparingCollection = null;
         }
 
         async protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -83,7 +81,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 args = e.Parameter.ToString();
             }
-            PageHelper.PreparingCollection = this;
+
             if (string.IsNullOrWhiteSpace(args) == false)
             {
                 if (NavigationHelper.GetParameter(args, "action") == "resizeImages")

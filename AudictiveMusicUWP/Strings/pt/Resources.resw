@@ -723,7 +723,7 @@
   <data name="ChoosePlaylist.Text" xml:space="preserve">
     <value>Escolha a lista de reprodução:</value>
   </data>
-  <data name="Done.Content" xml:space="preserve">
+  <data name="Done.Text" xml:space="preserve">
     <value>Concluir</value>
   </data>
   <data name="Empty" xml:space="preserve">
@@ -744,7 +744,7 @@
   <data name="NamePlaylistHeader" xml:space="preserve">
     <value>Digite um nome para a sua lista</value>
   </data>
-  <data name="NewPlaylist.Content" xml:space="preserve">
+  <data name="NewPlaylist.Text" xml:space="preserve">
     <value>Nova lista</value>
   </data>
   <data name="NoResults.Text" xml:space="preserve">
@@ -958,10 +958,10 @@
     <value>Biblioteca</value>
   </data>
   <data name="GoToAlbumString" xml:space="preserve">
-    <value>Ir para o álbum</value>
+    <value>Mostrar álbum</value>
   </data>
   <data name="GoToArtistString" xml:space="preserve">
-    <value>Ir para o artista</value>
+    <value>Mostrar artista</value>
   </data>
   <data name="LetsStart.Text" xml:space="preserve">
     <value>Vamos começar!</value>
@@ -1214,5 +1214,8 @@
   </data>
   <data name="ReloadCollectionWarningTitle" xml:space="preserve">
     <value>Deseja realmente recarregar sua coleção de músicas?</value>
+  </data>
+  <data name="AddTo" xml:space="preserve">
+    <value>Adicionar</value>
   </data>
 </root>

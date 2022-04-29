@@ -70,10 +70,10 @@
             </Grid.Background>
             <Grid Grid.RowSpan="5" Grid.ColumnSpan="4" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Opacity="0.6" />
 
-            <Button Grid.Column="4" HorizontalAlignment="Right" x:Name="closeButton" Click="closeButton_Click" Padding="-10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="20" Height="20" FontSize="20" IsTextScaleFactorEnabled="False" Content="" FontFamily="Segoe MDL2 Assets">
+            <Button Grid.Column="4" HorizontalAlignment="Right" x:Name="closeButton" Click="closeButton_Click" Padding="-10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="20" Height="20" FontSize="20" IsTextScaleFactorEnabled="False" Content="" FontFamily="{ThemeResource IconFont}">
 
             </Button>
-            <TextBlock Grid.Row="1" Grid.RowSpan="2" Text="{Binding Icon, ElementName=root}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" x:Name="icon" FontSize="30" Margin="20,0,20,0" IsTextScaleFactorEnabled="False" />
+            <TextBlock Grid.Row="1" Grid.RowSpan="2" Text="{Binding Icon, ElementName=root}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" x:Name="icon" FontSize="30" Margin="20,0,20,0" IsTextScaleFactorEnabled="False" />
             <TextBlock x:Name="title" Text="{Binding Title, ElementName=root}" Margin="0,0,10,0" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Bottom" FontWeight="Medium" TextWrapping="Wrap" FontSize="16" />
             <TextBlock x:Name="subtitle" Text="{Binding Subtitle, ElementName=root}" Margin="0,0,10,0" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top" TextWrapping="Wrap" />
             <Grid x:Name="customContentArea" Visibility="Collapsed" HorizontalAlignment="Stretch" Grid.Row="3" Grid.ColumnSpan="4">

@@ -56,14 +56,14 @@
 
                 <StackPanel Grid.Row="1" Margin="0,5" Orientation="Horizontal">
                     <TextBlock x:Name="year" Text="{Binding Year, Converter={StaticResource intToStringConverter}}" FontSize="10" />
-                    <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" />
+                    <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
                     <TextBlock x:Name="countOfSongs" FontSize="10" />
                 </StackPanel>
             </StackPanel>
             <StackPanel x:Name="buttonsArea" Orientation="Horizontal" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" Height="40" Margin="0,0,0,0">
-                <Button Foreground="{Binding Color, Converter={StaticResource foregroundByColorConverter}}" IsTextScaleFactorEnabled="False" x:Name="playButton" Click="playButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="Segoe UI Symbol" Width="55" VerticalAlignment="Stretch" />
-                <Button Foreground="{Binding Color, Converter={StaticResource foregroundByColorConverter}}" IsTextScaleFactorEnabled="False" x:Name="addButton" Click="addButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="Segoe UI Symbol" Width="55" VerticalAlignment="Stretch"/>
-                <Button Foreground="{Binding Color, Converter={StaticResource foregroundByColorConverter}}" IsTextScaleFactorEnabled="False" x:Name="moreButton" Click="moreButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="Segoe UI Symbol" Width="55" VerticalAlignment="Stretch" />
+                <Button Foreground="{Binding Color, Converter={StaticResource foregroundByColorConverter}}" IsTextScaleFactorEnabled="False" x:Name="playButton" Click="playButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="{ThemeResource IconFont}" Width="55" VerticalAlignment="Stretch" />
+                <Button Foreground="{Binding Color, Converter={StaticResource foregroundByColorConverter}}" IsTextScaleFactorEnabled="False" x:Name="addButton" Click="addButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="{ThemeResource IconFont}" Width="55" VerticalAlignment="Stretch"/>
+                <Button Foreground="{Binding Color, Converter={StaticResource foregroundByColorConverter}}" IsTextScaleFactorEnabled="False" x:Name="moreButton" Click="moreButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="{ThemeResource IconFont}" Width="55" VerticalAlignment="Stretch" />
             </StackPanel>
         </Grid>
 

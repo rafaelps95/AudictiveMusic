@@ -100,18 +100,14 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void blur_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (PageHelper.MainPage != null)
-            {
-                PageHelper.MainPage.RemovePicker();
-            }
+            NavigationHelper.Back(this);
+            //PageHelper.MainPage.RemovePicker();
         }
 
         private void doneButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PageHelper.MainPage != null)
-            {
-                PageHelper.MainPage.RemovePicker();
-            }
+            NavigationHelper.Back(this);
+            //PageHelper.MainPage.RemovePicker();
         }
 
         private async void removeButton_Click(object sender, RoutedEventArgs e)

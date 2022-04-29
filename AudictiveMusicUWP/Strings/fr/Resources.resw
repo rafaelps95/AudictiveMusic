@@ -685,7 +685,7 @@
     <value>Nous vous aimerions savoir ce que vous pensez de la Audictive Music! Vous pouvez nous parler par mail, Facebook ou via Feedback Hub!</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Jouer puis</value>
+    <value>Lire ensuite</value>
   </data>
   <data name="RecentlyAdded" xml:space="preserve">
     <value>Récemment ajouté</value>
@@ -726,7 +726,7 @@
   <data name="ChoosePlaylist.Text" xml:space="preserve">
     <value>Choisissez la liste de lecture:</value>
   </data>
-  <data name="Done.Content" xml:space="preserve">
+  <data name="Done.Text" xml:space="preserve">
     <value>Compléter</value>
   </data>
   <data name="Empty" xml:space="preserve">
@@ -738,7 +738,7 @@
   <data name="MoreInfo.Content" xml:space="preserve">
     <value>Plus d'information...</value>
   </data>
-  <data name="NewPlaylist.Content" xml:space="preserve">
+  <data name="NewPlaylist.Text" xml:space="preserve">
     <value>Nouvelle liste</value>
   </data>
   <data name="NoResults.Text" xml:space="preserve">
@@ -949,10 +949,10 @@
     <value>Collection</value>
   </data>
   <data name="GoToAlbumString" xml:space="preserve">
-    <value>Aller à l'album</value>
+    <value>Afficher l'album</value>
   </data>
   <data name="GoToArtistString" xml:space="preserve">
-    <value>Aller à l'artiste</value>
+    <value>Afficher l'artiste</value>
   </data>
   <data name="LetsStart.Text" xml:space="preserve">
     <value>Accueil</value>
@@ -1208,5 +1208,8 @@
   </data>
   <data name="ReloadCollectionWarningTitle" xml:space="preserve">
     <value>Voulez-vous vraiment réinitialiser votre collection?</value>
+  </data>
+  <data name="AddTo" xml:space="preserve">
+    <value>Ajouter</value>
   </data>
 </root>

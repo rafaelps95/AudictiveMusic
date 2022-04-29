@@ -12,10 +12,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Numerics;
 using Windows.Foundation;
+using Windows.UI.Composition;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -47,6 +50,10 @@ namespace AudictiveMusicUWP.Gui.Pages
             set;
         }
 
+        Compositor _compositor;
+        SpriteVisual _sprite;
+        CompositionEffectBrush _brush;
+
         public StartPage()
         {
             LastFm.Current.Connected += LastFm_Connected;
@@ -73,9 +80,26 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void StartPage_Loaded(object sender, RoutedEventArgs e)
         {
+
             //searchUI.SetSearchBarPlacement(NewSearchUX.SearchPlacement.Right);
             //searchUI.SetOffset(headerRightButtons.ActualWidth);
+            //ApplyElementShadow(headerShadow);
+        }
 
+        private void ApplyElementShadow(Panel panel)
+        {
+            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+            _sprite = _compositor.CreateSpriteVisual();
+            //_sprite.Brush = _compositor.CreateColorBrush(Colors.Blue);
+            _sprite.Size = new Vector2((float)panel.ActualWidth, (float)panel.ActualHeight);
+
+            var basicShadow = _compositor.CreateDropShadow();
+            basicShadow.BlurRadius = 25f;
+            basicShadow.Offset = new Vector3(0, 5, 3);
+
+            _sprite.Shadow = basicShadow;
+
+            ElementCompositionPreview.SetElementChildVisual(panel, _sprite);
         }
 
         private void Favorites_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -90,20 +114,18 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void UpdatePageLayout(Size newSize)
         {
-            PageHelper.MainPage.SearchUISetOffset(headerRightButtons.ActualWidth);
+            PageHelper.SetSearchBarOffset(headerRightButtons.ActualWidth);
 
-            if (newSize.Width < headerRightButtons.ActualWidth + PageHelper.MainPage.SearchUIGetSearchBoxWidth())
-            {
-                //searchUI.SetSearchBarPlacement(NewSearchUX.SearchBoxPlacement.Center);
-                //searchUI.SetOffset(0);
-                PageHelper.MainPage.SearchUISetCompactMode(true);
-            }
-            else
-            {
-                PageHelper.MainPage.SearchUISetCompactMode(false);
-            }
-
-            //searchUI.SetOffset(headerRightButtons.ActualWidth);
+            double d = (headerRightButtons.ActualWidth + PageHelper.SearchBoxSize.Width + 13);
+            PageHelper.SetSearchBarCompactMode(newSize.Width < d);
+            //if (newSize.Width < headerRightButtons.ActualWidth + PageHelper.SearchBoxSize.Width + 13)
+            //{
+            //    PageHelper.SetSearchBarCompactMode(true);
+            //}
+            //else
+            //{
+            //    PageHelper.SetSearchBarCompactMode(false);
+            //}
 
             if (newSize.Height < 700)
             {
@@ -359,77 +381,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
         }
 
-        private void Tile_Holding(object sender, HoldingRoutedEventArgs e)
-        {
-            if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
-            {
-                Song song = ((PreviewTile)sender).Tag as Song;
-
-                this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, e.GetPosition((PreviewTile)sender));
-            }
-        }
-
-        private void Tile_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            if (e.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Touch)
-            {
-                Song song = ((PreviewTile)sender).Tag as Song;
-
-                this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, e.GetPosition((PreviewTile)sender));
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //tile.TileSize = TileSize.Small;
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            //tile.TileSize = TileSize.Medium;
-        }
-
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            //tile.TileSize = TileSize.Wide;
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            //tile.TileSize = TileSize.Large;
-        }
-
-        private void Tile_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(new List<string>() { (((PreviewTile)sender).Tag as Song).SongURI }));
-            //UpdateSingleTile(tilesContainer.Children.IndexOf((UIElement)sender));
-        }
-
-        private void PreviewTile_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //tilesContainer.ItemWidth = tilesContainer.ItemHeight = e.NewSize.Width + 4;
-        }
-
-        private void playButton_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            List<string> songs = Ctr_Song.Current.GetAllSongsPaths();
-
-            Random rng = new Random();
-            int n = songs.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                string value = songs[k];
-                songs[k] = songs[n];
-                songs[n] = value;
-            }
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(songs));
-
-            PageHelper.MainPage.OpenPlayer();
-        }
-
         private void pageTransition_Completed(object sender, object e)
         {
             LoadCards();
@@ -441,45 +392,40 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
         {
             MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.PlayEverything));
-
-            PageHelper.MainPage.OpenPlayer();
+            PlayerController.OpenPlayer(this);
+            //PageHelper.MainPage.OpenPlayer();
         }
 
         private void collectionButton_Click(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(CollectionPage), "page=artists");
+            NavigationHelper.Navigate(this, typeof(CollectionPage), "page=artists");
         }
 
         private void favoritesButton_Click(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(Favorites), null);
+            NavigationHelper.Navigate(this, typeof(Favorites));
         }
 
         private void foldersButton_Click(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(FolderPage), null);
-        }
-
-        private void searchButton_Click(object sender, RoutedEventArgs e)
-        {
-            PageHelper.MainPage.CreateSearchGrid();
+            NavigationHelper.Navigate(this, typeof(FolderPage));
         }
 
         private void settingsButton_Click(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(Settings), "path=menu");
+            NavigationHelper.Navigate(this, typeof(Settings), "path=menu");
         }
 
         private void lastFmLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.CreateLastFmLogin();
+            LastFm.Current.RequestLogin(this);
         }
 
         private async void lastFmProfileButton_Click(object sender, RoutedEventArgs e)
         {
             LastUser user = await LastFm.Current.GetUserInfo(ApplicationSettings.LastFmSessionUsername);
 
-            PageHelper.MainPage.Navigate(typeof(LastFmProfilePage), user);
+            NavigationHelper.Navigate(this, typeof(LastFmProfilePage), user);
         }
 
         private async void lastFmUserButton_Click(object sender, RoutedEventArgs e)
@@ -554,7 +500,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void openFavoritesPageButton_Click(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(Favorites));
+            NavigationHelper.Navigate(this, typeof(Favorites));
         }
 
         private void leftBorder_Click(object sender, RoutedEventArgs e)
@@ -625,18 +571,19 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void HeaderRightButtons_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            PageHelper.MainPage.SearchUISetOffset(headerRightButtons.ActualWidth);
+            PageHelper.SetSearchBarOffset(headerRightButtons.ActualWidth);
+            PageHelper.SetSearchBarCompactMode(this.ActualWidth < headerRightButtons.ActualWidth + PageHelper.SearchBoxSize.Width + 13);
+        }
 
-            if (this.ActualWidth < headerRightButtons.ActualWidth + PageHelper.MainPage.SearchUIGetSearchBoxWidth())
-            {
-                //searchUI.SetSearchBarPlacement(NewSearchUX.SearchBoxPlacement.Center);
-                //searchUI.SetOffset(0);
-                PageHelper.MainPage.SearchUISetCompactMode(true);
-            }
-            else
-            {
-                PageHelper.MainPage.SearchUISetCompactMode(false);
-            }
+        private void HeaderShadow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (_sprite != null)
+                _sprite.Size = e.NewSize.ToVector2();
+        }
+
+        private void ScrobbleSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.Navigate(this, typeof(Settings), "path=scrobble");
         }
     }
 }

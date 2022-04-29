@@ -8,6 +8,13 @@ namespace ClassLibrary.Helpers
 {
     public static class Enumerators
     {
+        public enum PageTheme
+        {
+            Dark = 0,
+            Light = 1,
+            Default = 2
+        }
+
         public enum MediaItemType
         {
             Song,

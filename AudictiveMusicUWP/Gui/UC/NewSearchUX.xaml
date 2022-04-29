@@ -10,13 +10,23 @@
     d:DesignWidth="400"
     x:Name="root">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
+            <RowDefinition Height="43" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Rectangle x:Name="dismissArea" Tapped="DismissArea_Tapped" IsHitTestVisible="False" Fill="#444444" Opacity="0" Grid.RowSpan="2" />
-        <Grid x:Name="box" SizeChanged="Box_SizeChanged" VerticalAlignment="Center" HorizontalAlignment="Right">
+        <Grid x:Name="box" Margin="0,5,0,0" SizeChanged="Box_SizeChanged" VerticalAlignment="Center" HorizontalAlignment="Right">
             <TextBox x:Name="searchBox" x:Uid="SearchBox" SizeChanged="Box_SizeChanged" TextAlignment="Center" TextChanged="searchBox_TextChanged" KeyDown="searchBox_KeyDown" GotFocus="Search_GotFocus" Style="{StaticResource SearchBoxStyle}" Width="{Binding SearchBoxWidth, ElementName=root}">
                 <TextBox.RenderTransform>
                     <TransformGroup>
@@ -25,7 +35,7 @@
                 </TextBox.RenderTransform>
             </TextBox>
         </Grid>
-        <Button x:Name="searchButton" Content="" Click="SearchButton_Click" Visibility="Collapsed" VerticalAlignment="Stretch" Width="40" Style="{StaticResource SearchButtonStyle}" />
+        <Button x:Name="searchButton" Margin="0,9,0,4" Content="" FontSize="12" Click="SearchButton_Click" Visibility="Collapsed" VerticalAlignment="Stretch" Width="30" Style="{StaticResource SearchButtonStyle}" />
 
         <!--<Rectangle Width="2" Fill="Red" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Stretch" />-->
 
@@ -127,7 +137,7 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Grid Background="Gray" Height="100" Width="100">
-                                            <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF737373" />
+                                            <TextBlock Text="" FontFamily="{ThemeResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF737373" />
                                             <Image Source="{Binding Image}" ImageOpened="AlbumCover_ImageOpened" Opacity="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                                             <Border x:Name="albumItemOverlay" Opacity="0" PointerEntered="albumItemOverlay_PointerEntered"  PointerExited="albumItemOverlay_PointerExited">
                                                 <Border.Background>
@@ -175,7 +185,7 @@
                                             <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Grid.Row="0" Text="{Binding Title}" FontSize="14" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                                             <StackPanel Margin="0,5,0,5" Orientation="Horizontal" Grid.Row="1">
                                                 <TextBlock Text="{Binding Artist}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
-                                                <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" />
+                                                <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
                                                 <TextBlock Text="{Binding Album}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
 
                                             </StackPanel>

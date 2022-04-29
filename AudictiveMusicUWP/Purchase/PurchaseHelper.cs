@@ -1,5 +1,6 @@
 ﻿using AudictiveMusicUWP.Gui.Util;
 using ClassLibrary.Helpers;
+using InAppNotificationLibrary;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -148,32 +149,28 @@ namespace AudictiveMusicUWP.Purchase
         }
 
 
-        public static async void ShowDonationErrorMessage()
+        public static void ShowDonationErrorMessage()
         {
-            PageHelper.MainPage.Notification.Hide();
-            await Task.Delay(200);
+            InAppNotification inAppNotification = new InAppNotification()
+            {
+                Title = ApplicationInfo.Current.Resources.GetString("AskForDonationErrorTitle"),
+                Message = ApplicationInfo.Current.Resources.GetString("AskForDonationErrorMessage"),
+                Icon = "\uEB90",
+            };
 
-            PageHelper.MainPage.Notification.SetContent(ApplicationInfo.Current.Resources.GetString("AskForDonationErrorTitle"),
-                ApplicationInfo.Current.Resources.GetString("AskForDonationErrorMessage"), "");
-            PageHelper.MainPage.Notification.PrimaryActionVisibility = Visibility.Collapsed;
-            PageHelper.MainPage.Notification.SecondaryActionVisibility = Visibility.Collapsed;
-            PageHelper.MainPage.Notification.Show();
-
-            PreviousDonationFailed = null;
+            InAppNotificationHelper.ShowNotification(inAppNotification);
         }
 
-        public static async void ShowDonationThanksMessage()
+        public static void ShowDonationThanksMessage()
         {
-            PageHelper.MainPage.Notification.Hide();
-            await Task.Delay(200);
-            PageHelper.MainPage.Notification.SetContent(ApplicationInfo.Current.Resources.GetString("ThankYouSoMuch"),
-                ApplicationInfo.Current.Resources.GetString("AskForDonationThankMessage"),
-                "");
-            PageHelper.MainPage.Notification.PrimaryActionVisibility = Visibility.Collapsed;
-            PageHelper.MainPage.Notification.SecondaryActionVisibility = Visibility.Collapsed;
-            PageHelper.MainPage.Notification.Show();
+            InAppNotification inAppNotification = new InAppNotification()
+            {
+                Title = ApplicationInfo.Current.Resources.GetString("ThankYouSoMuch"),
+                Message = ApplicationInfo.Current.Resources.GetString("AskForDonationThankMessage"),
+                Icon = "\uE899",
+            };
 
-            NeedToThankForDonation = null;
+            InAppNotificationHelper.ShowNotification(inAppNotification);
         }
 
     }

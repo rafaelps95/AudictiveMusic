@@ -102,7 +102,7 @@
                 <ColumnDefinition Width="{Binding ItemLength, ElementName=root}" />
             </Grid.ColumnDefinitions>
             <Grid Background="Gray" Height="{Binding ItemLength, ElementName=root}">
-                <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF737373" />
+                <TextBlock Text="" FontFamily="{ThemeResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF737373" />
                 <Image Source="{Binding Image}" ImageOpened="AlbumCover_ImageOpened" Opacity="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                 <Border x:Name="albumItemOverlay" Opacity="0">
                     <Border.Background>
@@ -116,15 +116,11 @@
                 <TextBlock Margin="0,5,0,0" Grid.Row="1" Text="{Binding Name}" FontSize="13" FontWeight="Bold" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Left" />
                 <TextBlock Margin="0,5,0,5" Grid.Row="2" Text="{Binding Artist}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextAlignment="Left" />
             </StackPanel>
-            <Button RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" FontWeight="Bold" Margin="0,3,-5,0" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" Content="" Tapped="action_Click" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Grid.Row="1">
+            <Button RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" FontWeight="Bold" Margin="0,3,-5,0" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" Content="" Tapped="action_Click" FontFamily="{ThemeResource IconFont}" VerticalAlignment="Center" Grid.Row="1">
                 <Button.RenderTransform>
                     <CompositeTransform Rotation="-90" />
                 </Button.RenderTransform>
             </Button>
-            <!--<StackPanel x:Name="buttonsArea" Visibility="Collapsed" Opacity="0" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-            <Button Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SideMenuButtonStyle}" Tag="" Width="55" x:Name="playButton" Click="playButton_Click" FontSize="20"  />
-            <Button Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SideMenuButtonStyle}" Tag="" Width="55" x:Name="shareButton" Click="shareButton_Click" FontSize="20"  />
-        </StackPanel>-->
         </Grid>
     </Border>
 

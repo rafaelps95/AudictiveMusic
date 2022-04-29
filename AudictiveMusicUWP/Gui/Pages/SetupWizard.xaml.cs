@@ -1,4 +1,5 @@
 ﻿using AudictiveMusicUWP.Gui.Util;
+using AudictiveMusicUWP.Gui.UC;
 using ClassLibrary.Control;
 using ClassLibrary.Helpers;
 using System;
@@ -59,15 +60,11 @@ namespace AudictiveMusicUWP.Gui.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-
-            PageHelper.SetupWizard = null;
         }
 
         async protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-
-            PageHelper.SetupWizard = this;
 
             appName.Text = ApplicationInfo.Current.AppPackageName;
             VersionNumber.Text = ApplicationInfo.Current.AppVersion;

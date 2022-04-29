@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.Data.Xml.Dom;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 
 namespace ClassLibrary.Helpers
 {
@@ -20,6 +21,7 @@ namespace ClassLibrary.Helpers
         public event LastFmConnectedEventArgs Connected;
         public delegate void LastFmDisconnectedEventArgs();
         public event LastFmDisconnectedEventArgs Disconnected;
+        public event RoutedEventHandler LoginRequested;
         //public delegate void RoutedEventArgs(Artist artist);
         //public static event RoutedEventArgs DownloadCompleted;
 
@@ -70,6 +72,7 @@ namespace ClassLibrary.Helpers
             }
         }
 
+        public void RequestLogin(object sender) => LoginRequested?.Invoke(sender, new RoutedEventArgs());
 
         private string SessionKey
         {

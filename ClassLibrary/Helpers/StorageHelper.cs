@@ -5,11 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.UI.Xaml;
 
 namespace ClassLibrary.Helpers
 {
     public static class StorageHelper
     {
+        public static event RoutedEventHandler LibraryPickerRequested;
+
+        public static void RequestLibraryPicker(object sender) => LibraryPickerRequested?.Invoke(sender, new RoutedEventArgs());
+
         public static async Task<int> CalculateSize(this StorageFolder folder)
         {
             // Query all files in the folder. Make sure to add the CommonFileQuery
@@ -30,54 +35,11 @@ namespace ClassLibrary.Helpers
             return Convert.ToInt32(d);
         }
 
-        //private static List<string> files = new List<string>();
-
-        //public static List<string> GetAllFiles(StorageFolder folder)
-        //{
-        //    DeepScan(folder);
-
-        //    return files;
-        //}
-
-        //private static async void DeepScan(StorageFolder folder)
-        //{
-        //    StorageFolder fold = folder;
-
-        //    var items = await fold.GetItemsAsync();
-
-        //    foreach (var item in items)
-        //    {
-        //        if (item.GetType() == typeof(StorageFile))
-        //        {
-        //            if (IsMusicFile(item.Path))
-        //                files.Add(item.Path.ToString());
-        //        }
-        //        else
-        //            DeepScan(item as StorageFolder);
-        //    }
-        //}
-
-
         public static async Task<IReadOnlyList<IStorageItem>> ReadFolder(StorageFolder folder)
         {
             var items = await folder.GetItemsAsync();
             return items;
         }
-
-        //private static readonly Dictionary<string, string> SupportedMediaFiles = new Dictionary<string, string>();
-
-        //private static readonly string[] SupportedMimeTypes =
-        //{
-        //    "audio/aac",
-        //    "audio/flac",
-        //    "audio/x-flac",
-        //    "audio/m4a",
-        //    "audio/mp4",
-        //    "video/mp4",
-        //    "audio/mpeg",
-        //    "audio/wav",
-        //    "audio/x-ms-wma"
-        //};
 
         public static readonly string[] SupportedFileFormats = { ".aac", ".flac", ".m4a", ".mp3", ".mp4", ".wav", ".wma" };
 
@@ -92,8 +54,6 @@ namespace ClassLibrary.Helpers
             extension = s.Last();
 
             return SupportedFileFormats.Contains("." + extension);
-            //return fileName.EndsWith(".aac") || fileName.EndsWith(".mp3") || fileName.EndsWith(".wma") || fileName.EndsWith(".m4a") || fileName.EndsWith(".flac") || fileName.EndsWith(".mp4");
-            //return true;
         }
 
         /// <summary>

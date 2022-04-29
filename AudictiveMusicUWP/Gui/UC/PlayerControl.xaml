@@ -518,10 +518,10 @@
             <Grid Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="1" IsTapEnabled="True" Canvas.ZIndex="5" PointerPressed="dismissArea_PointerPressed" IsHitTestVisible="False" x:Name="dismissArea" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button x:Name="optionsButton" Click="optionsButton_Click" RequestedTheme="Dark" Width="55" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" FontSize="20" Content="">
+                <Button x:Name="optionsButton" Click="optionsButton_Click" RequestedTheme="Dark" Width="55" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" FontSize="20" Content="">
 
                 </Button>
-                <Button x:Name="closeButton" Click="closeButton_Click" RequestedTheme="Dark" Width="55" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" FontSize="20" Content="" />
+                <Button x:Name="closeButton" Click="closeButton_Click" RequestedTheme="Dark" Width="55" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" FontSize="20" Content="" />
             </StackPanel>
 
             <Grid RequestedTheme="Dark" x:Name="PlayerControlsContainer" MaxWidth="500">
@@ -549,7 +549,7 @@
                                 </ImageBrush.ImageSource>
                             </ImageBrush>
                         </Border.Background>
-                        <TextBlock RenderTransformOrigin="0.5,0.5" x:Name="loveIndicator" Text="" Opacity="0" IsHitTestVisible="False" FontSize="95" FontFamily="Segoe MDL2 Assets" TextAlignment="Center" VerticalAlignment="Center" Foreground="#FF930A0A">
+                        <TextBlock RenderTransformOrigin="0.5,0.5" x:Name="loveIndicator" Text="" Opacity="0" IsHitTestVisible="False" FontSize="95" FontFamily="{ThemeResource IconFont}" TextAlignment="Center" VerticalAlignment="Center" Foreground="#FF930A0A">
                             <TextBlock.RenderTransform>
                                 <ScaleTransform x:Name="loveIndicatorScale" ScaleX="0.8" ScaleY="0.8" />
                             </TextBlock.RenderTransform>
@@ -557,7 +557,7 @@
                     </Border>
                     <StackPanel VerticalAlignment="Center" Orientation="Vertical">
                         <Button x:Name="playlistButton" IsEnabled="False" Click="playlistButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource IconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5"/>
-                        <ToggleButton x:Name="repeatToggleButton" IsEnabled="False" IsThreeState="True" IsTextScaleFactorEnabled="False" Click="Repeat_Click" FontFamily="Segoe MDL2 Assets" Content="" Style="{StaticResource IconToggleButtonStyle}" Foreground="White" FontSize="18" Margin="0,5" />
+                        <ToggleButton x:Name="repeatToggleButton" IsEnabled="False" IsThreeState="True" IsTextScaleFactorEnabled="False" Click="Repeat_Click" FontFamily="{ThemeResource IconFont}" Content="" Style="{StaticResource IconToggleButtonStyle}" Foreground="White" FontSize="18" Margin="0,5" />
                         <Button x:Name="shuffleButton" IsEnabled="False" Click="shuffleButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource IconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5" />
 
                     </StackPanel>
@@ -568,8 +568,8 @@
                 <!--<TextBlock x:Name="AlbumName" IsHitTestVisible="False" Visibility="Collapsed" Text="" TextTrimming="CharacterEllipsis" />-->
 
                 <StackPanel Orientation="Horizontal" x:Name="MusicControlButtonsPanel">
-                    <Button x:Name="previousButton" IsEnabled="False" Margin="10,0" FontFamily="Segoe UI Symbol" Foreground="White" FontSize="25" Click="previousButton_Click" Content="" Style="{StaticResource IconButtonStyle}" />
-                    <Button Content="{Binding ElementName=PlayPauseButton, Path=Tag}" Margin="10,0" Foreground="White" Height="50" Width="50" FontSize="25" Click="playPauseButton_Click" Style="{StaticResource CircleButtonStyle}">
+                    <Button x:Name="previousButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" FontFamily="{ThemeResource IconFont}" Foreground="White" FontSize="20" Click="previousButton_Click" Content="&#xE622;" Style="{StaticResource IconButtonStyle}" />
+                    <Button Content="{Binding ElementName=PlayPauseButton, Path=Tag}" Margin="10,0" Foreground="White" Height="50" Width="50" FontSize="20" Click="playPauseButton_Click" Style="{StaticResource CircleButtonStyle}">
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <LinearGradientBrush.RelativeTransform>
@@ -581,7 +581,7 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="nextButton" IsEnabled="False" Margin="10,0" FontFamily="Segoe UI Symbol" Foreground="White" FontSize="25" Click="nextButton_Click" Content="" Style="{StaticResource IconButtonStyle}" />
+                    <Button x:Name="nextButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" FontFamily="{ThemeResource IconFont}" Foreground="White" FontSize="20" Click="nextButton_Click" Content="&#xE623;" Style="{StaticResource IconButtonStyle}" />
                 </StackPanel>
 
                 <Slider x:Name="musicSlider" IsThumbToolTipEnabled="False" Foreground="White" Style="{StaticResource ProgressSliderStyle}" />
@@ -629,7 +629,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" CornerRadius="0,0,5,0" Margin="0,0,5,0" Width="60" Height="60" Background="#FF333333" Name="SmallCoverContainer">
-                            <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="35" FontFamily="Segoe MDL2 Assets" Foreground="#FF666666" />
+                            <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="35" FontFamily="{ThemeResource IconFont}" Foreground="#FF666666" />
                             <Image Stretch="UniformToFill">
                                 <Image.Source>
                                     <BitmapImage x:Name="compactAlbumBitmap" ImageFailed="currentAlbumBitmap_ImageFailed" />
@@ -648,9 +648,9 @@
                 </Grid>
 
                 <StackPanel Margin="0,0,0,0" Grid.Column="1" Orientation="Horizontal" Visibility="Visible" HorizontalAlignment="Right" Name="CompactControlButtons">
-                    <Button IsEnabled="{Binding ElementName=previousButton, Path=IsEnabled}" Style="{StaticResource PlayerBarControlsButtonStyle}" PointerEntered="previousButton_PointerEntered" Holding="previousButton_Holding" PointerPressed="previousButton_PointerEntered" PointerCaptureLost="previousButton_PointerExited" PointerExited="previousButton_PointerExited" PointerReleased="previousButton_PointerExited" FontSize="24" Background="Transparent" Click="previousButton_Click" Tag="" Padding="0" VerticalAlignment="Stretch" Margin="20,0,0,0" />
-                    <Button Style="{StaticResource PlayerBarControlsButtonStyle}" FontSize="24" Background="Transparent" Click="playPauseButton_Click" Name="PlayPauseButton" Tag="" Padding="0" VerticalAlignment="Stretch" Margin="0,0,0,0" />
-                    <Button IsEnabled="{Binding ElementName=nextButton, Path=IsEnabled}" Style="{StaticResource PlayerBarControlsButtonStyle}" PointerEntered="nextButton_PointerEntered" Holding="nextButton_Holding" PointerPressed="nextButton_PointerEntered" PointerCaptureLost="nextButton_PointerExited" PointerExited="nextButton_PointerExited" PointerReleased="nextButton_PointerExited" FontSize="24" Background="Transparent" Click="nextButton_Click" Tag="" Padding="0" VerticalAlignment="Stretch" Margin="0,0,0,0" />
+                    <Button IsEnabled="{Binding ElementName=previousButton, Path=IsEnabled}" Style="{StaticResource PlayerBarControlsButtonStyle}" PointerEntered="previousButton_PointerEntered" Holding="previousButton_Holding" PointerPressed="previousButton_PointerEntered" PointerCaptureLost="previousButton_PointerExited" PointerExited="previousButton_PointerExited" PointerReleased="previousButton_PointerExited" FontSize="19" Background="Transparent" Click="previousButton_Click" Tag="&#xE622;" Padding="0" VerticalAlignment="Stretch" Margin="20,0,0,0" />
+                    <Button Style="{StaticResource PlayerBarControlsButtonStyle}" FontSize="19" Background="Transparent" Click="playPauseButton_Click" Name="PlayPauseButton" Tag="&#xF5B0;" Padding="0" VerticalAlignment="Stretch" Margin="0,0,0,0" />
+                    <Button IsEnabled="{Binding ElementName=nextButton, Path=IsEnabled}" Style="{StaticResource PlayerBarControlsButtonStyle}" PointerEntered="nextButton_PointerEntered" Holding="nextButton_Holding" PointerPressed="nextButton_PointerEntered" PointerCaptureLost="nextButton_PointerExited" PointerExited="nextButton_PointerExited" PointerReleased="nextButton_PointerExited" FontSize="19" Background="Transparent" Click="nextButton_Click" Tag="&#xE623;" Padding="0" VerticalAlignment="Stretch" Margin="0,0,0,0" />
                 </StackPanel>
             </Grid>
         </Grid>

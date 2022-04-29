@@ -169,6 +169,12 @@ namespace AudictiveMusicUWP.Gui.UC
             ApplicationSettings.NowPlayingThemeChanged += ApplicationSettings_NowPlayingThemeChanged;
             ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
             ApplicationSettings.ThemeBackgroundPreferenceChanged += ApplicationSettings_ThemeBackgroundPreferenceChanged;
+            PlayerController.FullPlayerRequested += PlayerController_FullPlayerRequested;
+        }
+
+        private void PlayerController_FullPlayerRequested(object sender, RoutedEventArgs e)
+        {
+            Mode = DisplayMode.Full;
         }
 
         private void ApplicationSettings_ThemeBackgroundPreferenceChanged()
@@ -214,7 +220,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
                 HideTouch3D();
 
-                PageHelper.MainPage.Navigate(typeof(ArtistPage), artist);
+                NavigationHelper.Navigate(this, typeof(ArtistPage), artist);
             }
             else if (e.Action == Touch3DEventArgs.Type.LikeSong)
             {
@@ -232,7 +238,7 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 List<string> list = new List<string>();
                 list.Add(ApplicationSettings.CurrentTrackPath);
-                PageHelper.MainPage.CreateAddToPlaylistPopup(list);
+                PlaylistHelper.RequestPlaylistPicker(this, list);
             }
         }
 
@@ -428,7 +434,7 @@ namespace AudictiveMusicUWP.Gui.UC
                     Canvas.SetZIndex(notice, 5);
                     notice.Dismissed += (s) =>
                     {
-                        PageHelper.MainPage.Navigate(typeof(ThemeSelector));
+                        NavigationHelper.Navigate(this, typeof(ThemeSelector));
                         ApplicationSettings.ThemesUserAware = true;
                     };
                     notice.Show(ApplicationInfo.Current.Resources.GetString("ThemesMessage"), ApplicationInfo.Current.Resources.GetString("SetUp/Text"));
@@ -540,7 +546,7 @@ namespace AudictiveMusicUWP.Gui.UC
             if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.None)
             {
                 previousButton.IsEnabled = nextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = false;
-                PlayPauseButton.Tag = "";
+                PlayPauseButton.Tag = "\uF5B0";
             }
             else
             {
@@ -548,12 +554,11 @@ namespace AudictiveMusicUWP.Gui.UC
 
                 if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.Playing)
                 {
-                    PlayPauseButton.Tag = "";
+                    PlayPauseButton.Tag = "\uF8AE";
                 }
                 else if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.Paused)
                 {
-                    previousButton.IsEnabled = nextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = true;
-                    PlayPauseButton.Tag = "";
+                    PlayPauseButton.Tag = "\uF5B0";
                 }
             }
         }
@@ -741,11 +746,11 @@ namespace AudictiveMusicUWP.Gui.UC
 
         public void UpdateThemeColor(Color color)
         {
-            Color darkerColor = color.ChangeColorBrightness(-0.6f);
-            Color lighterColor = color.ChangeColorBrightness(0.3f);
+            Color darkerColor = color.ChangeColorBrightness(-0.7f);
+            Color lighterColor = color.ChangeColorBrightness(0.4f);
 
             gradientStop1.Color = gradientStop3.Color = darkerColor;
-            gradientStop2.Color = color;
+            gradientStop2.Color = color.ChangeColorBrightness(-0.1f);
 
             if (ApplicationSettings.NowPlayingTheme == ClassLibrary.Themes.Theme.Material)
             {
@@ -1486,7 +1491,7 @@ namespace AudictiveMusicUWP.Gui.UC
             };
             ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
 
-            PageHelper.MainPage.Navigate(typeof(AlbumPage), album);
+            NavigationHelper.Navigate(this, typeof(AlbumPage), album);
 
         }
 
@@ -1677,7 +1682,7 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 Name = ApplicationSettings.CurrentSong.Artist,
             };
-            PageHelper.MainPage.Navigate(typeof(ArtistPage), art);
+            NavigationHelper.Navigate(this, typeof(ArtistPage), art);
         }
 
         private void optionsButton_Click(object sender, RoutedEventArgs e)
@@ -1691,7 +1696,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             mfi.Click += (s, a) =>
             {
-                PageHelper.MainPage.Navigate(typeof(ThemeSelector));
+                NavigationHelper.Navigate(this, typeof(ThemeSelector));
             };
 
                 mf.Items.Add(mfi);
@@ -1703,7 +1708,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             mfi2.Click += (s,a) =>
             {
-                PageHelper.MainPage.Navigate(typeof(Settings), "path=timer");
+                NavigationHelper.Navigate(this, typeof(Settings), "path=timer");
             };
 
             mf.Items.Add(mfi2);

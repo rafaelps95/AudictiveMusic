@@ -123,6 +123,12 @@
     <Compile Include="Gui\Pages\LFM\TopMediaPage.xaml.cs">
       <DependentUpon>TopMediaPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\UC\FluentButton.xaml.cs">
+      <DependentUpon>FluentButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\UC\SelectedItemsBar.xaml.cs">
+      <DependentUpon>SelectedItemsBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\UC\SettingsItemDropDownList.xaml.cs">
       <DependentUpon>SettingsItemDropDownList.xaml</DependentUpon>
     </Compile>
@@ -216,14 +222,8 @@
     <Compile Include="Gui\UC\MusicLibraryPicker.xaml.cs">
       <DependentUpon>MusicLibraryPicker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\UC\PageFlyout.xaml.cs">
-      <DependentUpon>PageFlyout.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Gui\UC\PlayerControl.xaml.cs">
       <DependentUpon>PlayerControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Gui\UC\SearchPane.xaml.cs">
-      <DependentUpon>SearchPane.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Util\PageHelper.cs" />
     <Compile Include="Gui\UC\PlaylistControl.xaml.cs">
@@ -363,6 +363,7 @@
     <Content Include="Assets\Themes\material.png" />
     <Content Include="Assets\Themes\modern.png" />
     <Content Include="Assets\tileTallLogo.png" />
+    <Content Include="Assets\Segoe Fluent Icons.ttf" />
     <None Include="AudictiveMusicUWP_StoreKey.pfx" />
     <None Include="AudictiveMusicUWP_TemporaryKey.pfx" />
     <PRIResource Include="Keys.resw" />
@@ -499,6 +500,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Gui\UC\FluentButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Gui\UC\ModernProgressBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -531,10 +536,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\UC\PageFlyout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Gui\UC\PlayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -559,11 +560,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\UC\SearchPane.xaml">
+    <Page Include="Gui\Pages\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Settings.xaml">
+    <Page Include="Gui\UC\SelectedItemsBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -640,6 +641,10 @@
     <ProjectReference Include="..\ClassLibrary\ClassLibrary.csproj">
       <Project>{9018aa24-dd82-4883-b645-e678bf05a0ac}</Project>
       <Name>ClassLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InAppNotificationLibrary\InAppNotificationLibrary.csproj">
+      <Project>{d040fdc0-6317-4a78-b157-3f8a2534fa79}</Project>
+      <Name>InAppNotificationLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToastBackgroundTask\ToastBackgroundTask.csproj">
       <Project>{80cdb166-8b4c-42e4-9488-59aa96709096}</Project>

@@ -4,66 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AudictiveMusicUWP.Gui.Pages;
+using Windows.Foundation;
 
 namespace AudictiveMusicUWP.Gui.Util
 {
     public class PageHelper
     {
+        public delegate void SearchBarLayoutHandler(bool isCompact);
+        public static event SearchBarLayoutHandler LayoutChangeRequested;
+
+        public delegate void SearchBarOffsetHandler(double offset);
+        public static event SearchBarOffsetHandler OffsetChangeRequested;
+
+        public static void SetSearchBarCompactMode(bool isCompact) => LayoutChangeRequested?.Invoke(isCompact);
+
+        public static void SetSearchBarOffset(double offset) => OffsetChangeRequested?.Invoke(offset);
+
+        public static Size SearchBoxSize
+        {
+            get;
+            set;
+        }
+
         public static MainPage MainPage
-        {
-            get;
-            set;
-        }
-
-        public static Settings Settings
-        {
-            get;
-            set;
-        }
-
-        public static PreparingCollection PreparingCollection
-        {
-            get;
-            set;
-        }
-
-        public static Artists Artists
-        {
-            get;
-            set;
-        }
-
-        public static Albums Albums
-        {
-            get;
-            set;
-        }
-
-        public static Songs Songs
-        {
-            get;
-            set;
-        }
-
-        public static Favorites Favorites
-        {
-            get;
-            set;
-        }
-
-        public static Playlists Playlists
-        {
-            get;
-            set;
-        }
-
-        public static PlaylistPage PlaylistPage
-        {
-            get;
-            set;
-        }
-
-        public static SetupWizard SetupWizard
         {
             get;
             set;

@@ -471,13 +471,12 @@ namespace AudictiveMusicUWP.Gui.UC
             foreach (Song song in songs)
                 list.Add(song.SongURI);
 
-            PageHelper.MainPage.CreateAddToPlaylistPopup(list);
+            PlaylistHelper.RequestPlaylistPicker(this, list);
         }
 
         private void moreButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PageHelper.MainPage != null)
-                PageHelper.MainPage.ShowPopupMenu(ART, sender, Enumerators.MediaItemType.Artist, true, new Point(0, 0));
+            this.ShowPopupMenu(ART, sender, Enumerators.MediaItemType.Artist, true, new Point(0, 0));
         }
 
         private async void ellipseBitmap_ImageOpened(object sender, RoutedEventArgs e)
@@ -555,7 +554,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             item1.Click += (s, a) =>
             {
-                //PageHelper.MainPage.Navigate(typeof(ImagePreview), ART);
+                //NavigationHelper.Navigate(this, typeof(ImagePreview), ART);
             };
 
             //item2.Click += async (s, a) =>
@@ -586,9 +585,6 @@ namespace AudictiveMusicUWP.Gui.UC
                 if (ApplicationInfo.Current.HasInternetConnection)
                 {
                     this.ART.IsUpdatingImage = true;
-                    //if (PageHelper.Artists != null)
-                    //    PageHelper.Artists.NavigationCacheMode = NavigationCacheMode.Disabled;
-
                     ellipse.RemoveSource();
                     rootBrush.ImageSource = null;
                     await Spotify.DownloadArtistImage(ART);
@@ -617,18 +613,18 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 LastArtist artist = result.Content;
 
-                PageHelper.MainPage.Navigate(typeof(LastFmProfilePage), artist);
+                NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
             }
         }
 
         private void audictiveButton_Click(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(ArtistPage), new Artist() { Name = this.LastART.Name });
+            NavigationHelper.Navigate(this, typeof(ArtistPage), new Artist() { Name = this.LastART.Name });
         }
 
         private void lastFmTagsList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(LastFmListPage), e.ClickedItem);
+            NavigationHelper.Navigate(this, typeof(LastFmListPage), e.ClickedItem);
         }
 
         private async void webServiceButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -649,13 +645,13 @@ namespace AudictiveMusicUWP.Gui.UC
                     {
                         LastArtist artist = result.Content;
 
-                        PageHelper.MainPage.Navigate(typeof(LastFmProfilePage), artist);
+                        NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
                     }
                 }
             }
             else if (webServiceButton.Service == WebServiceButton.WebService.LocalFiles)
             {
-                PageHelper.MainPage.Navigate(typeof(ArtistPage), new Artist() { Name = this.LastART.Name });
+                NavigationHelper.Navigate(this, typeof(ArtistPage), new Artist() { Name = this.LastART.Name });
             }
         }
     }

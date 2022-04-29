@@ -130,16 +130,16 @@
     <value>Agregar a los favoritos</value>
   </data>
   <data name="AddToNowPlaying.Text" xml:space="preserve">
-    <value>Añadir a la reproducción</value>
+    <value>Agregar a cola de reproducción</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Añadir a la reproducción</value>
+    <value>Agregar a cola de reproducción</value>
   </data>
   <data name="AddToPlaylistFile" xml:space="preserve">
-    <value>Añadir a lista de reproducción...</value>
+    <value>Agregar a lista de reproducción...</value>
   </data>
   <data name="AddToPlaylistMenu.Text" xml:space="preserve">
-    <value>Añadir a lista de reproducción...</value>
+    <value>Agregar a lista de reproducción...</value>
   </data>
   <data name="Album" xml:space="preserve">
     <value>Álbum</value>
@@ -691,7 +691,7 @@
     <value>Nos encantaría saber lo que tiene que decir acerca de el Audictive Music Audictive! Elija el método que desea ponerse en contacto con nosotros.</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Reproducir entonces</value>
+    <value>Reproducir seguiente</value>
   </data>
   <data name="RecentlyAdded" xml:space="preserve">
     <value>Recientemente añadido</value>
@@ -723,7 +723,7 @@
   <data name="ChoosePlaylist.Text" xml:space="preserve">
     <value>Elija la lista de reproducción:</value>
   </data>
-  <data name="Done.Content" xml:space="preserve">
+  <data name="Done.Text" xml:space="preserve">
     <value>Hecho</value>
   </data>
   <data name="Empty" xml:space="preserve">
@@ -744,7 +744,7 @@
   <data name="NamePlaylistHeader" xml:space="preserve">
     <value>Escribe un nombre para tu lista de reproducción</value>
   </data>
-  <data name="NewPlaylist.Content" xml:space="preserve">
+  <data name="NewPlaylist.Text" xml:space="preserve">
     <value>Lista nueva</value>
   </data>
   <data name="NoResults.Text" xml:space="preserve">
@@ -955,10 +955,10 @@
     <value>Colección</value>
   </data>
   <data name="GoToAlbumString" xml:space="preserve">
-    <value>Ir al álbum</value>
+    <value>Mostrar el álbum</value>
   </data>
   <data name="GoToArtistString" xml:space="preserve">
-    <value>Ir al artista</value>
+    <value>Mostrar el artista</value>
   </data>
   <data name="LetsStart.Text" xml:space="preserve">
     <value>Inicio</value>
@@ -1214,5 +1214,8 @@
   </data>
   <data name="ReloadCollectionWarningTitle" xml:space="preserve">
     <value>¿Estás seguro/segura de que quieres recargar tu colección?</value>
+  </data>
+  <data name="AddTo" xml:space="preserve">
+    <value>Agregar</value>
   </data>
 </root>

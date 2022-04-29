@@ -67,7 +67,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
+            <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="{ThemeResource IconFont}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -78,12 +78,12 @@
                     <RowDefinition Height="48" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid.Background>
-                    <SolidColorBrush Opacity="0.5" Color="{ThemeResource SystemChromeLowColor}" />
-                </Grid.Background>
+                <!--<Grid.Background>
+                    <SolidColorBrush Opacity="0.3" Color="{ThemeResource SystemChromeLowColor}" />
+                </Grid.Background>-->
                 <TextBlock x:Name="pageTitle" x:Uid="Collection" VerticalAlignment="Center" Margin="12,0" Text="Songs" FontWeight="Bold" FontSize="25" TextTrimming="CharacterEllipsis" />
-                <Button Grid.Column="1" x:Name="sortButton" Click="sortButton_Click" Visibility="Collapsed" VerticalAlignment="Stretch" Width="55" FontFamily="Segoe UI Symbol" FontSize="20" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="" Style="{StaticResource IconButtonStyle}" />
-                <Button Grid.Row="0" Grid.Column="2" Content="" x:Name="shuffleButton" Click="shuffleButton_Click" VerticalAlignment="Stretch" Width="55" FontFamily="Segoe UI Symbol" FontSize="16" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" />
+                <Button Grid.Column="1" x:Name="sortButton" Click="sortButton_Click" Visibility="Collapsed" VerticalAlignment="Stretch" Width="55" FontFamily="{ThemeResource IconFont}" FontSize="20" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="" Style="{StaticResource IconButtonStyle}" />
+                <Button Grid.Row="0" Grid.Column="2" Content="" x:Name="shuffleButton" Click="shuffleButton_Click" VerticalAlignment="Stretch" Width="55" FontFamily="{ThemeResource IconFont}" FontSize="16" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" />
 
                 <StackPanel x:Name="navigationButtons" Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="1">
                     <ToggleButton Style="{StaticResource NavigationHeaderToggleButtonStyle}" Content="artistas" x:Uid="ArtistsMenu" Checked="artistsButton_Checked" x:Name="artistsButton" Click="artistsButton_Click" />
@@ -91,7 +91,7 @@
                     <ToggleButton Style="{StaticResource NavigationHeaderToggleButtonStyle}" Content="músicas" x:Uid="SongsMenu" Checked="songsButton_Checked" x:Name="songsButton" Click="songsButton_Click" />
 
                 </StackPanel>
-                <Button Grid.Row="1" Grid.Column="2" Content="" x:Name="foldersButton" Click="foldersButton_Click" VerticalAlignment="Stretch" Width="55" FontFamily="Segoe UI Symbol" Height="33" FontSize="12" VerticalContentAlignment="Center" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" />
+                <Button Grid.Row="1" Grid.Column="2" Content="" x:Name="foldersButton" Click="foldersButton_Click" VerticalAlignment="Stretch" Width="55" FontFamily="{ThemeResource IconFont}" Height="33" FontSize="12" VerticalContentAlignment="Center" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" />
 
             </Grid>
             <Frame Grid.Row="1" x:Name="frame" Navigated="frame_Navigated" />

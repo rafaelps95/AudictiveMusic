@@ -360,7 +360,7 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
             {
                 LastArtist artist = result.Content;
                 //artist.PlayCount = la.PlayCount;
-                PageHelper.MainPage.Navigate(typeof(LastFmProfilePage), artist);
+                NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
             }
         }
 

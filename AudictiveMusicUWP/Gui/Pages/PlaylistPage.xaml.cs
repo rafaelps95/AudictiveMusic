@@ -94,15 +94,11 @@ namespace AudictiveMusicUWP.Gui.Pages
                 pageTitle.Text = playlist.Name;
                 LoadSongs();
             }
-
-            PageHelper.PlaylistPage = this;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-
-            PageHelper.PlaylistPage = null;
         }
 
         private void LoadSongs()

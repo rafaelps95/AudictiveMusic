@@ -121,7 +121,7 @@
     <value>About</value>
   </data>
   <data name="AddToPlaylist" xml:space="preserve">
-    <value>Add to now playing</value>
+    <value>Add to play queue</value>
   </data>
   <data name="Albums.Text" xml:space="preserve">
     <value>Albums</value>
@@ -226,7 +226,7 @@
     <value>Add to favorites</value>
   </data>
   <data name="AddToNowPlaying.Text" xml:space="preserve">
-    <value>Add to now playing</value>
+    <value>Add to play queue</value>
   </data>
   <data name="AddToPlaylistMenu.Text" xml:space="preserve">
     <value>Add to playlist...</value>
@@ -735,7 +735,7 @@
   <data name="ChoosePlaylist.Text" xml:space="preserve">
     <value>Choose the playlist:</value>
   </data>
-  <data name="Done.Content" xml:space="preserve">
+  <data name="Done.Text" xml:space="preserve">
     <value>Done</value>
   </data>
   <data name="Empty" xml:space="preserve">
@@ -756,7 +756,7 @@
   <data name="NamePlaylistHeader" xml:space="preserve">
     <value>Type a name for your playlist</value>
   </data>
-  <data name="NewPlaylist.Content" xml:space="preserve">
+  <data name="NewPlaylist.Text" xml:space="preserve">
     <value>New list</value>
   </data>
   <data name="NoResults.Text" xml:space="preserve">
@@ -967,10 +967,10 @@
     <value>Collection</value>
   </data>
   <data name="GoToAlbumString" xml:space="preserve">
-    <value>Go to album</value>
+    <value>Show album</value>
   </data>
   <data name="GoToArtistString" xml:space="preserve">
-    <value>Go to artist</value>
+    <value>Show artist</value>
   </data>
   <data name="LetsStart.Text" xml:space="preserve">
     <value>Let's start!</value>
@@ -1223,5 +1223,8 @@
   </data>
   <data name="ReloadCollectionWarningTitle" xml:space="preserve">
     <value>Do you really want to reload your music collection?</value>
+  </data>
+  <data name="AddTo" xml:space="preserve">
+    <value>Add</value>
   </data>
 </root>

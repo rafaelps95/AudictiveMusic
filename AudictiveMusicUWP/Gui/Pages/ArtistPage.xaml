@@ -149,7 +149,7 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Grid Background="Gray" Height="100" Width="100">
-                                            <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF737373" />
+                                            <TextBlock Text="" FontFamily="{ThemeResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF737373" />
                                             <Image Source="{Binding Image}" ImageOpened="AlbumCover_ImageOpened" Opacity="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                                             <Border x:Name="albumItemOverlay" Opacity="0" PointerEntered="albumItemOverlay_PointerEntered"  PointerExited="albumItemOverlay_PointerExited">
                                                 <Border.Background>
@@ -185,7 +185,7 @@
                                     <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Grid.Row="0" Text="{Binding Title}" FontSize="14" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                                     <StackPanel Margin="0,5,0,5" Orientation="Horizontal" Grid.Row="1">
                                         <TextBlock Text="{Binding Artist}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
-                                        <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" />
+                                        <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
                                         <TextBlock Text="{Binding Album}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
 
                                     </StackPanel>
@@ -196,51 +196,6 @@
                     </ListView>
                 </Grid>
             </ScrollViewer>
-
-            <local:PageFlyout x:Name="pageFlyout" Opened="pageFlyout_Opened" Closed="pageFlyout_Closed" Grid.RowSpan="3" Canvas.ZIndex="20" IsHitTestVisible="False" />
-
-            <!--<Grid x:Name="touchFlyout" Opacity="0" IsHitTestVisible="False" Canvas.ZIndex="20" Grid.RowSpan="3">
-                <Rectangle Fill="#BB000000" x:Name="touchFlyoutOverlay" PointerPressed="touchFlyoutOverlay_PointerPressed" />
-                <Grid x:Name="touchFlyoutMainGrid" Padding="0,0,0,5" ManipulationMode="All" ManipulationDelta="touchFlyoutMainGrid_ManipulationDelta" ManipulationCompleted="touchFlyoutMainGrid_ManipulationCompleted" BorderThickness="2" VerticalAlignment="Top" HorizontalAlignment="Left" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                    <Grid.BorderBrush>
-                        <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}"/>
-                    </Grid.BorderBrush>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid Background="Transparent" IsRightTapEnabled="True" RightTapped="Album_RightTapped" IsHoldingEnabled="True">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid Background="Gray" Height="{Binding AlbumItemLength, ElementName=root, Mode=TwoWay}" Width="{Binding AlbumItemLength, ElementName=root, Mode=TwoWay}">
-                            <TextBlock Text="" FontFamily="Segoe MDL2 Assets" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF737373" />
-                            <Image x:Name="touchFlyoutAlbumCover" ImageOpened="AlbumCover_ImageOpened" Opacity="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-                        </Grid>
-                        <StackPanel Grid.Row="1" Margin="5,0,5,0" MaxWidth="{Binding AlbumItemLength, ElementName=root, Mode=TwoWay}">
-                            <TextBlock Margin="0,5,0,0" Grid.Row="1" x:Name="touchFlyoutAlbumName" FontSize="12" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Left" />
-                            <TextBlock Margin="0,5,0,0" Grid.Row="2" x:Name="touchFlyoutArtistName" FontSize="9" TextWrapping="NoWrap" TextAlignment="Left" />
-                        </StackPanel>
-                    </Grid>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-                        <Button Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" Content="" x:Name="touchFlyoutPlayButton" Click="touchFlyoutPlayButton_Click" FontSize="20" Margin="0,5,10,5" />
-                        <Button Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" Content="" x:Name="touchFlyoutMoreButton" Click="touchFlyoutMoreButton_Click" FontSize="20" Margin="0,5,0,5" />
-                    </StackPanel>
-
-                </Grid>
-            </Grid>-->
-            <!--<Grid Visibility="Collapsed" x:Name="bioGrid">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <TextBlock FontSize="22" FontWeight="Thin" Text="Biografia" />
-            <TextBlock Grid.Row="1" IsTextSelectionEnabled="True" FontWeight="Thin" FontSize="14" x:Name="bio" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" TextAlignment="Justify" Margin="3" />
-            <Button Grid.Row="2" HorizontalAlignment="Right" Content="Ler mais..." Style="{StaticResource InlineButtonStyle}" Margin="3" />
-        </Grid>-->
-
         </Grid>
     </Grid>
 </Page>

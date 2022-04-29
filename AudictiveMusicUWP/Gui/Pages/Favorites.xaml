@@ -58,7 +58,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
+            <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="{ThemeResource IconFont}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -72,16 +72,16 @@
                     <SolidColorBrush Opacity="0.5" Color="{ThemeResource SystemChromeLowColor}" />
                 </Grid.Background>
                 <TextBlock x:Name="pageTitle" x:Uid="Favorites" VerticalAlignment="Center" Margin="12,0" Text="Songs" FontWeight="Bold" FontSize="25" TextTrimming="CharacterEllipsis" />
-                <Button Grid.Row="0" Grid.Column="2" Content="" x:Name="shuffleButton" Click="shuffleButton_Click" VerticalAlignment="Stretch" Width="55" FontFamily="Segoe UI Symbol" FontSize="16" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" />
+                <Button Grid.Row="0" Grid.Column="2" Content="" x:Name="shuffleButton" Click="shuffleButton_Click" VerticalAlignment="Stretch" Width="55" FontFamily="{ThemeResource IconFont}" FontSize="16" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" />
 
                 <Grid Grid.Row="1" Grid.ColumnSpan="2" x:Name="topAppBar" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="topPlay" IsEnabled="False" Click="topPlay_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
-                        <Button x:Name="topAdd" IsEnabled="False" Click="topAdd_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
-                        <Button x:Name="topMore" IsEnabled="False" Click="topMore_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
+                        <Button x:Name="topPlay" IsEnabled="False" Click="topPlay_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" />
+                        <Button x:Name="topAdd" IsEnabled="False" Click="topAdd_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" />
+                        <Button x:Name="topMore" IsEnabled="False" Click="topMore_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" />
 
                     </StackPanel>
 
@@ -113,7 +113,7 @@
                             <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Grid.Row="0" Text="{Binding Title}" FontSize="14" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                             <StackPanel Margin="0,5,0,5" Orientation="Horizontal" Grid.Row="1">
                                 <TextBlock Text="{Binding Artist}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
-                                <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" />
+                                <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
                                 <TextBlock Text="{Binding Album}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
 
                             </StackPanel>
@@ -134,7 +134,7 @@
                 </Button>
             </Grid>
 
-            <!--<Button Grid.Row="2" Margin="0,0,20,80" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="" Background="{ThemeResource SystemControlHighlightAccentBrush}" Click="shuffleButton_Click" FontSize="32" FontFamily="Segoe UI Symbol" Width="80" Height="80" Style="{StaticResource CircleButtonStyle}" />-->
+            <!--<Button Grid.Row="2" Margin="0,0,20,80" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="" Background="{ThemeResource SystemControlHighlightAccentBrush}" Click="shuffleButton_Click" FontSize="32" FontFamily="{ThemeResource IconFont}" Width="80" Height="80" Style="{StaticResource CircleButtonStyle}" />-->
         </Grid>
     </Grid>
 

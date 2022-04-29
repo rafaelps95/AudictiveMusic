@@ -19,6 +19,7 @@ namespace ClassLibrary.Control
         public delegate void LoadingCollectionProgressChangedEventArgs(int progress, bool isLoading);
 
         public static event LoadingCollectionProgressChangedEventArgs ProgressChanged;
+        public static event RoutedEventHandler SongsChanged;
 
         private static bool Stop = false;
 
@@ -26,6 +27,11 @@ namespace ClassLibrary.Control
         /// Returns false if the collection is busy
         /// </summary>
         private static bool LoadCollectionCompleted = true;
+
+        public static void RefreshUI(object sender)
+        {
+            SongsChanged?.Invoke(sender, new RoutedEventArgs());
+        }
 
         /// <summary>
         /// Creates the entire database of songs based on user's music collection

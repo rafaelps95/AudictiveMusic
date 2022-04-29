@@ -34,7 +34,12 @@ namespace AudictiveMusicUWP.Gui.Pages
             base.OnNavigatedTo(e);
 
             NavMode = e.NavigationMode;
-            PageHelper.Playlists = this;
+            LoadPlaylists();
+            PlaylistHelper.PlaylistChanged += PlaylistHelper_PlaylistChanged;
+        }
+
+        private void PlaylistHelper_PlaylistChanged(object sender, RoutedEventArgs e)
+        {
             LoadPlaylists();
         }
 
@@ -42,7 +47,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             base.OnNavigatedFrom(e);
 
-            PageHelper.Playlists = null;
+            PlaylistHelper.PlaylistChanged -= PlaylistHelper_PlaylistChanged;
         }
 
         public async void LoadPlaylists()

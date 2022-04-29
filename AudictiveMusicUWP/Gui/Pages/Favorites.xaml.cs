@@ -86,8 +86,6 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             NavMode = e.NavigationMode;
 
-            PageHelper.Favorites = this;
-
             LoadSongs();
         }
 
@@ -205,14 +203,14 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void topAdd_Click(object sender, RoutedEventArgs e)
         {
-            List<string> listSongs = new List<string>();
+            List<string> list = new List<string>();
 
             foreach (Song song in SongsList.SelectedItems)
             {
-                listSongs.Add(song.SongURI);
+                list.Add(song.SongURI);
             }
 
-            PageHelper.MainPage.CreateAddToPlaylistPopup(listSongs);
+            PlaylistHelper.RequestPlaylistPicker(this, list);
 
             DisableSelectionMode();
         }
@@ -265,10 +263,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             };
             item3.Click += (s, a) =>
             {
-                if (PageHelper.MainPage != null)
-                {
-                    PageHelper.MainPage.CreateAddToPlaylistPopup(list);
-                }
+                PlaylistHelper.RequestPlaylistPicker(this, list);
             };
 
             menu.Items.Add(item3);

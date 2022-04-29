@@ -1,4 +1,5 @@
 ﻿using ClassLibrary.Control;
+using ClassLibrary.Entities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Data.Xml.Dom;
 using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,6 +23,11 @@ namespace ClassLibrary.Helpers
 {
     public static class PlaylistHelper
     {
+        public static event RoutedEventHandler PlaylistChanged;
+        public delegate void PlaylistPickerRequestedHandler(object sender, List<string> list);
+        public static event PlaylistPickerRequestedHandler PlaylistPickerRequested;
+
+        public static void RequestPlaylistPicker(object sender, List<string> list) => PlaylistPickerRequested?.Invoke(sender, list);
 
         public static string TrackByIndex(int index)
         {
@@ -60,6 +67,38 @@ namespace ClassLibrary.Helpers
             await DOC.SaveToFileAsync(st);
 
             ApplicationData.Current.LocalSettings.Values["ExistsLastPlayback"] = true;
+        }
+
+        public static async void DeletePlaylist(object sender, Playlist playlist)
+        {
+            MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("DeletePlaylistMessage"), ApplicationInfo.Current.Resources.GetString("DeletePlaylistMessageTitle"));
+            md.Commands.Add(new UICommand(ApplicationInfo.Current.Resources.GetString("Yes"), async (t) =>
+            {
+                StorageFolder playlistsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Playlists", CreationCollisionOption.OpenIfExists);
+
+                IStorageItem playlistItem = await playlistsFolder.TryGetItemAsync(playlist.PlaylistFileName);
+
+                if (playlistItem != null)
+                {
+                    try
+                    {
+                        await playlistItem.DeleteAsync(StorageDeleteOption.Default);
+
+                        PlaylistChanged?.Invoke(sender, new RoutedEventArgs());
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }));
+
+            md.Commands.Add(new UICommand(ApplicationInfo.Current.Resources.GetString("No")));
+
+            md.CancelCommandIndex = 1;
+            md.DefaultCommandIndex = 1;
+
+            await md.ShowAsync();
         }
 
     }

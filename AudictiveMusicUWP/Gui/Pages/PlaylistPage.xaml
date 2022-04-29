@@ -51,7 +51,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
+            <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="{ThemeResource IconFont}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
             <Grid Grid.ColumnSpan="2">
                 <Grid.Background>
                     <SolidColorBrush Opacity="0.5" Color="{ThemeResource SystemChromeLowColor}" />
@@ -61,10 +61,10 @@
                 <TextBlock x:Name="pageTitle" VerticalAlignment="Center" Margin="12,0" FontWeight="Bold" FontSize="25" TextTrimming="CharacterEllipsis" />
             </Grid>
             <StackPanel x:Name="actionButtons" Grid.Column="1" Orientation="Horizontal">
-                <Button x:Name="removeButton" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" IsEnabled="False" Click="removeButton_Click" Content="" VerticalAlignment="Stretch" />
-                <Button x:Name="renameButton" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" Click="renameButton_Click" Content="" VerticalAlignment="Stretch" />
-                <Button x:Name="saveButton" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" Click="saveButton_Click" Content="" VerticalAlignment="Stretch" />
-                <Button x:Name="moreButton" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" Click="moreButton_Click" Content="" VerticalAlignment="Stretch" />
+                <Button x:Name="removeButton" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" IsEnabled="False" Click="removeButton_Click" Content="" VerticalAlignment="Stretch" />
+                <Button x:Name="renameButton" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" Click="renameButton_Click" Content="" VerticalAlignment="Stretch" />
+                <Button x:Name="saveButton" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" Click="saveButton_Click" Content="" VerticalAlignment="Stretch" />
+                <Button x:Name="moreButton" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" Click="moreButton_Click" Content="" VerticalAlignment="Stretch" />
             </StackPanel>
 
             <ListView Grid.Row="1" Grid.ColumnSpan="2" Padding="0,0,0,55" x:Name="SongsList" SelectionChanged="SongsList_SelectionChanged" CanReorderItems="True" AllowDrop="True" CanDragItems="True" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
@@ -86,7 +86,7 @@
                             <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Grid.Row="0" Text="{Binding Title}" FontSize="14" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                             <StackPanel Margin="0,5,0,5" Orientation="Horizontal" Grid.Row="1">
                                 <TextBlock Text="{Binding Artist}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
-                                <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" />
+                                <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
                                 <TextBlock Text="{Binding Album}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
 
                             </StackPanel>

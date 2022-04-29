@@ -80,10 +80,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void blur_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (PageHelper.MainPage != null)
-            {
-                PageHelper.MainPage.RemovePicker();
-            }
+            NavigationHelper.Back(this);
+            //PageHelper.MainPage.RemovePicker();
         }
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
@@ -97,7 +95,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (result)
             {
-                PageHelper.MainPage.RemovePicker();
+                NavigationHelper.Back(this);
+                //PageHelper.MainPage.RemovePicker();
             }
             else
             {

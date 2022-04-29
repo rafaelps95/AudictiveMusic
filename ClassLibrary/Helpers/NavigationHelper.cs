@@ -4,11 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace ClassLibrary.Helpers
 {
     public class NavigationHelper
     {
+        public delegate void NavigationRequestedHandler(object sender, Type targetPage, object parameter = null, bool mainFrame = false);
+        public static event NavigationRequestedHandler NavigationRequested;
+        public delegate void NavigationClearRequestedHandler(object sender, bool mainFrame);
+        public static event RoutedEventHandler BackRequested;
+        public static event RoutedEventHandler ForwardRequested;
+        public static event NavigationClearRequestedHandler ClearRequested;
+
+        public static void Navigate(object sender, Type targetPage, object parameter = null, bool mainFrame = false) => NavigationRequested?.Invoke(sender, targetPage, parameter, mainFrame);
+
+        public static void Back(object sender) => BackRequested?.Invoke(sender, new RoutedEventArgs());
+
+        public static void Forward(object sender) => ForwardRequested?.Invoke(sender, new RoutedEventArgs());
+
+        public static void ClearBackstack(object sender, bool mainFrame) => ClearRequested?.Invoke(sender, mainFrame);
+
         public static string GetParameter(string args, string attribute)
         {
             if (string.IsNullOrWhiteSpace(args) == false)

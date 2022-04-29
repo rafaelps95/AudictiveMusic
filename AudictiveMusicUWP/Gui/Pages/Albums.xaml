@@ -84,34 +84,8 @@
             <Grid.RenderTransform>
                 <ScaleTransform ScaleX="0.9" ScaleY="0.9" x:Name="layoutRootScale" />
             </Grid.RenderTransform>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
-            <Grid Grid.Row="0">
-                <Grid.Background>
-                    <SolidColorBrush Opacity="0.5" Color="{ThemeResource SystemChromeLowColor}" />
-                </Grid.Background>
 
-                <Grid Grid.Row="0" x:Name="topAppBar" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="48" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="topPlay" IsEnabled="False" Click="topPlay_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
-                        <Button x:Name="topAdd" IsEnabled="False" Click="topAdd_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
-                        <Button x:Name="topMore" IsEnabled="False" Click="topMore_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
-
-                    </StackPanel>
-
-                </Grid>
-
-
-            </Grid>
-
-            <SemanticZoom Grid.Row="1" ViewChangeStarted="SemanticZoom_ViewChangeStarted">
+            <SemanticZoom ViewChangeStarted="SemanticZoom_ViewChangeStarted">
                 <SemanticZoom.ZoomedOutView>
                     <GridView Padding="0,0,0,110" HorizontalAlignment="Center" 
               ItemsSource="{Binding Source={StaticResource ListOfAlbums}, Path=CollectionGroups}"
@@ -125,8 +99,8 @@
                 </SemanticZoom.ZoomedOutView>
 
                 <SemanticZoom.ZoomedInView>
-                    <GridView Loaded="AlbumsList_Loaded" Padding="0,0,0,110" Grid.Row="2" SelectionMode="None" x:Name="AlbumsList" ItemsSource="{Binding Source={StaticResource ListOfAlbums}}"
-                          IsItemClickEnabled="True" ItemClick="AlbumsList_ItemClick">
+                    <GridView Loaded="listView_Loaded" Padding="0,0,0,110" Grid.Row="2" SelectionMode="None" x:Name="listView" ItemsSource="{Binding Source={StaticResource ListOfAlbums}}"
+                          IsItemClickEnabled="True" ItemClick="listView_ItemClick">
                         <GridView.GroupStyle>
                             <GroupStyle HidesIfEmpty="True" HeaderTemplate="{StaticResource GroupHeaderTemplate}"/>
                         </GridView.GroupStyle>
@@ -146,7 +120,10 @@
                 </SemanticZoom.ZoomedInView>
             </SemanticZoom>
 
-            <Grid Grid.Row="1" x:Name="selectionGrid" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20,20,20,130">
+            <local:SelectedItemsBar Canvas.ZIndex="2" SelectionModeChanged="SelectionItemsBar_SelectionModeChanged" PlaySelected="SelectionItemsBar_PlaySelected" AddSelected="SelectionItemsBar_AddSelected" ClearRequest="SelectionItemsBar_ClearRequest" SelectAllRequest="SelectionItemsBar_SelectAllRequest" ShareSelected="SelectionItemsBar_ShareSelected" x:Name="selectionItemsBar" Visibility="Visible" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+
+
+            <!--<Grid Grid.Row="1" x:Name="selectionGrid" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20,20,20,130">
                 <Grid Tapped="selection_Tapped">
                     <Border x:Name="selection" CornerRadius="30" Background="{Binding AccentColorMediumBrush, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}">
 
@@ -156,9 +133,9 @@
                 <Button Content="" x:Name="selectButton" Foreground="{Binding ForegroundColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" HorizontalAlignment="Right" Click="selectButton_Click" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" FontSize="17" Style="{StaticResource CircleButtonStyle}" Width="60" Height="60">
 
                 </Button>
-            </Grid>
+            </Grid>-->
 
-            <local:PageFlyout x:Name="pageFlyout" Opened="pageFlyout_Opened" Closed="pageFlyout_Closed" Grid.RowSpan="3" Canvas.ZIndex="20" IsHitTestVisible="False" />
+            <!--<local:PageFlyout x:Name="pageFlyout" Opened="pageFlyout_Opened" Closed="pageFlyout_Closed" Grid.RowSpan="3" Canvas.ZIndex="20" IsHitTestVisible="False" />-->
         </Grid>
     </Grid>
 </Page>

@@ -58,7 +58,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
+            <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="{ThemeResource IconFont}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -72,7 +72,7 @@
                     <SolidColorBrush Opacity="0.5" Color="{ThemeResource SystemChromeLowColor}" />
                 </Grid.Background>
                 <TextBlock x:Name="pageTitle" VerticalAlignment="Center" Margin="12,0" Text="Songs" FontWeight="Bold" FontSize="16" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{Binding ElementName=pageTitle, Path=Text}" />
-                <Button Grid.Row="0" Grid.Column="1" Width="55" Content="" x:Name="refreshButton" Click="refreshButton_Click" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
+                <Button Grid.Row="0" Grid.Column="1" Width="55" Content="" x:Name="refreshButton" Click="refreshButton_Click" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" />
                 
                 <Grid Grid.Row="1" Grid.ColumnSpan="2" x:Name="topAppBar" Visibility="Collapsed">
                     <Grid.RowDefinitions>
@@ -80,9 +80,9 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="topPlay" IsEnabled="False" Click="topPlay_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
-                        <Button x:Name="topAdd" IsEnabled="False" Click="topAdd_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
-                        <Button x:Name="topMore" IsEnabled="False" Click="topMore_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" />
+                        <Button x:Name="topPlay" IsEnabled="False" Click="topPlay_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" />
+                        <Button x:Name="topAdd" IsEnabled="False" Click="topAdd_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" />
+                        <Button x:Name="topMore" IsEnabled="False" Click="topMore_Click" Width="55" Content="" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" />
 
                     </StackPanel>
                 </Grid>
@@ -108,7 +108,7 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Glyph}" FontSize="28" FontFamily="Segoe MDL2 Assets" Margin="7" Grid.RowSpan="2" />
+                            <TextBlock Text="{Binding Glyph}" FontSize="28" FontFamily="{ThemeResource IconFont}" Margin="7" Grid.RowSpan="2" />
                             <TextBlock HorizontalAlignment="Left" Margin="0,5,0,3" Grid.Row="0" Grid.Column="1" Text="{Binding Name}" FontSize="14" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                             <TextBlock Text="{Binding Date}" Grid.Row="1" Grid.Column="1" Margin="0,3,0,5" FontSize="14" Opacity="0.8" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
 
@@ -132,14 +132,14 @@
             <!--<Grid Grid.Row="2" SizeChanged="bottomBar_SizeChanged" x:Name="bottomBar" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <Rectangle x:Name="blur" />
                 <StackPanel x:Name="actionButtons" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="playButton" IsEnabled="False" Visibility="Collapsed" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" Click="playButton_Click" Tag="" Width="55" Height="55" />
-                    <Button x:Name="shareButton" IsEnabled="False" Visibility="Collapsed" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" Click="shareButton_Click" Tag="" Width="55" Height="55" />
-                    <Button x:Name="moreButton" IsEnabled="False" Visibility="Collapsed" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" Click="moreButton_Click" Tag="" Width="55" Height="55" />
-                    <ToggleButton x:Name="selectToggleButton" Style="{StaticResource IconToggleButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Symbol" Checked="selectToggleButton_Checked" Unchecked="selectToggleButton_Unchecked" Tag="" Width="55" Height="55" />
+                    <Button x:Name="playButton" IsEnabled="False" Visibility="Collapsed" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" Click="playButton_Click" Tag="" Width="55" Height="55" />
+                    <Button x:Name="shareButton" IsEnabled="False" Visibility="Collapsed" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" Click="shareButton_Click" Tag="" Width="55" Height="55" />
+                    <Button x:Name="moreButton" IsEnabled="False" Visibility="Collapsed" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" Click="moreButton_Click" Tag="" Width="55" Height="55" />
+                    <ToggleButton x:Name="selectToggleButton" Style="{StaticResource IconToggleButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" Checked="selectToggleButton_Checked" Unchecked="selectToggleButton_Unchecked" Tag="" Width="55" Height="55" />
 
                 </StackPanel>
             </Grid>-->
-            <!--<Button Grid.Row="2" Margin="0,0,20,80" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="" Background="{ThemeResource SystemControlHighlightAccentBrush}" Click="shuffleButton_Click" FontSize="32" FontFamily="Segoe UI Symbol" Width="80" Height="80" Style="{StaticResource CircleButtonStyle}" />-->
+            <!--<Button Grid.Row="2" Margin="0,0,20,80" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="" Background="{ThemeResource SystemControlHighlightAccentBrush}" Click="shuffleButton_Click" FontSize="32" FontFamily="{ThemeResource IconFont}" Width="80" Height="80" Style="{StaticResource CircleButtonStyle}" />-->
         </Grid>
     </Grid>
 </Page>

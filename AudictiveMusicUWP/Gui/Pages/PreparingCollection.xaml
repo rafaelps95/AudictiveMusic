@@ -21,7 +21,7 @@
                 <TextBlock Grid.Row="0" x:Name="progressPercentage" Text="" FontWeight="Thin" FontSize="30" TextAlignment="Center" />
                 <ProgressBar Grid.Row="1" x:Name="progress" MaxWidth="500" Margin="20,4,20,4" Foreground="White" Maximum="100" HorizontalAlignment="Stretch" />
                 <TextBlock Grid.Row="2" Text="Looking for your music..." x:Uid="PreparingCollection" TextAlignment="Center" Margin="0,0,0,10" />
-                <TextBlock Grid.Row="3" Text="" FontFamily="Segoe MDL2 Assets" FontSize="40" TextAlignment="Center" />
+                <TextBlock Grid.Row="3" Text="" FontFamily="{ThemeResource IconFont}" FontSize="40" TextAlignment="Center" />
             </Grid>
         </Grid>
     </Grid>

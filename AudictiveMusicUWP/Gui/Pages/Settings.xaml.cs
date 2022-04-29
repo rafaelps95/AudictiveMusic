@@ -6,6 +6,7 @@ using ClassLibrary;
 using ClassLibrary.Control;
 using ClassLibrary.Helpers;
 using ClassLibrary.Themes;
+using InAppNotificationLibrary;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -86,25 +87,13 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             content.Width = e.NewSize.Width;
 
-            if (this.CurrentView == SettingsPageContent.Menu)
-            {
-                pageFrameTranslate.X = e.NewSize.Width;
-                menuTranslate.X = 0;
-            }
-            else
-            {
-                pageFrameTranslate.X = 0;
-                menuTranslate.X = -e.NewSize.Width;
-            }
-
-            menuScroll.Margin = pageFrame.Margin = frameContent.Padding = new Thickness(0, 0, 0, ApplicationInfo.Current.FooterHeight);
+            menuScroll.Margin = new Thickness(0, 0, 0, ApplicationInfo.Current.FooterHeight);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            PageHelper.Settings = this;
             NavMode = e.NavigationMode;
 
             string arguments = string.Empty;
@@ -129,8 +118,6 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             base.OnNavigatedFrom(e);
 
-            PageHelper.Settings = null;
-
             LockScreenToggleSwitch.Toggled -= LockScreenToggleSwitch_Toggled;
             LimitedConnectionToggleSwitch.Toggled -= CelullarDownloadToggleSwitch_Toggled;
             WhatsNextNotification.Toggled -= WhatsNextNotification_Toggled;
@@ -154,15 +141,15 @@ namespace AudictiveMusicUWP.Gui.Pages
                 ChooseLibrarySettingsItem.Visibility = Visibility.Visible;
             }
 
-            int theme = ApplicationSettings.AppTheme;
+            PageTheme theme = ApplicationSettings.AppTheme;
 
             // REPLACES THE LEGACY 'DEFAULT' (FOLLOW SYSTEM THEME) SETTING IN CASE THE USER IS UPDATING FROM AN OLD VERSION
-            if (theme == 2)
+            if ((int)theme == 2)
             {
-                theme = ApplicationSettings.AppTheme = 0;
+                theme = ApplicationSettings.AppTheme = PageTheme.Dark;
             }
 
-            AppThemeSettingsItem.SelectedIndex = theme;
+            AppThemeSettingsItem.SelectedIndex = (int)theme;
             UpdateDropDownItemAdditionalInfo(AppThemeSettingsItem);
             BackgroundPreferencesSettingsItem.SelectedIndex = ApplicationSettings.ThemeBackgroundPreference;
             UpdateDropDownItemAdditionalInfo(BackgroundPreferencesSettingsItem);
@@ -239,7 +226,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
             else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.NoColor)
             {
-                ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentAppThemeColor(PageHelper.MainPage.RequestedTheme == ElementTheme.Dark);
+                ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentAppThemeColor(ApplicationSettings.AppTheme == PageTheme.Dark);
             }
 
             CustomColorSettingsSection.Visibility = ApplicationSettings.ThemeColorPreference == 2 ? Visibility.Visible : Visibility.Collapsed;
@@ -341,9 +328,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void LightRadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            ApplicationSettings.AppTheme = 1;
-            this.RequestedTheme = ElementTheme.Light;
-            PageHelper.MainPage.SetAppTheme();
+            ApplicationSettings.AppTheme = PageTheme.Light;
         }
 
         private void DarkRadioButton_Checked(object sender, RoutedEventArgs e)
@@ -430,90 +415,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
         }
 
-        //public void GoToView(SettingsPageContent value)
-        //{
-        //    Debug.WriteLine("SELECIONADO: " + value.ToString());
-
-        //    Grid selected = null;
-
-        //    if (value == SettingsPageContent.AppInfo)
-        //    {
-        //        selected = appInfoSection;
-        //    }
-        //    else if (value == SettingsPageContent.DataManagement)
-        //    {
-        //        selected = dataManagementSection;
-
-        //        LoadStorageInfo();
-        //    }
-        //    else if (value == SettingsPageContent.Feedback)
-        //    {
-        //        selected = feedbackSection;
-        //    }
-        //    else if (value == SettingsPageContent.Permissions)
-        //    {
-        //        selected = permissionsSection;
-        //    }
-        //    else if (value == SettingsPageContent.Playback)
-        //    {
-        //        selected = playbackSection;
-        //    }
-        //    else if (value == SettingsPageContent.Personalization)
-        //    {
-        //        selected = personalizationSection;
-        //    }
-        //    else if (value == SettingsPageContent.Menu)
-        //    {
-        //        Back();
-        //        return;
-        //    }
-
-        //    if (selected == null)
-        //        return;
-
-        //    selected.IsHitTestVisible = true;
-        //    selected.Opacity = 1;
-
-        //    foreach (Grid g in frameContent.Children)
-        //    {
-        //        if (g != selected)
-        //        {
-        //            g.IsHitTestVisible = false;
-        //            g.Opacity = 0;
-        //        }
-        //    }
-
-        //    Storyboard sb = new Storyboard();
-
-        //    DoubleAnimation da = new DoubleAnimation()
-        //    {
-        //        To = 0,
-        //        Duration = TimeSpan.FromMilliseconds(300),
-        //        EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-        //        EnableDependentAnimation = false,
-        //    };
-
-        //    Storyboard.SetTarget(da, pageFrameTranslate);
-        //    Storyboard.SetTargetProperty(da, "X");
-
-
-        //    DoubleAnimation da1 = new DoubleAnimation()
-        //    {
-        //        To = -PageWidth / 3,
-        //        Duration = TimeSpan.FromMilliseconds(300),
-        //        EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-        //        EnableDependentAnimation = false,
-        //    };
-
-        //    Storyboard.SetTarget(da1, menuTranslate);
-        //    Storyboard.SetTargetProperty(da1, "X");
-
-        //    sb.Children.Add(da);
-        //    sb.Children.Add(da1);
-
-        //    sb.Begin();
-        //}
-
         private async void LoadStorageInfo()
         {
             await Task.Delay(200);
@@ -551,55 +452,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             });
         }
 
-        public void Back()
-        {
-            Storyboard sb = new Storyboard();
-
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = PageWidth,
-                BeginTime = TimeSpan.FromMilliseconds(100),
-                Duration = TimeSpan.FromMilliseconds(300),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-                EnableDependentAnimation = false,
-            };
-
-            Storyboard.SetTarget(da, pageFrameTranslate);
-            Storyboard.SetTargetProperty(da, "X");
-
-
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-                EnableDependentAnimation = false,
-            };
-
-            Storyboard.SetTarget(da1, menuTranslate);
-            Storyboard.SetTargetProperty(da1, "X");
-
-            sb.Children.Add(da);
-            sb.Children.Add(da1);
-
-            sb.Begin();
-        }
-
-        private async void joinTelegramButton_Click(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("https://t.me/audictivemusic", UriKind.Absolute));
-        }
-
-        private async void getTelegramButton_Click(object sender, RoutedEventArgs e)
-        {
-            string uri;
-            if (ApplicationInfo.Current.GetDeviceFormFactorType() == ApplicationInfo.DeviceFormFactorType.Phone)
-                uri = "https://www.microsoft.com/store/productId/9WZDNCRDZHS0";
-            else
-                uri = "https://www.microsoft.com/store/productId/9NZTWSQNTD0S";
-
-            await Launcher.LaunchUriAsync(new Uri(uri, UriKind.Absolute));
-        }
 
         private async void OpenPageTransition_Completed(object sender, object e)
         {
@@ -652,12 +504,12 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void Themes_Click(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(ThemeSelector));
+            NavigationHelper.Navigate(this, typeof(ThemeSelector));
         }
 
         private void MoreThemesSettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(ThemeSelector));
+            NavigationHelper.Navigate(this, typeof(ThemeSelector));
         }
 
         private async void RateAppSettingsItem_ItemClick(object sender, RoutedEventArgs e)
@@ -680,34 +532,37 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
             {
                 try
                 {
-                    ApplicationData.Current.RoamingSettings.Values["DonatePrompt"] = true;
-
                     var iapList = await PurchaseHelper.GetDonationsIAP();
+
+                    string title = ApplicationInfo.Current.Resources.GetString("AskForDonationTitle");
+                    string message = ApplicationInfo.Current.Resources.GetString("AskForDonationMessage");
+                    string icon = "\uECA7";
+                    string primaryButtonContent = ApplicationInfo.Current.Resources.GetString("Proceed");
+                    InAppNotification inAppNotification = new InAppNotification(title, message, icon, primaryButtonContent);
+                    inAppNotification.PrimaryButtonEnabled = false;
 
                     ComboBox box = new ComboBox()
                     {
-                        Margin = new Thickness(10, 10, 10, 0),
+                        Margin = new Thickness(10),
                         HorizontalAlignment = HorizontalAlignment.Stretch,
                     };
-
-
-                    Button setButton = new Button()
-                    {
-                        IsEnabled = false,
-                        Content = ApplicationInfo.Current.Resources.GetString("Proceed"),
-                        Margin = new Thickness(10, 10, 10, 0),
-                        HorizontalAlignment = HorizontalAlignment.Stretch,
-                    };
-
-
-
                     box.SelectionChanged += (snd, args) =>
                     {
                         if (box.SelectedItem != null)
-                            setButton.IsEnabled = true;
+                            inAppNotification.PrimaryButtonEnabled = true;
                     };
 
-                    setButton.Click += async (s, a) =>
+                    foreach (ProductListing product in iapList)
+                    {
+                        ComboBoxItem cbi = new ComboBoxItem()
+                        {
+                            Tag = product,
+                            Content = product.FormattedPrice,
+                        };
+                        box.Items.Add(cbi);
+                    }
+
+                    inAppNotification.PrimaryButtonClicked += async (snd, args) =>
                     {
                         ProductListing product = ((ComboBoxItem)box.SelectedItem).Tag as ProductListing;
 
@@ -723,35 +578,13 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
                         }
                     };
 
-                    foreach (ProductListing product in iapList)
-                    {
-                        ComboBoxItem cbi = new ComboBoxItem()
-                        {
-                            Tag = product,
-                            Content = product.FormattedPrice,
-                        };
-                        box.Items.Add(cbi);
-                    }
-
-                    Grid.SetColumn(box, 0);
-                    Grid.SetColumn(setButton, 1);
-
-                    PageHelper.MainPage.Notification.SetContent(ApplicationInfo.Current.Resources.GetString("AskForDonationTitle"),
-ApplicationInfo.Current.Resources.GetString("AskForDonationMessage"),
-"", new System.Collections.Generic.List<UIElement>() { box, setButton });
-
-                    PageHelper.MainPage.Notification.Show();
-
+                    inAppNotification.SetCustomContent(box);
+                    InAppNotificationHelper.ShowNotification(inAppNotification);
                 }
-                catch
+                catch (Exception ex)
                 {
 
-                    //await nf1.Show(res.GetString("AskForDonationErrorMessage"), res.GetString("AskForDonationErrorTitle"), btn1, btn2);
                 }
-            }
-            else
-            {
-
             }
 
             DonateSettingsItem.IsEnabled = true;
@@ -760,35 +593,24 @@ ApplicationInfo.Current.Resources.GetString("AskForDonationMessage"),
 
         private void ChooseLibrarySettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
-            if (PageHelper.MainPage != null)
-            {
-                PageHelper.MainPage.CreateLibraryPicker();
-            }
+            StorageHelper.RequestLibraryPicker(this);
         }
 
         private void FindMusicSettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
-            Button setButton = new Button()
+            InAppNotification inAppNotification = new InAppNotification();
+            inAppNotification.Title = ApplicationInfo.Current.Resources.GetString("ReloadCollectionWarningTitle");
+            inAppNotification.Message = ApplicationInfo.Current.Resources.GetString("ReloadCollectionWarningContent");
+            inAppNotification.Icon = "\uE777";
+            inAppNotification.PrimaryButtonContent = ApplicationInfo.Current.Resources.GetString("ProceedAnyway");
+
+            inAppNotification.PrimaryButtonClicked += (s, a) =>
             {
-                Content = ApplicationInfo.Current.Resources.GetString("ProceedAnyway"),
-                Margin = new Thickness(10, 10, 10, 0),
-                HorizontalAlignment = HorizontalAlignment.Stretch,
+                NavigationHelper.Navigate(this, typeof(PreparingCollection), null, true);
+                NavigationHelper.ClearBackstack(this, true);
             };
 
-            setButton.Click += (s, a) =>
-            {
-                PageHelper.MainPage.Frame.Navigate(typeof(PreparingCollection));
-                PageHelper.MainPage.Frame.BackStack.Clear();
-            };
-
-            Grid.SetColumn(setButton, 1);
-
-            PageHelper.MainPage.Notification.SetContent(ApplicationInfo.Current.Resources.GetString("ReloadCollectionWarningTitle"),
-ApplicationInfo.Current.Resources.GetString("ReloadCollectionWarningContent"),
-"", new System.Collections.Generic.List<UIElement>() { setButton });
-
-            PageHelper.MainPage.Notification.Show();
-
+            InAppNotificationHelper.ShowNotification(inAppNotification);
         }
 
         private void BackgroundPreferencesSettingsItem_ItemClick(object sender, RoutedEventArgs e)
@@ -813,11 +635,9 @@ ApplicationInfo.Current.Resources.GetString("ReloadCollectionWarningContent"),
 
         private void AppThemeSettingsItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ApplicationSettings.AppTheme = AppThemeSettingsItem.SelectedIndex;
+            ApplicationSettings.AppTheme = (PageTheme)AppThemeSettingsItem.SelectedIndex;
 
             UpdateDropDownItemAdditionalInfo(AppThemeSettingsItem);
-
-            PageHelper.MainPage.SetAppTheme();
         }
 
         private void PrepareColorsList()

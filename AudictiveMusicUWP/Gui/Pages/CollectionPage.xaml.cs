@@ -1,6 +1,7 @@
 ﻿using AudictiveMusicUWP.Gui.Util;
 using BackgroundAudioShared.Messages;
 using ClassLibrary;
+using ClassLibrary.Control;
 using ClassLibrary.Helpers;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -130,19 +131,16 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void artistsButton_Click(object sender, RoutedEventArgs e)
         {
-            //PageHelper.MainPage.Navigate(typeof(CollectionPage), "page=artists");
             frame.Navigate(typeof(Artists));
         }
 
         private void albumsButton_Click(object sender, RoutedEventArgs e)
         {
-            //PageHelper.MainPage.Navigate(typeof(CollectionPage), "page=albums");
             frame.Navigate(typeof(Albums));
         }
 
         private void songsButton_Click(object sender, RoutedEventArgs e)
         {
-            //PageHelper.MainPage.Navigate(typeof(CollectionPage), "page=songs");
             frame.Navigate(typeof(Songs));
         }
 
@@ -210,12 +208,12 @@ namespace AudictiveMusicUWP.Gui.Pages
                 mfi.Click += (s,a) => 
                 {
                     ApplicationSettings.SaveSettingsValue("AlbumsSortBy", Sorting.SortByArtist);
-                    PageHelper.Albums?.LoadAlbums();
+                    Collection.RefreshUI(this);
                 };
                 mfi2.Click += (s, a) => 
                 {
                     ApplicationSettings.SaveSettingsValue("AlbumsSortBy", Sorting.SortByTitle);
-                    PageHelper.Albums?.LoadAlbums();
+                    Collection.RefreshUI(this);
                 };
 
                 fly.Items.Add(mfi);
@@ -242,17 +240,17 @@ namespace AudictiveMusicUWP.Gui.Pages
                 mfi.Click += (s, a) => 
                 {
                     ApplicationSettings.SaveSettingsValue("SongsSortBy", Sorting.SortByArtist);
-                    PageHelper.Songs?.LoadSongs();
+                    Collection.RefreshUI(this);
                 };
                 mfi2.Click += (s, a) => 
                 {
                     ApplicationSettings.SaveSettingsValue("SongsSortBy", Sorting.SortByAlbum);
-                    PageHelper.Songs?.LoadSongs();
+                    Collection.RefreshUI(this);
                 };
                 mfi3.Click += (s, a) => 
                 {
                     ApplicationSettings.SaveSettingsValue("SongsSortBy", Sorting.SortByTitle);
-                    PageHelper.Songs?.LoadSongs();
+                    Collection.RefreshUI(this);
                 };
 
                 fly.Items.Add(mfi);
@@ -281,7 +279,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void foldersButton_Click(object sender, RoutedEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(FolderPage), null);
+            NavigationHelper.Navigate(this, typeof(FolderPage), null);
         }
     }
 }

@@ -6,12 +6,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using static ClassLibrary.Helpers.Enumerators;
 
 namespace AudictiveMusicUWP.Gui.Util
 {
     public static class PlayerController
     {
+        public static event RoutedEventHandler FullPlayerRequested;
+
+        public static void OpenPlayer(object sender) => FullPlayerRequested?.Invoke(sender, new RoutedEventArgs());
+
         public static async void Play(object mediaItem, MediaItemType mediaItemType)
         {
             if (mediaItemType == MediaItemType.ListOfStrings)

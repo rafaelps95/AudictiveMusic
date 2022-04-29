@@ -31,6 +31,7 @@ namespace AudictiveMusicUWP.Gui.UC
     {
         public delegate void UIDismissedEventArgs(object sender);
         public event UIDismissedEventArgs UIDismissed;
+        public event SizeChangedEventHandler SearchBarSizeChanged;
 
         //private bool stretchBar = false;
         private bool anyResult = false;
@@ -212,18 +213,18 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 if (SearchMode == SearchPaneMode.Closed)
                     boxTranslate.X = offset;
-                searchButton.Margin = new Thickness(offset, 4, 0, 4);
+                searchButton.Margin = new Thickness(offset, 9, 0, 4);
             }
             else if (placement == SearchPlacement.Right)
             {
                 if (SearchMode == SearchPaneMode.Closed)
                     boxTranslate.X = offset *-1;
-                searchButton.Margin = new Thickness(0, 4, offset, 4);
+                searchButton.Margin = new Thickness(0, 9, offset, 4);
             }
             else
             {
                 boxTranslate.X = 0;
-                searchButton.Margin = new Thickness(0, 4, 0, 4);
+                searchButton.Margin = new Thickness(0, 9, 0, 4);
             }
         }
 
@@ -438,7 +439,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void Box_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
+            SearchBarSizeChanged?.Invoke(this, e);
         }
 
         private void DismissArea_Tapped(object sender, TappedRoutedEventArgs e)
@@ -547,7 +548,7 @@ namespace AudictiveMusicUWP.Gui.UC
         private void albumsList_ItemClick(object sender, ItemClickEventArgs e)
         {
             ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
-            PageHelper.MainPage.Navigate(typeof(AlbumPage), e.ClickedItem);
+            NavigationHelper.Navigate(this, typeof(AlbumPage), e.ClickedItem);
         }
 
         private void AlbumCover_ImageOpened(object sender, RoutedEventArgs e)
@@ -638,7 +639,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void artistsList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(ArtistPage), e.ClickedItem);
+            NavigationHelper.Navigate(this, typeof(ArtistPage), e.ClickedItem);
         }
 
         private void CircleImage_ImageFailed(object sender, EventArgs e)

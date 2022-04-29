@@ -256,7 +256,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void albumsList_ItemClick(object sender, ItemClickEventArgs e)
         {
             ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
-            PageHelper.MainPage.Navigate(typeof(AlbumPage), e.ClickedItem);
+            NavigationHelper.Navigate(this, typeof(AlbumPage), e.ClickedItem);
         }
 
         private void AlbumCover_ImageOpened(object sender, RoutedEventArgs e)
@@ -306,7 +306,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void artistsList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            PageHelper.MainPage.Navigate(typeof(ArtistPage), e.ClickedItem);
+            NavigationHelper.Navigate(this, typeof(ArtistPage), e.ClickedItem);
         }
 
         private void Album_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -334,11 +334,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             foreach (Song s in songs)
                 list.Add(s.SongURI);
             MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
-        }
-
-        private void CloseMegaFlyout()
-        {
-            pageFlyout.Hide();
         }
 
         private void artistBackgroundBitmap_ImageOpened(object sender, RoutedEventArgs e)
@@ -495,34 +490,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                     //EnlargeHeader();
                 }
             }
-        }
-
-        private void pageFlyout_Closed(object sender, EventArgs e)
-        {
-            pageFlyout.IsHitTestVisible = false;
-        }
-
-        private void pageFlyout_Opened(object sender, EventArgs e)
-        {
-            pageFlyout.IsHitTestVisible = true;
-        }
-
-        private void AlbumItem_LongHover(object sender, object context)
-        {
-            pageFlyout.Show(typeof(AlbumPage), context, false);
-        }
-
-        private void AlbumItem_LongPressed(object sender, HoldingRoutedEventArgs args)
-        {
-            //Album album = (sender as FrameworkElement).DataContext as Album;
-
-            //SelectedAlbum = album;
-
-            //var ttv = (sender as FrameworkElement).TransformToVisual(this);
-            //Point screenCoords = ttv.TransformPoint(new Point(0, 0));
-
-            //screenCoords = new Point(screenCoords.X, screenCoords.Y);
-            //OpenTouchFlyout(sender, screenCoords);
         }
 
         private void AlbumItem_MenuTriggered(object sender, Point point)

@@ -49,21 +49,17 @@
                         </ListView.ItemTemplate>
                     </ListView>
 
-                    <Grid Grid.Row="3" MinHeight="48" Background="#33999999">
-                        <Grid.ColumnDefinitions>
+                    <Border Grid.Row="3" MinHeight="48" CornerRadius="5" Background="#33999999">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
 
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Style="{StaticResource SideMenuButtonStyle}" x:Name="addButton" Click="addButton_Click" Width="55" HorizontalAlignment="Left" VerticalAlignment="Stretch" Tag="" />
-
-                        <!--<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource SideMenuButtonStyle}" x:Name="removeButton" Click="removeButton_Click" Width="55" HorizontalAlignment="Right" VerticalAlignment="Stretch" Tag="" />
-                    <Button Style="{StaticResource SideMenuButtonStyle}" x:Name="addButton" Click="addButton_Click" Width="55" HorizontalAlignment="Right" VerticalAlignment="Stretch" Tag="" />
-                </StackPanel>-->
-                        <Button Grid.Column="1" Style="{StaticResource SideMenuButtonStyle}" x:Uid="Done" x:Name="doneButton" Click="doneButton_Click" VerticalAlignment="Stretch" Tag="" Content="Concluir" />
-
-                    </Grid>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <local:FluentButton x:Name="addButton" Click="addButton_Click" Width="55" HorizontalAlignment="Left" VerticalAlignment="Stretch" Icon="" IconOnly="True" />
+                            <local:FluentButton Grid.Column="1" x:Uid="Done" x:Name="doneButton" Click="doneButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Icon="" IconOnly="False" IsMainAction="True" MainActionBackground="{Binding AccentColor, Source={StaticResource ApplicationAccentColor}}" MainActionBorder="{Binding AccentColorDark10PercentBrush, Source={StaticResource ApplicationAccentColor}}" Text="Concluir" />
+                        </Grid>
+                    </Border>
 
                 </Grid>
             </Grid>

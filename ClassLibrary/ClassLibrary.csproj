@@ -138,7 +138,6 @@
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\LastFm.cs" />
-    <Compile Include="Helpers\Navigation.cs" />
     <Compile Include="Helpers\NavigationHelper.cs" />
     <Compile Include="Helpers\PlaylistHelper.cs" />
     <Compile Include="Helpers\ShuffleHelper.cs" />

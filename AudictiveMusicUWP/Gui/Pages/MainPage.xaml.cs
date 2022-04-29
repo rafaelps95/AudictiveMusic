@@ -5,6 +5,7 @@ using ClassLibrary;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
+using InAppNotificationLibrary;
 using Microsoft.Graphics.Canvas.Effects;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using static AudictiveMusicUWP.Gui.Pages.ThemeSelector;
+using static ClassLibrary.Helpers.Enumerators;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -50,7 +52,6 @@ namespace AudictiveMusicUWP.Gui.Pages
         private double searchUIOffset = (double)0;
 
         private bool MainFrameNavigating = false;
-        public ActionableNotification Notification { get => notice; }
 
         public PlayerControl Player
         {
@@ -71,7 +72,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             get
             {
-                return notice.IsVisible;
+                return notificationGrid.Visibility == Visibility.Visible;
             }
         }
 
@@ -84,12 +85,9 @@ namespace AudictiveMusicUWP.Gui.Pages
         private SpriteVisual menuHostSprite;
         private SpriteVisual titleBarHostSprite;
 
-
-
         private CoreApplicationViewTitleBar coreTitleBar;
         public LastFmLoginControl lastFmLoginControl;
         private NewSearchUX searchUI;
-        public SearchPane searchGrid;
         public PlaylistPicker playlistPicker;
         public MusicLibraryPicker libraryPicker;
         public NextTooltip nextTooltip;
@@ -113,13 +111,103 @@ namespace AudictiveMusicUWP.Gui.Pages
             Application.Current.Suspending += Current_Suspending;
             playlistPicker = null;
             searchUI = null;
-            searchGrid = null;
 
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated +=
        CoreDispatcher_AcceleratorKeyActivated;
 
             ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
+            ApplicationSettings.ThemeChanged += ApplicationSettings_ThemeChanged;
+            PlaylistHelper.PlaylistChanged += PlaylistHelper_PlaylistChanged;
+            PlaylistHelper.PlaylistPickerRequested += PlaylistHelper_PlaylistPickerRequested;
+            StorageHelper.LibraryPickerRequested += StorageHelper_LibraryPickerRequested;
+            NavigationHelper.BackRequested += NavigationHelper_BackRequested;
+            NavigationHelper.NavigationRequested += NavigationHelper_NavigationRequested;
+            NavigationHelper.ClearRequested += NavigationHelper_ClearRequested;
+            LastFm.Current.LoginRequested += Current_LoginRequested;
+            PageHelper.LayoutChangeRequested += PageHelper_LayoutChangeRequested;
+            PageHelper.OffsetChangeRequested += PageHelper_OffsetChangeRequested;
             //Window.Current.CoreWindow.CharacterReceived += CoreWindow_CharacterReceived;
+            InAppNotificationHelper.NotificationReceived += InAppNotificationHelper_NotificationReceived;
+            InAppNotificationHelper.NotificationDismissed += InAppNotificationHelper_NotificationDismissed;
+
+        }
+
+        private void PageHelper_OffsetChangeRequested(double offset)
+        {
+            searchUIOffset = offset;
+            searchUI.SetOffset(offset);
+        }
+
+        private void PageHelper_LayoutChangeRequested(bool isCompact)
+        {
+            if (searchUI.IsCompact != isCompact)
+                searchUI.IsCompact = isCompact;
+        }
+
+        private void InAppNotificationHelper_NotificationDismissed(Notification notification)
+        {
+            notificationGrid.Children.Remove(notification);
+            if (notificationGrid.Children.Count == 0)
+                notificationGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void InAppNotificationHelper_NotificationReceived(Notification notification)
+        {
+            notificationGrid.Visibility = Visibility.Visible;
+            notificationGrid.Children.Add(notification);
+            notification.Show();
+        }
+
+        private void StorageHelper_LibraryPickerRequested(object sender, RoutedEventArgs e)
+        {
+            CreateLibraryPicker();
+        }
+
+        private void NavigationHelper_ClearRequested(object sender, bool mainFrame)
+        {
+            if (mainFrame)
+                Frame.BackStack.Clear();
+            else
+                MainFrame.BackStack.Clear();
+        }
+
+        private void ApplicationSettings_ThemeChanged(ThemeChangedEventArgs args)
+        {
+            SetAppTheme(args.NewTheme);
+        }
+
+        private void PlaylistHelper_PlaylistPickerRequested(object sender, List<string> list)
+        {
+            CreateAddToPlaylistPopup(list);
+        }
+
+        private void Current_LoginRequested(object sender, RoutedEventArgs e)
+        {
+            CreateLastFmLogin();
+        }
+
+        private void NavigationHelper_NavigationRequested(object sender, Type targetPage, object parameter = null, bool mainFrame = false)
+        {
+            if (mainFrame != true)
+                Navigate(targetPage, parameter);
+            else
+                Frame.Navigate(targetPage, parameter);
+        }
+
+        private void NavigationHelper_BackRequested(object sender, RoutedEventArgs e)
+        {
+            GoBack();
+        }
+
+        private void PlaylistHelper_PlaylistChanged(object sender, RoutedEventArgs e)
+        {
+            if (MainFrame.SourcePageType == typeof(PlaylistPage))
+            {
+                if (MainFrame.CanGoBack)
+                    MainFrame.GoBack();
+                else
+                    Navigate(typeof(Playlists));
+            }
         }
 
         private void SearchUI_UIDismissed(object sender)
@@ -182,7 +270,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
                 Collection.LoadCollectionChanges();
 
-                SetAppTheme();
+                SetAppTheme(ApplicationSettings.AppTheme);
             }
             else
             {
@@ -493,7 +581,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             base.OnNavigatedTo(e);
 
-            SetAppTheme();
+            SetAppTheme(ApplicationSettings.AppTheme);
 
             PageHelper.MainPage = this;
 
@@ -522,14 +610,14 @@ namespace AudictiveMusicUWP.Gui.Pages
 
                         isResumingPlayback = true;
                         PlayPauseOrResume();
-                        OpenPlayer();
+                        PlayerController.OpenPlayer(this);
                     }
                     else if (NavigationHelper.GetParameter(arguments, "action") == "playEverything")
                     {
                         if (this.IsAppOpened == false)
                             player.InitializePlayer();
                         MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.PlayEverything));
-                        OpenPlayer();
+                        PlayerController.OpenPlayer(this);
                     }
                     else if (NavigationHelper.GetParameter(arguments, "action") == "navigate")
                     {
@@ -555,78 +643,70 @@ namespace AudictiveMusicUWP.Gui.Pages
                 if (BackgroundMediaPlayer.Current != null)
                 {
                     if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState != MediaPlaybackState.None || isResumingPlayback)
-                        OpenPlayer();
+                        PlayerController.OpenPlayer(this);
                 }
             }
 
             IsAppOpened = true;
         }
 
-        public async void SetAppTheme()
+        private async void SetAppTheme(PageTheme theme)
         {
-            if (ApplicationData.Current.LocalSettings.Values.ContainsKey("AppTheme"))
+            switch (theme)
             {
-                switch ((int)ApplicationData.Current.LocalSettings.Values["AppTheme"])
-                {
-                    case 0:
-                        //if (ApplicationInfo.Current.ColorEnabled == false)
-                        //{
-                        //    if (ApplicationInfo.Current.IsMobile == false)
-                        //        ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
-                        //}
-                            this.RequestedTheme = ElementTheme.Dark;
+                case PageTheme.Dark:
+                    this.RequestedTheme = ElementTheme.Dark;
+                    break;
+                case PageTheme.Light:
+                    this.RequestedTheme = ElementTheme.Light;
+                    break;
+            };
+            //if (ApplicationData.Current.LocalSettings.Values.ContainsKey("AppTheme"))
+            //{
+            //    switch ((int)ApplicationData.Current.LocalSettings.Values["AppTheme"])
+            //    {
+            //        case 0:
+            //            //if (ApplicationInfo.Current.ColorEnabled == false)
+            //            //{
+            //            //    if (ApplicationInfo.Current.IsMobile == false)
+            //            //        ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
+            //            //}
+            //                this.RequestedTheme = ElementTheme.Dark;
 
 
 
-                        break;
-                    case 1:
-                        //if (ApplicationInfo.Current.ColorEnabled == false)
-                        //{
-                        //    if (ApplicationInfo.Current.IsMobile == false)
-                        //        ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
-                        //}
+            //            break;
+            //        case 1:
+            //            //if (ApplicationInfo.Current.ColorEnabled == false)
+            //            //{
+            //            //    if (ApplicationInfo.Current.IsMobile == false)
+            //            //        ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
+            //            //}
 
-                        this.RequestedTheme = ElementTheme.Light;
+            //            this.RequestedTheme = ElementTheme.Light;
 
-                        break;
-                    case 2:
-                        //if (ApplicationInfo.Current.ColorEnabled == false)
-                        //{
-                        //    if (ApplicationInfo.Current.IsMobile == false)
-                        //    {
-                        //        if ((bool)Application.Current.Resources["IsDarkTheme"])
-                        //        {
-                        //            ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
-                        //        }
-                        //        else
-                        //        {
-                        //            ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
-                        //        }
-                        //    }
-                        //}
-                        this.RequestedTheme = ElementTheme.Default;
+            //            break;
+            //        case 2:
+            //            //if (ApplicationInfo.Current.ColorEnabled == false)
+            //            //{
+            //            //    if (ApplicationInfo.Current.IsMobile == false)
+            //            //    {
+            //            //        if ((bool)Application.Current.Resources["IsDarkTheme"])
+            //            //        {
+            //            //            ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
+            //            //        }
+            //            //        else
+            //            //        {
+            //            //            ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
+            //            //        }
+            //            //    }
+            //            //}
+            //            this.RequestedTheme = ElementTheme.Default;
 
-                        break;
-                }
-            }
-            else
-            {
-                //if (ApplicationInfo.Current.ColorEnabled == false)
-                //{
-                //    if (ApplicationInfo.Current.IsMobile == false)
-                //    {
-                //        if ((bool)Application.Current.Resources["IsDarkTheme"])
-                //        {
-                //            ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
-                //        }
-                //        else
-                //        {
-                //            ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
-                //        }
-                //    }
-                //}
-                this.RequestedTheme = ElementTheme.Default;
-            }
+            //            break;
+            //    }
+            //}
+
 
             if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.NoColor)
             {
@@ -663,47 +743,6 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             e.Handled = GoBack();
         }
-
-        //private void SideMenuButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (menu.IsPaneOpen)
-        //        CloseMenu();
-        //    else
-        //        OpenMenu();
-        //}
-
-        //private void CloseMenu()
-        //{
-        //    if (ApplicationInfo.Current.WindowSize.Width > 400)
-        //    {
-        //        MainFrame.Margin = new Thickness(54, 0, 0, 0);
-        //    }
-
-        //    //MenuBackgroundColor.Opacity = 1;
-
-        //    menu.IsPaneOpen = false;
-        //}
-
-        //private void OpenMenu()
-        //{
-        //    menu.IsPaneOpen = true;
-
-        //    if (ApplicationInfo.Current.WindowSize.Width > 700)
-        //    {
-        //        MainFrame.Margin = new Thickness(274, 0, 0, 0);
-        //        //MenuBackgroundColor.Opacity = 0.8;
-        //    }
-        //    else if (ApplicationInfo.Current.WindowSize.Width > 400 && ApplicationInfo.Current.WindowSize.Width <= 700)
-        //    {
-        //        MainFrame.Margin = new Thickness(54, 0, 0, 0);
-        //        //MenuBackgroundColor.Opacity = 1;
-        //    }
-        //    else
-        //    {
-        //        MainFrame.Margin = new Thickness(0, 0, 0, 0);
-        //        //MenuBackgroundColor.Opacity = 1;
-        //    }
-        //}
 
         private void MainFrame_Navigated(object sender, NavigationEventArgs e)
         {
@@ -819,7 +858,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PageHelper.MainPage?.IsNoticeVisible == true || MainFrame.CanGoBack == true)
+            if (IsNoticeVisible == true || MainFrame.CanGoBack == true)
             {
                 GoBack();
             }
@@ -829,12 +868,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
         }
 
-        public void OpenPlayer()
-        {
-            player.Mode = PlayerControl.DisplayMode.Full;
-        }
-
-        public bool GoBack()
+        private bool GoBack()
         {
             bool handled = false;
 
@@ -847,28 +881,10 @@ namespace AudictiveMusicUWP.Gui.Pages
                 handled = true;
             }
 
-            if (PageHelper.MainPage?.IsNoticeVisible == true)
+            if (IsNoticeVisible == true)
             {
-                PageHelper.MainPage?.HideEmptyLibraryNotice();
+                HideEmptyLibraryNotice();
                 handled = true;
-            }
-
-
-
-            if (handled == false)
-            {
-                if (PageHelper.Settings != null)
-                {
-                    if (PageHelper.Settings.CurrentView == Enumerators.SettingsPageContent.Menu)
-                    {
-                        handled = false;
-                    }
-                    else
-                    {
-                        PageHelper.Settings.CurrentView = Enumerators.SettingsPageContent.Menu;
-                        handled = true;
-                    }
-                }
             }
 
             if (handled == false)
@@ -960,6 +976,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             searchUI = new NewSearchUX();
             searchUI.UIDismissed += SearchUI_UIDismissed;
+            searchUI.SearchBarSizeChanged += SearchUI_SearchBarSizeChanged;
             searchContainer.Children.Add(searchUI);
 
             searchContainer.Visibility = Visibility.Visible;
@@ -981,6 +998,14 @@ namespace AudictiveMusicUWP.Gui.Pages
             //customPopupsArea.Children.Add(searchGrid);
 
             //customPopupsArea.Visibility = Visibility.Visible;
+        }
+
+        private void SearchUI_SearchBarSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (searchUI.IsCompact)
+                return;
+
+            PageHelper.SearchBoxSize = e.NewSize;
         }
 
         private void OpenSearchPane()
@@ -1147,7 +1172,8 @@ namespace AudictiveMusicUWP.Gui.Pages
             //    CloseMenu();
         }
 
-        public void Navigate(Type targetPage, object parameter = null)
+
+        private void Navigate(Type targetPage, object parameter = null)
         {
             MainFrameNavigating = true;
 
@@ -1278,8 +1304,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 }
             }
 
-            if (PageHelper.MainPage != null)
-                PageHelper.MainPage.CreateAddToPlaylistPopup(songs);
+            CreateAddToPlaylistPopup(songs);
         }
 
         private void PlayerBottomBarInfo_DragStarting(UIElement sender, DragStartingEventArgs args)
@@ -1294,34 +1319,34 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         public void ShowEmptyLibraryNotice()
         {
-            string subtitle;
-            if (ApplicationInfo.Current.GetDeviceFormFactorType() == ApplicationInfo.DeviceFormFactorType.Desktop
-                || ApplicationInfo.Current.GetDeviceFormFactorType() == ApplicationInfo.DeviceFormFactorType.Tablet)
-            {
-                subtitle = ApplicationInfo.Current.Resources.GetString("EmptyLibraryDesktopTip");
-                Notification.PrimaryActionVisibility = Visibility.Collapsed;
-                Notification.SecondaryActionVisibility = Visibility.Visible;
-                Notification.SecondaryActionContent = ApplicationInfo.Current.Resources.GetString("SettingsString");
-                Notification.SecondaryActionClick += (s, a) => { Navigate(typeof(Settings), "path=dataManagement"); };
-            }
-            else
-            {
-                subtitle = ApplicationInfo.Current.Resources.GetString("EmptyLibraryMobileTip");
-                Notification.PrimaryActionVisibility = Visibility.Collapsed;
-                Notification.SecondaryActionVisibility = Visibility.Collapsed;
-            }
+            //string subtitle;
+            //if (ApplicationInfo.Current.GetDeviceFormFactorType() == ApplicationInfo.DeviceFormFactorType.Desktop
+            //    || ApplicationInfo.Current.GetDeviceFormFactorType() == ApplicationInfo.DeviceFormFactorType.Tablet)
+            //{
+            //    subtitle = ApplicationInfo.Current.Resources.GetString("EmptyLibraryDesktopTip");
+            //    Notification.PrimaryActionVisibility = Visibility.Collapsed;
+            //    Notification.SecondaryActionVisibility = Visibility.Visible;
+            //    Notification.SecondaryActionContent = ApplicationInfo.Current.Resources.GetString("SettingsString");
+            //    Notification.SecondaryActionClick += (s, a) => { Navigate(typeof(Settings), "path=dataManagement"); };
+            //}
+            //else
+            //{
+            //    subtitle = ApplicationInfo.Current.Resources.GetString("EmptyLibraryMobileTip");
+            //    Notification.PrimaryActionVisibility = Visibility.Collapsed;
+            //    Notification.SecondaryActionVisibility = Visibility.Collapsed;
+            //}
 
-            Notification.SetContent(ApplicationInfo.Current.Resources.GetString("EmptyLibrary"), subtitle, "");
+            //Notification.SetContent(ApplicationInfo.Current.Resources.GetString("EmptyLibrary"), subtitle, "");
 
-            Notification.Show();
+            //Notification.Show();
         }
 
         public void HideEmptyLibraryNotice()
         {
-            notice.Hide();
+            //notice.Hide();
         }
 
-        public void CreateLastFmLogin()
+        void CreateLastFmLogin()
         {
             lastFmLoginControl = new LastFmLoginControl();
 

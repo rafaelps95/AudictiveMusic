@@ -1,0 +1,75 @@
+﻿<UserControl
+    x:Class="AudictiveMusicUWP.Gui.UC.SelectedItemsBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AudictiveMusicUWP.Gui.UC"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="110"
+    d:DesignWidth="600"
+    x:Name="root">
+
+    <Grid Height="70" Margin="0">
+        <Grid x:Name="shadowGrid" Visibility="Collapsed" Margin="10" SizeChanged="SelectedItemsBar_SizeChanged" />
+        <Border CornerRadius="5" Visibility="{Binding ElementName=shadowGrid, Path=Visibility}" Margin="10" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" Opacity="1" />
+        <Border CornerRadius="5" Visibility="{Binding ElementName=shadowGrid, Path=Visibility}" Padding="15,0" Margin="10" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" Opacity="0.2" />
+        <Grid Margin="25,12.5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="checkBox" Visibility="Collapsed" Content="{Binding SelectedItemsCountText, ElementName=root}" />
+                <!--<TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />-->
+                <!--<local:FluentButton Click="ClearButton_Click" IsEnabled="False" x:Name="clearButton" Icon="&#xE8E6;" IconOnly="True" />-->
+            </StackPanel>
+            <Grid x:Name="buttonsArea" Visibility="Collapsed" SizeChanged="ButtonsArea_SizeChanged" Margin="0" HorizontalAlignment="Stretch" Grid.Column="1">
+                <!--<Grid x:Name="emptyArea" Background="#888888" />-->
+                <Grid Grid.Column="1" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <local:FluentButton Visibility="Collapsed" Click="PlayButton_Click" Grid.Column="0" IsEnabled="False" IsMainAction="True" MainActionBackground="{Binding AccentColor, Mode=TwoWay, Source={ThemeResource ApplicationAccentColor}}" MainActionBorder="{Binding AccentColorDark10PercentBrush, Mode=TwoWay, Source={ThemeResource ApplicationAccentColor}}"  x:Name="playButton" Icon="&#xE768;" IconOnly="False" Text="Reproduzir" />
+                    <local:FluentButton Visibility="Collapsed" x:Name="addNextButton" Grid.Column="1" Click="AddNextButton_Click" IsEnabled="False" Icon="&#xE846;" Text="Reproduzir em seguida" />
+                    <local:FluentButton Visibility="Collapsed" Click="AddButton_Click" Grid.Column="2" IsEnabled="False" x:Name="addButton" Icon="&#xE710;" IconOnly="True">
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyout.Items>
+                                    <MenuFlyoutItem Text="Adicionar à fila" Click="AddToQueueButton_Click" />
+                                    <MenuFlyoutItem Text="Adicionar à lista de reprodução" Click="AddToPlaylistButton_Click"/>
+                                </MenuFlyout.Items>
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
+                    </local:FluentButton>
+
+                </Grid>
+            </Grid>
+            <local:FluentButton Click="MoreButton_Click" Visibility="Collapsed" IsEnabled="False" x:Name="moreButton" Icon="&#xE712;" IconOnly="True" Grid.Column="2">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuFlyout.Items>
+                            <MenuFlyoutItem x:Name="playMenuFlyoutItem" Tag="&#xE768;" Click="PlayButton_Click" />
+                            <MenuFlyoutItem x:Name="playNextMenuFlyoutItem" Tag="&#xE846;" Click="AddToQueueButton_Click" />
+                            <MenuFlyoutSeparator Visibility="{Binding ElementName=playNextMenuFlyoutItem, Path=Visibility}" />
+                            <MenuFlyoutSubItem x:Name="addMenuFlyoutItem" Tag="">
+                                <MenuFlyoutItem x:Name="addToQueueMenuFlyoutItem" Click="AddToQueueButton_Click" />
+                                <MenuFlyoutItem x:Name="addToPlaylistMenuFlyoutItem" Click="AddToPlaylistButton_Click"/>
+                            </MenuFlyoutSubItem>
+                            <MenuFlyoutSeparator Visibility="{Binding ElementName=addMenuFlyoutItem, Path=Visibility}" />
+                            <MenuFlyoutItem x:Name="shareMenuFlyoutItem" Click="ShareButton_Click" />
+
+                        </MenuFlyout.Items>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </local:FluentButton>
+            <local:FluentButton x:Name="selectButton" Grid.Column="3" Click="selectButton_Click" Icon="&#xE1EF;" IconOnly="True" />
+
+        </Grid>
+
+    </Grid>
+</UserControl>

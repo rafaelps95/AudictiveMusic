@@ -32,7 +32,7 @@ namespace AudictiveMusicUWP.Gui.Util
             MenuFlyoutItem item1 = new MenuFlyoutItem()
             {
                 Text = ApplicationInfo.Current.Resources.GetString("Play"),
-                Tag = "",
+                Tag = "\uE102",
             };
             item1.Click += (s, a) =>
             {
@@ -44,7 +44,7 @@ namespace AudictiveMusicUWP.Gui.Util
             MenuFlyoutItem item2 = new MenuFlyoutItem()
             {
                 Text = ApplicationInfo.Current.Resources.GetString("PlayNext"),
-                Tag = "\uEA52",
+                Tag = "\uE846",
             };
             item2.Click += (s, a) =>
             {
@@ -60,7 +60,7 @@ namespace AudictiveMusicUWP.Gui.Util
             MenuFlyoutItem item3 = new MenuFlyoutItem()
             {
                 Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylist"),
-                Tag = "",
+                Tag = "\uE109",
             };
             item3.Click += (s, a) =>
             {
@@ -72,16 +72,13 @@ namespace AudictiveMusicUWP.Gui.Util
             MenuFlyoutItem item4 = new MenuFlyoutItem()
             {
                 Text = ApplicationInfo.Current.Resources.GetString("AddToPlaylistFile"),
-                Tag = "",
+                Tag = "\uE7AC",
             };
             item4.Click += async (s, a) =>
             {
                 List<string> list = await PlayerController.FetchSongs(mediaItem, mediaItemType);
 
-                if (PageHelper.MainPage != null)
-                {
-                    PageHelper.MainPage.CreateAddToPlaylistPopup(list);
-                }
+                PlaylistHelper.RequestPlaylistPicker(sender, list);
             };
 
             menu.Items.Add(item4);
@@ -93,7 +90,7 @@ namespace AudictiveMusicUWP.Gui.Util
             MenuFlyoutItem item5 = new MenuFlyoutItem()
             {
                 Text = ApplicationInfo.Current.Resources.GetString("Share"),
-                Tag = "",
+                Tag = "\uE72D",
             };
             item5.Click += async (s, a) =>
             {
@@ -106,22 +103,39 @@ namespace AudictiveMusicUWP.Gui.Util
 
             menu.Items.Add(item5);
 
+            if (mediaItemType == MediaItemType.Playlist)
+            {
+                Playlist playlist = mediaItem as Playlist;
+                MenuFlyoutItem item = new MenuFlyoutItem()
+                {
+                    Text = ApplicationInfo.Current.Resources.GetString("Delete"),
+                    Tag = "\uE107"
+                };
+                item.Click += (s, a) =>
+                {
+                    PlaylistHelper.DeletePlaylist(sender, playlist);
+                };
+
+                menu.Items.Add(item);
+            }
+
+
             if (mediaItemType == MediaItemType.Song)
             {
                 menu.Items.Add(new MenuFlyoutSeparator());
 
-                Song song = mediaItem as Song;
+                Song song = Ctr_Song.Current.GetSong(mediaItem as Song);
                 MenuFlyoutItem item6 = new MenuFlyoutItem();
 
                 if (song.IsFavorite)
                 {
                     item6.Text = ApplicationInfo.Current.Resources.GetString("RemoveFromFavoritesString");
-                    item6.Tag = "";
+                    item6.Tag = "\uE00C";
                 }
                 else
                 {
                     item6.Text = ApplicationInfo.Current.Resources.GetString("AddToFavoritesString");
-                    item6.Tag = "";
+                    item6.Tag = "\uE00B";
                 }
 
                 item6.Click += (s, a) =>
@@ -148,7 +162,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 MenuFlyoutItem item7 = new MenuFlyoutItem()
                 {
                     Text = ApplicationInfo.Current.Resources.GetString("GoToArtistString"),
-                    Tag = "",
+                    Tag = "\uE13D",
                 };
                 item7.Click += (s, a) =>
                 {
@@ -164,7 +178,7 @@ namespace AudictiveMusicUWP.Gui.Util
                         artist.Name = song.Artist;
                     }
 
-                    PageHelper.MainPage?.Navigate(typeof(ArtistPage), artist);
+                    NavigationHelper.Navigate(sender, typeof(ArtistPage), artist);
                 };
 
                 menu.Items.Add(item7);
@@ -175,7 +189,7 @@ namespace AudictiveMusicUWP.Gui.Util
                     MenuFlyoutItem item8 = new MenuFlyoutItem()
                     {
                         Text = ApplicationInfo.Current.Resources.GetString("GoToAlbumString"),
-                        Tag = "",
+                        Tag = "\uE958",
                     };
                     item8.Click += (s, a) =>
                     {
@@ -190,7 +204,7 @@ namespace AudictiveMusicUWP.Gui.Util
                             HexColor = song.HexColor
                         };
 
-                        PageHelper.MainPage?.Navigate(typeof(AlbumPage), album);
+                        NavigationHelper.Navigate(sender, typeof(AlbumPage), album);
                     };
 
                     menu.Items.Add(item8);
@@ -218,7 +232,8 @@ namespace AudictiveMusicUWP.Gui.Util
 
                 mfi.Click += (s, a) =>
                 {
-                    PageHelper.MainPage.CreateLastFmLogin();
+
+                    LastFm.Current.RequestLogin(fwe);
                 };
 
                 mf.Items.Add(mfi);
@@ -234,7 +249,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi.Click += (s, a) =>
                     {
-                        PageHelper.MainPage.Navigate(typeof(LastFmProfilePage), user);
+                        NavigationHelper.Navigate(fwe, typeof(LastFmProfilePage), user);
                     };
 
                     mf.Items.Add(mfi);
@@ -246,7 +261,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi2.Click += (s, a) =>
                     {
-                        PageHelper.MainPage.Navigate(typeof(Settings), "path=scrobble");
+                        NavigationHelper.Navigate(fwe, typeof(Settings), "path=scrobble");
                     };
 
                     mf.Items.Add(mfi2);
@@ -272,7 +287,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi.Click += (s, a) =>
                     {
-                        PageHelper.MainPage.Navigate(typeof(LastFmProfilePage), user);
+                        NavigationHelper.Navigate(fwe, typeof(LastFmProfilePage), user);
                     };
 
                     mf.Items.Add(mfi);

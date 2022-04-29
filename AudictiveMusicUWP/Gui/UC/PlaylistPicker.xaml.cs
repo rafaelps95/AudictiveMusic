@@ -135,10 +135,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void blur_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (PageHelper.MainPage != null)
-            {
-                PageHelper.MainPage.RemovePicker();
-            }
+            NavigationHelper.Back(this);
+            //PageHelper.MainPage.RemovePicker();
         }
 
         private void playlistsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -185,10 +183,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (result == true)
             {
-                if (PageHelper.MainPage != null)
-                {
-                    PageHelper.MainPage.RemovePicker();
-                }
+                NavigationHelper.Back(this);
+                //PageHelper.MainPage.RemovePicker();
             }
             else
             {
@@ -221,7 +217,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 Ctr_Song.Current.SetFavoriteState(s, true);
             }
 
-            PageHelper.MainPage.RemovePicker();
+            NavigationHelper.Back(this);
         }
     }
 }

@@ -9,18 +9,17 @@
     x:Name="root">
 
     <Grid HorizontalAlignment="Left" Tapped="Grid_Tapped" Height="30" PointerEntered="Grid_PointerEntered" PointerExited="Grid_PointerExited">
-        <Border BorderThickness="0" CornerRadius="15" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="30" />
-                </Grid.ColumnDefinitions>
-                <Border BorderThickness="0" Grid.ColumnSpan="2" CornerRadius="15" x:Name="overlay" Visibility="Collapsed" Opacity="0.1" Background="{ThemeResource ApplicationForegroundThemeBrush}">
-                </Border>
-                <TextBlock x:Name="textTB" FontSize="12" Margin="8,0,8,0" VerticalAlignment="Center" />
-                <local:CircleImage Grid.Column="1" x:Name="image" />
-                <Image x:Name="serviceLogo" Grid.Column="1" />
-            </Grid>
-        </Border>
+        <Border BorderThickness="0" CornerRadius="15" Opacity="1" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="30" />
+            </Grid.ColumnDefinitions>
+            <Border BorderThickness="0" Grid.ColumnSpan="2" CornerRadius="15" x:Name="overlay" Visibility="Collapsed" Opacity="0.1" Background="{ThemeResource ApplicationForegroundThemeBrush}">
+            </Border>
+            <TextBlock x:Name="textTB" FontSize="12" Margin="8,0,8,0" VerticalAlignment="Center" />
+            <local:CircleImage Grid.Column="1" x:Name="image" />
+            <Image x:Name="serviceLogo" Grid.Column="1" />
+        </Grid>
     </Grid>
 </UserControl>

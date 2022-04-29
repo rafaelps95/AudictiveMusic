@@ -33,10 +33,10 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.RowSpan="2" Text="{Binding Icon, ElementName=root}" Margin="25,10,15,10" FontSize="{Binding IconSize, ElementName=root}" FontFamily="Segoe MDL2 Assets" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Grid.RowSpan="2" Text="{Binding Icon, ElementName=root}" Margin="25,10,15,10" FontSize="{Binding IconSize, ElementName=root}" FontFamily="{ThemeResource IconFont}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 <TextBlock Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" Margin="10,15,10,0" FontSize="16" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding Title, ElementName=root}" />
                 <TextBlock Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="10,2,10,15"  Opacity="0.8" FontSize="12" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding Subtitle, ElementName=root}" />
-                <TextBlock Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Margin="0,0,10,0" Text="" FontFamily="Segoe MDL2 Assets" FontSize="16" />
+                <TextBlock Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Margin="0,0,10,0" Text="" FontFamily="{ThemeResource IconFont}" FontSize="16" />
             </Grid>
         </Grid>
     </Border>

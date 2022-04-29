@@ -186,8 +186,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void moreButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PageHelper.MainPage != null)
-                PageHelper.MainPage.ShowPopupMenu(ALB, sender, Enumerators.MediaItemType.Album, true, new Point(0, 0));
+            this.ShowPopupMenu(ALB, sender, Enumerators.MediaItemType.Album, true, new Point(0, 0));
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
@@ -209,10 +208,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 Name = ALB.Artist
             };
 
-            if (PageHelper.MainPage != null)
-            {
-                PageHelper.MainPage.Navigate(typeof(ArtistPage), art);
-            }
+            NavigationHelper.Navigate(this, typeof(ArtistPage), art);
         }
 
         private void addButton_Click(object sender, RoutedEventArgs e)
@@ -224,7 +220,7 @@ namespace AudictiveMusicUWP.Gui.UC
             foreach (Song song in songs)
                 list.Add(song.SongURI);
 
-            PageHelper.MainPage.CreateAddToPlaylistPopup(list);
+            PlaylistHelper.RequestPlaylistPicker(this, list);
         }
     }
 }

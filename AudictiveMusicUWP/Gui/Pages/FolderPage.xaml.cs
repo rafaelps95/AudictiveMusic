@@ -219,7 +219,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (item.IsFolder)
             {
                 StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
-                PageHelper.MainPage.Navigate(typeof(FolderPage), folder);
+                NavigationHelper.Navigate(this, typeof(FolderPage), folder);
             }
             else
             {
@@ -329,7 +329,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 }
             }
 
-            PageHelper.MainPage.CreateAddToPlaylistPopup(list);
+            PlaylistHelper.RequestPlaylistPicker(this, list);
 
             DisableSelectionMode();
         }

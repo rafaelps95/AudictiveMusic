@@ -159,8 +159,8 @@
                             <TextBlock TextAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2" x:Uid="Permissions" Text="Permissões" Margin="12" FontSize="20" FontWeight="Thin" />
                             <TextBlock TextAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" x:Uid="PermissionsDownloadLastFm" Text="Permite o envio de informações à terceiros para obter as imagens dos artistas em sua biblioteca?" TextWrapping="WrapWholeWords" Margin="12,12,12,12" />
                             <!--<StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-                            <ToggleButton Grid.Row="2" x:Name="sendInfoYes" Click="sendInfoYes_Click" Style="{StaticResource IconToggleButtonStyle}" FontFamily="Segoe UI Symbol" Content="" Margin="12" HorizontalAlignment="Stretch" />
-                            <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="True" x:Name="sendInfoNo" Click="sendInfoNo_Click" Style="{StaticResource IconToggleButtonStyle}" FontFamily="Segoe UI Symbol" Content="" Margin="12" HorizontalAlignment="Stretch" />
+                            <ToggleButton Grid.Row="2" x:Name="sendInfoYes" Click="sendInfoYes_Click" Style="{StaticResource IconToggleButtonStyle}" FontFamily="{ThemeResource IconFont}" Content="" Margin="12" HorizontalAlignment="Stretch" />
+                            <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="True" x:Name="sendInfoNo" Click="sendInfoNo_Click" Style="{StaticResource IconToggleButtonStyle}" FontFamily="{ThemeResource IconFont}" Content="" Margin="12" HorizontalAlignment="Stretch" />
                         </StackPanel>-->
                             <ToggleButton Grid.Row="2" x:Uid="YesBtn" x:Name="sendInfoYes" Click="sendInfoYes_Click" Content="Sim" Margin="12" HorizontalAlignment="Stretch" />
                             <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="True" x:Uid="NoBtn" x:Name="sendInfoNo" Click="sendInfoNo_Click" Content="Não" Margin="12" HorizontalAlignment="Stretch" />
@@ -186,7 +186,7 @@
                         <TextBlock Grid.Row="0" x:Name="progressPercentage" Text="" FontWeight="Thin" FontSize="30" TextAlignment="Center" />
                         <ProgressBar Grid.Row="1" x:Name="progress" MaxWidth="500" Margin="20,4,20,4" Foreground="White" Maximum="100" HorizontalAlignment="Stretch" />
                         <TextBlock Grid.Row="2" Text="Looking for your music..." x:Uid="PreparingCollection" TextAlignment="Center" Margin="0,0,0,10" />
-                        <TextBlock Grid.Row="3" Text="" FontFamily="Segoe MDL2 Assets" FontSize="40" TextAlignment="Center" />
+                        <TextBlock Grid.Row="3" Text="" FontFamily="{ThemeResource IconFont}" FontSize="40" TextAlignment="Center" />
                     </Grid>
                 </Grid>
             </FlipViewItem>
@@ -203,24 +203,24 @@
                             <EntranceThemeTransition FromHorizontalOffset="0" FromVerticalOffset="100" IsStaggeringEnabled="True" />
                         </TransitionCollection>
                     </Grid.ChildrenTransitions>
-                    <TextBlock Text="" TextAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="80" Foreground="#FF319200" FontWeight="ExtraBold" />
+                    <TextBlock Text="" TextAlignment="Center" FontFamily="{ThemeResource IconFont}" FontSize="80" Foreground="#FF319200" FontWeight="ExtraBold" />
                     <TextBlock Grid.Row="1" x:Uid="SetupCompleted" TextWrapping="Wrap" Text="O Audictive Music foi configurado com êxito" TextAlignment="Center" Margin="10,20" />
                 </Grid>
             </FlipViewItem>
         </FlipView>
 
         <Grid Grid.Row="1" Height="50" Background="#22000000">
-            <Button Name="previousButton" Visibility="Collapsed" Tag="" Click="previousButton_Click" Style="{StaticResource SideMenuButtonStyle}" VerticalAlignment="Stretch" Width="55" HorizontalAlignment="Left" />
+            <local:FluentButton x:Name="previousButton" Visibility="Collapsed" Icon="" IconOnly="True" Click="previousButton_Click" VerticalAlignment="Stretch" Width="55" HorizontalAlignment="Left" />
             <StackPanel Name="selectionIndicators" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <!-- BOLINHAS INDICANDO PÁGINA ATUAL -->
-                <TextBlock Text="" FontFamily="Segoe MDL2 Assets" Margin="2" Opacity="1" FontSize="12" IsTextScaleFactorEnabled="False" />
-                <TextBlock Text="" FontFamily="Segoe MDL2 Assets" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
-                <TextBlock Text="" FontFamily="Segoe MDL2 Assets" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
+                <TextBlock Text="" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="1" FontSize="12" IsTextScaleFactorEnabled="False" />
+                <TextBlock Text="" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
+                <TextBlock Text="" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
 
                 <!-- CERTINHO!!! INDICADOR DE CONCLUSÃO -->
-                <TextBlock Text="" FontFamily="Segoe MDL2 Assets" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
+                <TextBlock Text="" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
             </StackPanel>
-            <Button Name="forwardButton" IsEnabled="True" Tag="" Click="forwardButton_Click" Style="{StaticResource SideMenuButtonStyle}" VerticalAlignment="Stretch" Width="55" HorizontalAlignment="Right" />
+            <local:FluentButton x:Name="forwardButton" IsEnabled="True" Icon="" IconOnly="True" Click="forwardButton_Click" VerticalAlignment="Stretch" Width="55" HorizontalAlignment="Right" />
         </Grid>
 
         <Grid Grid.Row="2" RequestedTheme="Dark" Background="#FF444444">

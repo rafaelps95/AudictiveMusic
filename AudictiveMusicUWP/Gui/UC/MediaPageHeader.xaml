@@ -35,13 +35,13 @@
 
             <local:WebServiceButton Grid.Column="1" Service="LastFm" Margin="10" x:Name="webServiceButton" VerticalAlignment="Top" HorizontalAlignment="Right" Tapped="webServiceButton_Tapped" />
 
-            <!--<Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Height="33" Width="33" x:Name="lastFmButton" Visibility="Collapsed" FontFamily="Segoe UI Symbol" FontSize="20" Click="lastFmButton_Click" Style="{StaticResource CircleButtonStyle}" Background="#66000000" >
+            <!--<Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Height="33" Width="33" x:Name="lastFmButton" Visibility="Collapsed" FontFamily="{ThemeResource IconFont}" FontSize="20" Click="lastFmButton_Click" Style="{StaticResource CircleButtonStyle}" Background="#66000000" >
                 <Grid>
                     <Image Source="ms-appx:///Assets/lastfm_logo.png" Stretch="Uniform" Opacity="1" />
                 </Grid>
             </Button>
             
-            <Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Height="33" Width="33" x:Name="audictiveButton" Visibility="Collapsed" FontFamily="Segoe UI Symbol" FontSize="20" Click="audictiveButton_Click" Style="{StaticResource CircleButtonStyle}" Background="#66000000" >
+            <Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Height="33" Width="33" x:Name="audictiveButton" Visibility="Collapsed" FontFamily="{ThemeResource IconFont}" FontSize="20" Click="audictiveButton_Click" Style="{StaticResource CircleButtonStyle}" Background="#66000000" >
                 <Grid>
                     <Image Source="ms-appx:///Assets/Logos/Square44.png" Stretch="Uniform" Opacity="1" />
                 </Grid>
@@ -58,7 +58,7 @@
                 <TextBlock x:Name="title" Text="" FontWeight="Bold" FontSize="18" />
                 <StackPanel Grid.Row="1" Margin="0,5" Orientation="Horizontal">
                     <TextBlock x:Name="subtitle1" FontSize="10" />
-                    <TextBlock x:Name="subtitleSeparator" Visibility="Collapsed" Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" />
+                    <TextBlock x:Name="subtitleSeparator" Visibility="Collapsed" Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
                     <TextBlock x:Name="subtitle2" Visibility="Collapsed" FontSize="10" />
                 </StackPanel>
             </StackPanel>
@@ -91,9 +91,9 @@
                 </ScrollViewer>
             </Grid>
             <StackPanel x:Name="buttonsArea" Orientation="Horizontal" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" Height="40" Margin="0,0,0,0">
-                <Button RequestedTheme="Default" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" IsTextScaleFactorEnabled="False" x:Name="playButton" Click="playButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="Segoe UI Symbol" Width="55" VerticalAlignment="Stretch" />
-                <Button RequestedTheme="Default" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" IsTextScaleFactorEnabled="False" x:Name="addButton" Click="addButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="Segoe UI Symbol" Width="55" VerticalAlignment="Stretch"/>
-                <Button RequestedTheme="Default" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" IsTextScaleFactorEnabled="False" x:Name="moreButton" Click="moreButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="Segoe UI Symbol" Width="55" VerticalAlignment="Stretch" />
+                <Button RequestedTheme="Default" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" IsTextScaleFactorEnabled="False" x:Name="playButton" Click="playButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="{ThemeResource IconFont}" Width="55" VerticalAlignment="Stretch" />
+                <Button RequestedTheme="Default" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" IsTextScaleFactorEnabled="False" x:Name="addButton" Click="addButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="{ThemeResource IconFont}" Width="55" VerticalAlignment="Stretch"/>
+                <Button RequestedTheme="Default" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" IsTextScaleFactorEnabled="False" x:Name="moreButton" Click="moreButton_Click" Content="" Style="{StaticResource IconButtonStyle}" FontFamily="{ThemeResource IconFont}" Width="55" VerticalAlignment="Stretch" />
             </StackPanel>
 
         </Grid>

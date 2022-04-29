@@ -293,10 +293,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 list.Add(item.SongURI);
             }
 
-            if (PageHelper.MainPage != null)
-            {
-                PageHelper.MainPage.CreateAddToPlaylistPopup(list);
-            }
+            PlaylistHelper.RequestPlaylistPicker(this, list);
         }
 
         private void MusicPlaylist_DragItemsStarting(object sender, DragItemsStartingEventArgs e)

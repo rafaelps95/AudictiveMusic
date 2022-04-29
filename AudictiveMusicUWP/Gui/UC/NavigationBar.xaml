@@ -200,7 +200,7 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" x:Name="Icon" Opacity="0.6" Text="{TemplateBinding Tag}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="18" />
+                                <TextBlock Grid.Row="0" x:Name="Icon" Opacity="0.6" Text="{TemplateBinding Tag}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontFamily="{ThemeResource IconFont}" FontSize="18" />
                                 <TextBlock Grid.Row="1" x:Name="ContentPresenter" Opacity="0.6" AutomationProperties.AccessibilityView="Raw" Text="{TemplateBinding Content}" TextAlignment="Center" Margin="5,2,5,0" VerticalAlignment="Stretch" TextTrimming="CharacterEllipsis"/>
                                 <Rectangle RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2" x:Name="checkMark" Fill="{ThemeResource ApplicationForegroundThemeBrush}" Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                                     <Rectangle.RenderTransform>
@@ -403,7 +403,7 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" x:Name="Icon" Opacity="0.6" Text="{TemplateBinding Tag}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="18" />
+                                <TextBlock Grid.Row="0" x:Name="Icon" Opacity="0.6" Text="{TemplateBinding Tag}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontFamily="{ThemeResource IconFont}" FontSize="18" />
                                 <TextBlock Grid.Row="1" x:Name="ContentPresenter" Opacity="0.6" AutomationProperties.AccessibilityView="Raw" Text="{TemplateBinding Content}" TextAlignment="Center" Margin="5,2,5,0" VerticalAlignment="Stretch" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
                                 <Rectangle RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2" x:Name="checkMark" Fill="{ThemeResource ApplicationForegroundThemeBrush}" Width="2" VerticalAlignment="Stretch" HorizontalAlignment="Left">
                                     <Rectangle.RenderTransform>

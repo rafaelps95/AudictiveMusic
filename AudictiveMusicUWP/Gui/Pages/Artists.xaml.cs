@@ -4,6 +4,7 @@ using BackgroundAudioShared.Messages;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
+using InAppNotificationLibrary;
 using Microsoft.Graphics.Canvas.Effects;
 using System;
 using System.Collections.Generic;
@@ -93,28 +94,24 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             if (e.NewSize.Width < 410)
             {
-                this.GridItemSize = (e.NewSize.Width - 60) / 3;
+                this.GridItemSize = (e.NewSize.Width - 60) / 2;
             }
             else if (e.NewSize.Width >= 410 && e.NewSize.Width < 610)
             {
-                this.GridItemSize = (e.NewSize.Width - 65) / 4;
+                this.GridItemSize = (e.NewSize.Width - 65) / 3;
             }
             else if (e.NewSize.Width >= 610 && e.NewSize.Width < 710)
             {
-                this.GridItemSize = (e.NewSize.Width - 80) / 5;
+                this.GridItemSize = (e.NewSize.Width - 80) / 4;
             }
             else if (e.NewSize.Width >= 710 && e.NewSize.Width < 810)
             {
-                this.GridItemSize = (e.NewSize.Width - 90) / 6;
+                this.GridItemSize = (e.NewSize.Width - 90) / 4;
             }
             else
             {
-                this.GridItemSize = (e.NewSize.Width - 100) / 7;
+                this.GridItemSize = (e.NewSize.Width - 100) / 5;
             }
-
-
-
-            selectionGrid.Margin = new Thickness(20, 20, 20, ApplicationInfo.Current.FooterHeight + 20);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -132,15 +129,13 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             NavMode = e.NavigationMode;
 
-            PageHelper.Artists = this;
-
             if (ApplicationInfo.Current.IsMobile == false)
             {
-                ArtistsList.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = true });
+                listView.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = true });
             }
             else
             {
-                ArtistsList.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = false });
+                listView.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = false });
             }
 
             if (((CollectionViewSource)Resources["ListOfArtists"]).Source == null || CollectionHasBeenUpdated)
@@ -173,11 +168,36 @@ namespace AudictiveMusicUWP.Gui.Pages
             OpenPage(NavMode == NavigationMode.Back);
 
             if (listOfArtists.Count == 0)
-                PageHelper.MainPage?.ShowEmptyLibraryNotice();
+            {
+                CreateEmptyLibraryNotification();
+
+            }
             else
             {
-                PageHelper.MainPage?.HideEmptyLibraryNotice();
             }
+        }
+
+        private void CreateEmptyLibraryNotification()
+        {
+            InAppNotification inAppNotification = new InAppNotification();
+            string message;
+            if (ApplicationInfo.Current.GetDeviceFormFactorType() == ApplicationInfo.DeviceFormFactorType.Desktop
+                || ApplicationInfo.Current.GetDeviceFormFactorType() == ApplicationInfo.DeviceFormFactorType.Tablet)
+            {
+                message = ApplicationInfo.Current.Resources.GetString("EmptyLibraryDesktopTip");
+                inAppNotification.PrimaryButtonContent = ApplicationInfo.Current.Resources.GetString("SettingsString");
+                inAppNotification.PrimaryButtonClicked += (s, a) => { NavigationHelper.Navigate(this, typeof(Settings), "path=dataManagement"); };
+            }
+            else
+            {
+                message = ApplicationInfo.Current.Resources.GetString("EmptyLibraryMobileTip");
+            }
+
+            inAppNotification.Title = ApplicationInfo.Current.Resources.GetString("EmptyLibrary");
+            inAppNotification.Message = message;
+            inAppNotification.Icon = "\uE783";
+
+            InAppNotificationHelper.ShowNotification(inAppNotification);
         }
 
         private void OpenPage(bool reload)
@@ -209,10 +229,10 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
         }
 
-        private void ArtistsList_ItemClick(object sender, ItemClickEventArgs e)
+        private void listView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (ArtistsList.SelectionMode == ListViewSelectionMode.None)
-                PageHelper.MainPage.Navigate(typeof(ArtistPage), e.ClickedItem);
+            if (listView.SelectionMode == ListViewSelectionMode.None)
+                NavigationHelper.Navigate(this, typeof(ArtistPage), e.ClickedItem);
         }
 
         private void Artist_ImageOpened(object sender, RoutedEventArgs e)
@@ -271,7 +291,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void Artist_Holding(object sender, HoldingRoutedEventArgs e)
         {
-            if (e.PointerDeviceType == PointerDeviceType.Touch && e.HoldingState == HoldingState.Started && ArtistsList.SelectionMode == ListViewSelectionMode.None)
+            if (e.PointerDeviceType == PointerDeviceType.Touch && e.HoldingState == HoldingState.Started && listView.SelectionMode == ListViewSelectionMode.None)
             {
                 Artist artist = (sender as FrameworkElement).DataContext as Artist;
 
@@ -323,133 +343,133 @@ namespace AudictiveMusicUWP.Gui.Pages
             MessageService.SendMessageToBackground(new SetPlaylistMessage(songs));
         }
 
-        private void ArtistsList_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
+        private void listView_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
         {
             e.Data.Properties.Add("mediaItem", e.Items.First());
-        }
-
-        private void ClearSelection_Click(object sender, RoutedEventArgs e)
-        {
-            DisableSelectionMode();
-        }
-
-        private void selectButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (ArtistsList.SelectionMode == ListViewSelectionMode.None)
-                EnableSelectionMode();
-            else
-                DisableSelectionMode();
-        }
-
-        private void EnableSelectionMode()
-        {
-            selectButton.Content = "";
-            ArtistsList.SelectionMode = ListViewSelectionMode.Multiple;
-            ArtistsList.SelectionChanged += ArtistsList_SelectionChanged;
-            topAppBar.Visibility = Visibility.Visible;
-        }
-
-        private void DisableSelectionMode()
-        {
-            selectButton.Content = "";
-            ArtistsList.SelectedItem = null;
-            ArtistsList.SelectionChanged -= ArtistsList_SelectionChanged;
-            ArtistsList.SelectionMode = ListViewSelectionMode.None;
-            topAppBar.Visibility = Visibility.Collapsed;
-        }
-
-        private void ActivateSelecionMode(Artist artist)
-        {
-            if (ArtistsList.SelectedItems.Contains(artist))
-                return;
-
-            ApplicationInfo.Current.VibrateDevice(25);
-
-            EnableSelectionMode();
-            ArtistsList.SelectedItems.Add(artist);
-        }
-
-        private void ArtistsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ArtistsList.SelectedItems.Count > 0)
-            {
-                topPlay.IsEnabled = topAdd.IsEnabled = topMore.IsEnabled = true;
-            }
-            else
-            {
-                topPlay.IsEnabled = topAdd.IsEnabled = topMore.IsEnabled = false;
-                selectedItemsLabel.Text = string.Empty;
-                selectedItemsLabel.Visibility = Visibility.Collapsed;
-
-                return;
-            }
-
-            int i = ArtistsList.SelectedItems.Count;
-
-            string s = i + " " + ApplicationInfo.Current.GetSingularPlural(i, "ItemSelected");
-
-            selectedItemsLabel.Text = s;
-            selectedItemsLabel.Visibility = Visibility.Visible;
-        }
-
-        private async void topPlay_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> list = new List<string>();
-
-            foreach (Artist artist in ArtistsList.SelectedItems)
-            {
-                List<string> songs = await PlayerController.FetchSongs(artist, Enumerators.MediaItemType.Artist);
-                list.AddRange(songs);
-            }
-
-            PlayerController.Play(list, Enumerators.MediaItemType.ListOfStrings);
-
-            DisableSelectionMode();
-        }
-
-        private async void topAdd_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> list = new List<string>();
-
-            foreach (Artist artist in ArtistsList.SelectedItems)
-            {
-                List<string> songs = await PlayerController.FetchSongs(artist, Enumerators.MediaItemType.Artist);
-                list.AddRange(songs);
-            }
-
-            PageHelper.MainPage.CreateAddToPlaylistPopup(list);
-
-            DisableSelectionMode();
-        }
-
-        private async void topMore_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> list = new List<string>();
-
-            foreach (Artist artist in ArtistsList.SelectedItems)
-            {
-                List<string> songs = await PlayerController.FetchSongs(artist, Enumerators.MediaItemType.Artist);
-                list.AddRange(songs);
-            }
-
-            this.ShowPopupMenu(list, sender, Enumerators.MediaItemType.ListOfStrings);
         }
 
         private void SemanticZoom_ViewChangeStarted(object sender, SemanticZoomViewChangedEventArgs e)
         {
             if (((SemanticZoom)sender).IsZoomedInViewActive)
             {
-                selectionGrid.Visibility = Visibility.Visible;
+                selectionItemsBar.Visibility = Visibility.Visible;
+                //selectionGrid.Visibility = Visibility.Visible;
             }
             else
             {
-                selectionGrid.Visibility = Visibility.Collapsed;
+                selectionItemsBar.Visibility = Visibility.Collapsed;
+                //selectionGrid.Visibility = Visibility.Collapsed;
             }
         }
 
-        private void selection_Tapped(object sender, TappedRoutedEventArgs e)
+        private void EnableSelectionMode()
+        {
+            listView.SelectionMode = ListViewSelectionMode.Multiple;
+            listView.SelectionChanged += listView_SelectionChanged;
+            selectionItemsBar.SelectionModeChanged -= SelectionItemsBar_SelectionModeChanged;
+            selectionItemsBar.SelectionMode = SelectedItemsBar.BarMode.Enabled;
+            selectionItemsBar.SelectionModeChanged += SelectionItemsBar_SelectionModeChanged;
+        }
+
+        private void DisableSelectionMode()
+        {
+            listView.SelectedItem = null;
+            listView.SelectionChanged -= listView_SelectionChanged;
+            listView.SelectionMode = ListViewSelectionMode.None;
+            selectionItemsBar.SelectionModeChanged -= SelectionItemsBar_SelectionModeChanged;
+            selectionItemsBar.SelectionMode = SelectedItemsBar.BarMode.Disabled;
+            selectionItemsBar.SelectionModeChanged += SelectionItemsBar_SelectionModeChanged;
+        }
+
+        private void ActivateSelecionMode(Artist artist)
+        {
+            if (listView.SelectedItems.Contains(artist))
+                return;
+
+            ApplicationInfo.Current.VibrateDevice(25);
+
+            EnableSelectionMode();
+            listView.SelectedItems.Add(artist);
+        }
+
+        private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int i = listView.SelectedItems.Count;
+            selectionItemsBar.SelectedItemsCount = i;
+
+            if (i == 0)
+            {
+                DisableSelectionMode();
+            }
+        }
+
+        private void SelectionItemsBar_ClearRequest(object sender, RoutedEventArgs e)
         {
             DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_SelectAllRequest(object sender, RoutedEventArgs e)
+        {
+            listView.SelectAll();
+        }
+
+        private async void SelectionItemsBar_PlaySelected(object sender, SelectedItemsBar.PlayMode playMode)
+        {
+            List<string> list = new List<string>();
+
+            foreach (Artist artist in listView.SelectedItems)
+            {
+                List<string> songs = await PlayerController.FetchSongs(artist, Enumerators.MediaItemType.Artist);
+                list.AddRange(songs);
+            }
+
+            if (playMode == SelectedItemsBar.PlayMode.Play)
+                PlayerController.Play(list, Enumerators.MediaItemType.ListOfStrings);
+            else
+                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings, true);
+
+            DisableSelectionMode();
+        }
+
+        private async void SelectionItemsBar_AddSelected(object sender, SelectedItemsBar.AddMode addMode)
+        {
+            List<string> list = new List<string>();
+
+            foreach (Artist artist in listView.SelectedItems)
+            {
+                List<string> songs = await PlayerController.FetchSongs(artist, Enumerators.MediaItemType.Artist);
+                list.AddRange(songs);
+            }
+
+            if (addMode == SelectedItemsBar.AddMode.AddToPlaylist)
+                PlaylistHelper.RequestPlaylistPicker(this, list);
+            else
+                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings);
+
+            DisableSelectionMode();
+        }
+
+        private async void SelectionItemsBar_ShareSelected(object sender, RoutedEventArgs e)
+        {
+            List<string> list = new List<string>();
+
+            foreach (Artist artist in listView.SelectedItems)
+            {
+                List<string> songs = await PlayerController.FetchSongs(artist, Enumerators.MediaItemType.Artist);
+                list.AddRange(songs);
+            }
+
+            await this.ShareMediaItem(list, Enumerators.MediaItemType.ListOfStrings);
+
+            DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_SelectionModeChanged(object sender, SelectedItemsBar.BarMode barMode)
+        {
+            if (barMode == SelectedItemsBar.BarMode.Disabled)
+                DisableSelectionMode();
+            else
+                EnableSelectionMode();
         }
     }
 }

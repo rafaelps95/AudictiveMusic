@@ -880,7 +880,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="icon" Grid.RowSpan="2" IsHitTestVisible="False" Text="{Binding Icon, ElementName=root}" Margin="15,10,15,10" FontSize="{Binding IconSize, ElementName=root}" FontFamily="Segoe MDL2 Assets" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBlock x:Name="icon" Grid.RowSpan="2" IsHitTestVisible="False" Text="{Binding Icon, ElementName=root}" Margin="15,10,15,10" FontSize="{Binding IconSize, ElementName=root}" FontFamily="{ThemeResource IconFont}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
             <TextBlock x:Name="text" Grid.Column="1" IsHitTestVisible="False" Grid.Row="0" VerticalAlignment="Center" Margin="10,15,10,15" TextWrapping="WrapWholeWords" Text="{Binding Text, ElementName=root}" />
             <TextBlock x:Name="additionalInfoTB" IsHitTestVisible="False" Visibility="Collapsed" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Margin="10,-10,10,15" Opacity="0.8" FontSize="12" TextWrapping="WrapWholeWords" Text="{Binding AdditionalInfo, ElementName=root}" />
 
@@ -888,7 +888,7 @@
 
             </Grid>
 
-            <TextBlock IsHitTestVisible="False" Visibility="{Binding ElementName=actionButton, Path=Visibility}" Grid.Column="3" Grid.RowSpan="2" FontFamily="Segoe MDL2 Assets" RenderTransformOrigin="0.5,0.5" FontSize="16" Text="" VerticalAlignment="Center" Margin="15,0,0,0" IsTextScaleFactorEnabled="False" />
+            <TextBlock IsHitTestVisible="False" Visibility="{Binding ElementName=actionButton, Path=Visibility}" Grid.Column="3" Grid.RowSpan="2" FontFamily="{ThemeResource IconFont}" RenderTransformOrigin="0.5,0.5" FontSize="16" Text="" VerticalAlignment="Center" Margin="15,0,0,0" IsTextScaleFactorEnabled="False" />
         </Grid>
     </Grid>
 </UserControl>

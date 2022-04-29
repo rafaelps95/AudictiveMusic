@@ -7,19 +7,34 @@ using System;
 using System.Diagnostics;
 using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Xaml;
+using static ClassLibrary.Helpers.Enumerators;
 
 namespace ClassLibrary.Helpers
 {
+    public class ThemeChangedEventArgs
+    {
+        public PageTheme NewTheme { get; set; }
+        public ThemeChangedEventArgs(PageTheme theme)
+        {
+            NewTheme = theme;
+        }
+
+    }
+
     /// <summary>
     /// Collection of string constants used in the entire solution. This file is shared for all projects
     /// </summary>
     public static class ApplicationSettings
     {
+        public delegate void ThemeChangedEventHandler(ThemeChangedEventArgs args);
+
         public delegate void RoutedEventArgs();
         public static event RoutedEventArgs BlurLevelChanged;
         public static event RoutedEventArgs NowPlayingThemeChanged;
         public static event RoutedEventArgs CurrentThemeColorChanged;
         public static event RoutedEventArgs ThemeBackgroundPreferenceChanged;
+        public static event ThemeChangedEventHandler ThemeChanged;
 
         public static AppState AppState
         {
@@ -558,19 +573,20 @@ namespace ClassLibrary.Helpers
             }
         }
 
-        public static int AppTheme
+        public static PageTheme AppTheme
         {
             get
             {
                 object value = ReadSettingsValue("AppTheme");
                 if (value == null)
-                    return 0;
+                    return PageTheme.Dark;
                 else
-                    return (int)value;
+                    return (PageTheme)value;
             }
             set
             {
-                SaveSettingsValue("AppTheme", value);
+                SaveSettingsValue("AppTheme", (int)value);
+                ThemeChanged?.Invoke(new ThemeChangedEventArgs(value));
             }
         }
 

@@ -27,7 +27,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Border x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="5">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
@@ -76,7 +76,7 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Grid>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -108,7 +108,7 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <TextBlock Text="" Grid.RowSpan="2" Margin="12" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe MDL2 Assets" />
+                                <TextBlock Text="" Grid.RowSpan="2" Margin="12" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" FontFamily="{ThemeResource IconFont}" />
                                 <TextBlock x:Uid="AddToFavorites" Text="Adicione aos favoritos" TextWrapping="Wrap" FontSize="15" FontWeight="Bold" VerticalAlignment="Bottom" Grid.Column="1" />
                                 <TextBlock x:Uid="AddToFavoritesCaption" Text="Tenha fácil acesso às músicas que mais gosta" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" />
                             </Grid>
@@ -137,16 +137,17 @@
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" x:Uid="TapToSelectList" Text="Toque para selecionar uma lista existente" />
                     </Grid>
 
-                    <Grid Grid.Row="3" MinHeight="48" Background="#33999999">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox x:Name="playlistName" TextChanged="playlistName_TextChanged" Visibility="Collapsed" Style="{StaticResource TextBoxStyle}" />
-                        <Button Grid.Column="0" Style="{StaticResource SideMenuButtonStyle}" x:Uid="NewPlaylist" x:Name="createButton" Click="createButton_Click" VerticalAlignment="Stretch" Tag="" Content="Nova lista" />
-                        <Button Grid.Column="1" Style="{StaticResource SideMenuButtonStyle}" x:Uid="Done" IsEnabled="False" x:Name="doneButton" Click="doneButton_Click" VerticalAlignment="Stretch" Tag="" Content="Concluir" />
-
-                    </Grid>
+                    <Border Grid.Row="3" MinHeight="48" Background="#33999999" CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="playlistName" TextChanged="playlistName_TextChanged" Visibility="Collapsed" Style="{StaticResource TextBoxStyle}" />
+                            <local:FluentButton Grid.Column="0" x:Uid="NewPlaylist" x:Name="createButton" Click="createButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Icon="" IconOnly="False" Text="Nova lista" />
+                            <local:FluentButton Grid.Column="1" x:Uid="Done" IsEnabled="False" x:Name="doneButton" Click="doneButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Icon="" IconOnly="False" IsMainAction="True" MainActionBackground="{Binding AccentColor, Source={StaticResource ApplicationAccentColor}}" MainActionBorder="{Binding AccentColorDark10PercentBrush, Source={StaticResource ApplicationAccentColor}}" Text="Concluir" />
+                        </Grid>
+                    </Border>
 
                     <Grid Grid.Row="3">
 
