@@ -3,15 +3,8 @@ using System.Collections.Generic;
 
 namespace ClassLibrary.Entities
 {
-    public class Playlist
+    public class Playlist : MediaItem
     {
-
-        public string Name
-        {
-            get;
-            set;
-        }
-
         public List<string> Songs
         {
             get;

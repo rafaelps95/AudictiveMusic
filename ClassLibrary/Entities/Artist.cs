@@ -5,14 +5,8 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ClassLibrary.Entities
 {
-    public class Artist
+    public class Artist : MediaItem
     {
-        public string Name
-        {
-            get;
-            set;
-        }
-
         public bool IsUpdatingImage 
         { 
             get;
@@ -25,20 +19,12 @@ namespace ClassLibrary.Entities
             IsUpdatingImage = false;
         }
 
-        public void Set(string artistName)
-        {
-            Name = artistName;
-        }
-
-        public string GetName()
-        {
-            return Name;
-        }
-
         public Artist Clone()
         {
-            Artist a = new Artist();
-            a.Set(Name);
+            Artist a = new Artist
+            {
+                Name = this.Name
+            };
 
             return a;
         }

@@ -479,17 +479,39 @@ namespace AudictiveMusicUWP.Gui.Pages
                 footerBlur.Height = ApplicationInfo.Current.FooterHeight;
                 player.SetCompactViewMargin(new Thickness(0, 0, 0, 50));
 
-                if (player.Mode == PlayerControl.DisplayMode.Compact)
-                    bottomNavBar.Visibility = Visibility.Visible;
+                //if (player.Mode == PlayerControl.DisplayMode.Compact)
+                //    bottomNavBar.Visibility = Visibility.Visible;
+                navBar.Orientation = Orientation.Horizontal;
+                navBar.Height = 50;
+                navBar.Width = double.NaN;
+                navBar.VerticalAlignment = VerticalAlignment.Bottom;
+                navBar.TintOpacity = 0;
+                Grid.SetColumn(navBar, 1);
+                Grid.SetRow(navBar, 1);
+                Grid.SetRowSpan(navBar, 1);
+                Canvas.SetZIndex(navBar, 3);
 
-                leftNavBar.Visibility = Visibility.Collapsed;
+                //leftNavBar.Visibility = Visibility.Collapsed;
             }
             else
             {
                 footerBlur.Height = 60;
                 player.SetCompactViewMargin(new Thickness(0, 0, 0, 0));
-                bottomNavBar.Visibility = Visibility.Collapsed;
-                leftNavBar.Visibility = Visibility.Visible;
+                navBar.Orientation = Orientation.Vertical;
+                navBar.Height = double.NaN;
+                navBar.Width = 65;
+                navBar.VerticalAlignment = VerticalAlignment.Stretch;
+                navBar.TintOpacity = 0.6;
+                Grid.SetColumn(navBar, 0);
+                Grid.SetRow(navBar, 1);
+                Grid.SetRowSpan(navBar, 2);
+                if (player.Mode == PlayerControl.DisplayMode.Compact)
+                    Canvas.SetZIndex(navBar, 3);
+                else
+                    Canvas.SetZIndex(navBar, 5);
+
+                //bottomNavBar.Visibility = Visibility.Collapsed;
+                //leftNavBar.Visibility = Visibility.Visible;
             }
         }
 
@@ -500,7 +522,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             if (newColor.IsDarkColor())
             {
-                leftNavBar.RequestedTheme = bottomNavBar.RequestedTheme = ElementTheme.Dark;
+                navBar.RequestedTheme = ElementTheme.Dark;
                 appAccentColor.ForegroundColor = new SolidColorBrush(Colors.White);
 
                 if (ApplicationInfo.Current.IsMobile == false)
@@ -513,7 +535,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
             else
             {
-                leftNavBar.RequestedTheme = bottomNavBar.RequestedTheme = ElementTheme.Light;
+                navBar.RequestedTheme = ElementTheme.Light;
                 appAccentColor.ForegroundColor = new SolidColorBrush(Colors.Black);
 
                 if (ApplicationInfo.Current.IsMobile == false)
@@ -539,7 +561,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 EasingFunction = new SineEase() { EasingMode = EasingMode.EaseOut }
             };
 
-            Storyboard.SetTarget(ca, leftNavBar);
+            Storyboard.SetTarget(ca, navBar);
             Storyboard.SetTargetProperty(ca, "Tint");
 
             sb.Children.Add(ca);
@@ -757,8 +779,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (MainFrame.SourcePageType == typeof(StartPage))
             {
                 CreateSearchGrid();
-                bottomNavBar.SyncNavigationState(NavigationBar.NavigationView.Home);
-                leftNavBar.SyncNavigationState(NavigationBar.NavigationView.Home);
+                navBar.SyncNavigationState(NavigationBar.NavigationView.Home);
             }
 
             else if (MainFrame.SourcePageType == typeof(CollectionPage)
@@ -766,29 +787,26 @@ namespace AudictiveMusicUWP.Gui.Pages
                 || MainFrame.SourcePageType == typeof(AlbumPage)
                 || MainFrame.SourcePageType == typeof(FolderPage))
             {
-                bottomNavBar.SyncNavigationState(NavigationBar.NavigationView.Collection);
-                leftNavBar.SyncNavigationState(NavigationBar.NavigationView.Collection);
+                navBar.SyncNavigationState(NavigationBar.NavigationView.Collection);
             }
 
             else if (MainFrame.SourcePageType == typeof(Playlists)
                 || MainFrame.SourcePageType == typeof(PlaylistPage)
                 || MainFrame.SourcePageType == typeof(Favorites))
             {
-                bottomNavBar.SyncNavigationState(NavigationBar.NavigationView.Playlists);
-                leftNavBar.SyncNavigationState(NavigationBar.NavigationView.Playlists);
+                navBar.SyncNavigationState(NavigationBar.NavigationView.Playlists);
             }
 
             else
             {
-                bottomNavBar.SyncNavigationState(NavigationBar.NavigationView.Unknown);
-                leftNavBar.SyncNavigationState(NavigationBar.NavigationView.Unknown);
+                navBar.SyncNavigationState(NavigationBar.NavigationView.Unknown);
             }
         }
 
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
         }
 
         //private void showMenu_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -1379,9 +1397,9 @@ namespace AudictiveMusicUWP.Gui.Pages
                     return;
 
                 song = Ctr_Song.Current.GetSong(new Song() { SongURI = prev });
-                title = song.Title;
+                title = song.Name;
                 subtitle = song.Artist;
-                source = new Album() { AlbumID = song.AlbumID }.GetCoverUri();
+                source = new Album() { ID = song.AlbumID }.GetCoverUri();
                 status = ApplicationInfo.Current.Resources.GetString("Previous").ToUpper();
                 //color = ImageHelper.GetColorFromHex(song.HexColor);
             }
@@ -1396,9 +1414,9 @@ namespace AudictiveMusicUWP.Gui.Pages
                     return;
 
                 song = Ctr_Song.Current.GetSong(new Song() { SongURI = next });
-                title = song.Title;
+                title = song.Name;
                 subtitle = song.Artist;
-                source = new Album() { AlbumID = song.AlbumID }.GetCoverUri();
+                source = new Album() { ID = song.AlbumID }.GetCoverUri();
                 status = ApplicationInfo.Current.Resources.GetString("Next").ToUpper();
                 //color = ImageHelper.GetColorFromHex(song.HexColor);
             }
@@ -1469,10 +1487,17 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (mode == PlayerControl.DisplayMode.Compact)
             {
                 SetMenuLayout(new Size(this.ActualWidth, this.ActualHeight));
-
+                Canvas.SetZIndex(navBar, 3);
             }
             else
-                bottomNavBar.Visibility = Visibility.Collapsed;
+            {
+                if (navBar.Orientation == Orientation.Vertical)
+                    Canvas.SetZIndex(navBar, 5);
+                else
+                    Canvas.SetZIndex(navBar, 3);
+            }
+            //else
+            //    bottomNavBar.Visibility = Visibility.Collapsed;
         }
 
         private void bottomNavBar_ActionRequested(NavigationBar.NavigationView target)

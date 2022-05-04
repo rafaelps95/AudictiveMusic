@@ -127,10 +127,10 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 if (ApplicationData.Current.LocalSettings.Values["SongsSortBy"].ToString() == Sorting.SortByTitle)
                 {
-                    listOfSongs.OrderBy(s => s.Title);
+                    listOfSongs.OrderBy(s => s.Name);
                     itemSource = AlphaKeyGroup<Song>.CreateGroups(listOfSongs,
     CultureInfo.InvariantCulture,
-    a => a.Title, true);
+    a => a.Name, true);
                 }
                 else if (ApplicationData.Current.LocalSettings.Values["SongsSortBy"].ToString() == Sorting.SortByArtist)
                 {
@@ -148,7 +148,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 }
                 else
                 {
-                    listOfSongs.OrderBy(s => s.Title);
+                    listOfSongs.OrderBy(s => s.Name);
                     itemSource = AlphaKeyGroup<Song>.CreateGroups(listOfSongs,
     CultureInfo.InvariantCulture,
     a => a.Artist, true);
@@ -202,7 +202,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
         }
 
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
@@ -315,9 +315,9 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
 
             if (playMode == SelectedItemsBar.PlayMode.Play)
-                PlayerController.Play(list, Enumerators.MediaItemType.ListOfStrings);
+                PlayerController.Play(list);
             else
-                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings, true);
+                PlayerController.AddToQueue(list, true);
 
             DisableSelectionMode();
         }
@@ -334,7 +334,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (addMode == SelectedItemsBar.AddMode.AddToPlaylist)
                 PlaylistHelper.RequestPlaylistPicker(this, list);
             else
-                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings);
+                PlayerController.AddToQueue(list);
 
             DisableSelectionMode();
         }
@@ -348,7 +348,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 list.Add(song.SongURI);
             }
 
-            await this.ShareMediaItem(list, Enumerators.MediaItemType.ListOfStrings);
+            await ShareHelper.Instance.Share(list);
 
             DisableSelectionMode();
         }

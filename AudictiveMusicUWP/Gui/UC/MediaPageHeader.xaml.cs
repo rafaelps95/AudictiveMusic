@@ -476,7 +476,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void moreButton_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowPopupMenu(ART, sender, Enumerators.MediaItemType.Artist, true, new Point(0, 0));
+            PopupHelper.GetInstance(sender).ShowPopupMenu(ART, true, new Point(0, 0));
         }
 
         private async void ellipseBitmap_ImageOpened(object sender, RoutedEventArgs e)

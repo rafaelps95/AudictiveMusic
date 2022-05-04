@@ -166,9 +166,9 @@ namespace AudictiveMusicUWP.Gui.Pages
                 Album albumAUX = null;
                 foreach (Song s in listOfSongs)
                 {
-                    if (listOfAlbums.Exists(a => a.AlbumID == s.AlbumID) == false)
+                    if (listOfAlbums.Exists(a => a.ID == s.AlbumID) == false)
                     {
-                        albumAUX = Ctr_Album.Current.GetAlbum(new Album() { AlbumID = s.AlbumID, HexColor = s.HexColor });
+                        albumAUX = Ctr_Album.Current.GetAlbum(new Album() { ID = s.AlbumID, HexColor = s.HexColor });
                         listOfAlbums.Add(albumAUX);
                     }
                 }
@@ -321,7 +321,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateAlbumPopup(Album album, object sender, Point point)
         {
-            this.ShowPopupMenu(album, sender, Enumerators.MediaItemType.Album, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(album, true, point);
         }
 
         private void playAlbumButton_Click(object sender, RoutedEventArgs e)
@@ -386,7 +386,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private async void shareArtist_Click(object sender, RoutedEventArgs e)
         {
-            if (await this.ShareMediaItem(Artist, Enumerators.MediaItemType.Artist) == false)
+            if (await ShareHelper.Instance.Share(Artist) == false)
             {
                 string message = ApplicationInfo.Current.Resources.GetString("ShareErrorMessage").Replace("%", "0x003");
 
@@ -428,12 +428,12 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
         }
 
         private void moreOptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowPopupMenu(Artist, sender, Enumerators.MediaItemType.Artist, true, new Point(0, 0));
+            PopupHelper.GetInstance(sender).ShowPopupMenu(Artist, true, new Point(0, 0));
         }
 
         private async void songsList_ItemClick(object sender, ItemClickEventArgs e)

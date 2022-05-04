@@ -10,40 +10,53 @@ using static ClassLibrary.Helpers.Enumerators;
 
 namespace AudictiveMusicUWP.Gui.Util
 {
-    public static class ShareHelper
+    public class ShareHelper
     {
-        private static DataTransferManager dataTransferManager;
-        private static List<IStorageItem> filesToShare;
-        private static MediaItemType MediaType;
-        private static object MediaItem;
+        private static ShareHelper _instance;
 
-        public static async Task<bool> ShareMediaItem(this object page, object mediaItem, MediaItemType type)
+        public static ShareHelper Instance
         {
-            MediaType = type;
-            MediaItem = mediaItem;
+            get
+            {
+                if (_instance == null)
+                    _instance = new ShareHelper();
+
+                return _instance;
+            }
+        }
+
+        private ShareHelper()
+        {
+
+        }
+
+        private DataTransferManager dataTransferManager;
+        private List<IStorageItem> filesToShare;
+        private string _title;
+
+        public async Task<bool> Share(List<string> list)
+        {
             filesToShare = new List<IStorageItem>();
             dataTransferManager = DataTransferManager.GetForCurrentView();
 
             dataTransferManager.DataRequested += ShareHandler;
 
-            return await PrepareFiles(mediaItem, type);
+            return await PrepareFiles(list);
         }
 
-        private static async Task<bool> PrepareFiles(object mediaItem, MediaItemType type)
+        public async Task<bool> Share(MediaItem mediaItem)
         {
-            if (type == MediaItemType.Song)
-            {
-                Song song = mediaItem as Song;
-                StorageFile file = await StorageFile.GetFileFromPathAsync(song.SongURI);
-                if (file == null)
-                {
-                    filesToShare = null;
-                    return false;
-                }
+            filesToShare = new List<IStorageItem>();
+            dataTransferManager = DataTransferManager.GetForCurrentView();
 
-                filesToShare.Add(file);
-            }
-            else if (type == MediaItemType.Album)
+            dataTransferManager.DataRequested += ShareHandler;
+
+            return await PrepareFiles(mediaItem);
+        }
+
+        private async Task<bool> PrepareFiles(MediaItem mediaItem)
+        {
+            if (mediaItem.GetType() == typeof(Album))
             {
                 Album album = mediaItem as Album;
 
@@ -57,8 +70,9 @@ namespace AudictiveMusicUWP.Gui.Util
                     }
                 }
 
+                _title = album.Name + " " + ApplicationInfo.Current.Resources.GetString("By") + album.Artist;
             }
-            else if (type == MediaItemType.Artist)
+            else if (mediaItem.GetType() == typeof(Artist))
             {
                 Artist artist = mediaItem as Artist;
 
@@ -71,16 +85,18 @@ namespace AudictiveMusicUWP.Gui.Util
                         filesToShare.Add(file);
                     }
                 }
+
+                _title = artist.Name;
             }
-            else if (type == MediaItemType.Folder)
+            else if (mediaItem.GetType() == typeof(FolderItem))
             {
                 FolderItem item = mediaItem as FolderItem;
                 if (item.IsFolder)
                 {
                     StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
                     var files = await StorageHelper.ScanFolder(folder);
-
                     filesToShare.AddRange(files);
+                    _title = files.Count + " " + ApplicationInfo.Current.Resources.GetString("SongPlural").ToLower();
                 }
                 else
                 {
@@ -89,21 +105,11 @@ namespace AudictiveMusicUWP.Gui.Util
                         StorageFile file = await StorageFile.GetFileFromPathAsync(item.Path);
                         filesToShare.Add(file);
                     }
+
+                    _title = 1 + " " + ApplicationInfo.Current.Resources.GetString("SongPlural").ToLower();
                 }
             }
-            else if (type == MediaItemType.ListOfStrings)
-            {
-                List<string> list = mediaItem as List<string>;
-
-                foreach (string path in list)
-                {
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-
-                    if (file != null)
-                        filesToShare.Add(file);
-                }
-            }
-            else if (type == MediaItemType.Playlist)
+            else if (mediaItem.GetType() == typeof(Playlist))
             {
                 Playlist playlist = mediaItem as Playlist;
 
@@ -115,8 +121,23 @@ namespace AudictiveMusicUWP.Gui.Util
                         filesToShare.Add(file);
                     }
                 }
-            }
 
+                _title = playlist.Name;
+            }
+            else if (mediaItem.GetType() == typeof(Song))
+            {
+                Song song = mediaItem as Song;
+                StorageFile file = await StorageFile.GetFileFromPathAsync(song.SongURI);
+                if (file == null)
+                {
+                    filesToShare = null;
+                    return false;
+                }
+
+                _title = song.Name + " " + ApplicationInfo.Current.Resources.GetString("By") + song.Artist;
+
+                filesToShare.Add(file);
+            }
 
             if (filesToShare.Count == 0)
                 return false;
@@ -126,37 +147,31 @@ namespace AudictiveMusicUWP.Gui.Util
             return true;
         }
 
-        private static void ShareHandler(DataTransferManager sender, DataRequestedEventArgs args)
+        private async Task<bool> PrepareFiles(List<string> list)
+        {
+            foreach (string path in list)
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+
+                if (file != null)
+                    filesToShare.Add(file);
+            }
+
+            if (filesToShare.Count == 0)
+                return false;
+
+            _title = list.Count + " " + ApplicationInfo.Current.Resources.GetString("SongPlural").ToLower();
+
+            DataTransferManager.ShowShareUI();
+
+            return true;
+        }
+
+        private void ShareHandler(DataTransferManager sender, DataRequestedEventArgs args)
         {
             var deferral = args.Request.GetDeferral();
             DataRequest request = args.Request;
-
-            if (MediaType == MediaItemType.Song)
-            {
-                    Song song = MediaItem as Song;
-                    request.Data.Properties.Title = song.Title + " " + ApplicationInfo.Current.Resources.GetString("By") + song.Artist;
-                //request.Data.Properties.Description = "Sharing a music file";
-            }
-            else if (MediaType == MediaItemType.Album)
-            {
-                Album album = MediaItem as Album;
-                request.Data.Properties.Title = album.Name + " " + ApplicationInfo.Current.Resources.GetString("By") + album.Artist;
-            }
-            else if (MediaType == MediaItemType.Artist)
-            {
-                Artist artist = MediaItem as Artist;
-                request.Data.Properties.Title = artist.Name;
-            }
-            else if (MediaType == MediaItemType.Playlist)
-            {
-                Playlist playlist = MediaItem as Playlist;
-                request.Data.Properties.Title = playlist.Name;
-            }
-            else if (MediaType == MediaItemType.ListOfStrings)
-            {
-                request.Data.Properties.Title = (MediaItem as List<string>).Count + ApplicationInfo.Current.Resources.GetString("SongPlural").ToLower();
-            }
-
+            request.Data.Properties.Title = _title;
             request.Data.SetStorageItems(filesToShare);
 
             deferral.Complete();

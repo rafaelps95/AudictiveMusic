@@ -24,7 +24,7 @@
                     <x:Boolean x:Key="IsDarkTheme">false</x:Boolean>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-
+            
             <local:ApplicationAccentColor x:Key="ApplicationAccentColor"/>
             <FontFamily x:Key="IconFont">ms-appx:///Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons</FontFamily>
 

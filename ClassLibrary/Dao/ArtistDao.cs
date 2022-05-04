@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary.Dao
 {
-    public class ArtistDao
+    internal class ArtistDao
     {
-        public static bool ArtistExists(Artist artist)
+        internal static bool ArtistExists(Artist artist)
         {
             bool result;
 

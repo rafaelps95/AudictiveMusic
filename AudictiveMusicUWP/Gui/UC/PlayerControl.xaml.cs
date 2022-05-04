@@ -231,7 +231,7 @@ namespace AudictiveMusicUWP.Gui.UC
             }
             else if (e.Action == Touch3DEventArgs.Type.ShareSong)
             {
-                if (await this.ShareMediaItem(ApplicationSettings.CurrentSong, Enumerators.MediaItemType.Song) == false)
+                if (await ShareHelper.Instance.Share(ApplicationSettings.CurrentSong) == false)
                 {
                     MessageDialog md = new MessageDialog("Não foi possível compartilhar este item");
                     await md.ShowAsync();
@@ -703,7 +703,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
                 if (ApplicationSettings.CurrentSong != null)
                 {
-                    SongName.Text = ApplicationSettings.CurrentSong.Title;
+                    SongName.Text = ApplicationSettings.CurrentSong.Name;
                     //await Task.Delay(50);
                     ArtistName.Text = ApplicationSettings.CurrentSong.Artist;
                     //AlbumName.Text = ApplicationSettings.CurrentSong.Album;
@@ -735,7 +735,7 @@ namespace AudictiveMusicUWP.Gui.UC
                         ApplicationSettings.CurrentThemeColor = ApplicationSettings.CustomThemeColor;
 
                     ToolTip toolTip = new ToolTip();
-                    toolTip.Content = ApplicationSettings.CurrentSong.Title + " " + ApplicationInfo.Current.Resources.GetString("By") + ApplicationSettings.CurrentSong.Artist;
+                    toolTip.Content = ApplicationSettings.CurrentSong.Name + " " + ApplicationInfo.Current.Resources.GetString("By") + ApplicationSettings.CurrentSong.Artist;
                     ToolTipService.SetToolTip(PlayerBottomBarInfo, toolTip);
                 }
                 else
@@ -941,7 +941,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void OpenPlayer_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (this.IsPlaying)
+            //if (this.IsPlaying)
                 this.Mode = DisplayMode.Full;
         }
 
@@ -1487,7 +1487,7 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 Name = song.Album,
                 Artist = song.Artist,
-                AlbumID = song.AlbumID,
+                ID = song.AlbumID,
                 Year = Convert.ToInt32(song.Year),
                 Genre = song.Genre,
                 HexColor = song.HexColor

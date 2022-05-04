@@ -284,7 +284,7 @@ namespace ClassLibrary.Control
 
                 song = new Song()
                 {
-                    Title = title,
+                    Name = title,
                     Artist = artist,
                     Album = album,
                     AlbumID = albumid,
@@ -339,7 +339,87 @@ namespace ClassLibrary.Control
 
             return true;
         }
-        
+
+        public static async Task<List<string>> FetchSongs(MediaItem mediaItem)
+        {
+            List<string> list = new List<string>();
+            List<Song> songs = new List<Song>();
+
+            if (mediaItem.GetType() == typeof(Album))
+            {
+                Album album = mediaItem as Album;
+                songs = Ctr_Song.Current.GetSongsByAlbum(album);
+            }
+            else if (mediaItem.GetType() == typeof(Artist))
+            {
+                Artist artist = mediaItem as Artist;
+                songs = Ctr_Song.Current.GetSongsByArtist(artist);
+            }
+            else if (mediaItem.GetType() == typeof(FolderItem))
+            {
+                FolderItem folderItem = mediaItem as FolderItem;
+                list = await Ctr_FolderItem.GetSongs(folderItem);
+            }
+            else if (mediaItem.GetType() == typeof(Playlist))
+            {
+                Playlist playlist = mediaItem as Playlist;
+                list = playlist.Songs;
+            }
+            else if (mediaItem.GetType() == typeof(Song))
+            {
+                Song song = mediaItem as Song;
+                songs.Add(song);
+            }
+
+            if (songs.Count > 0)
+                foreach (Song s in songs)
+                    list.Add(s.SongURI);
+
+            return list;
+        }
+
+        public static async Task<List<string>> FetchSongs(List<MediaItem> mediaItems)
+        {
+            List<string> list = new List<string>();
+            List<Song> songs = new List<Song>();
+
+            foreach (MediaItem mediaItem in mediaItems)
+            {
+                if (mediaItem.GetType() == typeof(Album))
+                {
+                    Album album = mediaItem as Album;
+                    songs.AddRange(Ctr_Song.Current.GetSongsByAlbum(album));
+                }
+                else if (mediaItem.GetType() == typeof(Artist))
+                {
+                    Artist artist = mediaItem as Artist;
+                    songs.AddRange(Ctr_Song.Current.GetSongsByArtist(artist));
+                }
+                else if (mediaItem.GetType() == typeof(FolderItem))
+                {
+                    FolderItem folderItem = mediaItem as FolderItem;
+                    list.AddRange(await Ctr_FolderItem.GetSongs(folderItem));
+                }
+                else if (mediaItem.GetType() == typeof(Playlist))
+                {
+                    Playlist playlist = mediaItem as Playlist;
+                    list.AddRange(playlist.Songs);
+                }
+                else if (mediaItem.GetType() == typeof(Song))
+                {
+                    Song song = mediaItem as Song;
+                    songs.Add(song);
+                }
+            }
+
+            if (songs.Count > 0)
+                foreach (Song s in songs)
+                    list.Add(s.SongURI);
+
+            return list;
+        }
+
+
         //public static List<Song> SearchSong(string value)
         //{
         //    List<Song> list = new List<Song>();

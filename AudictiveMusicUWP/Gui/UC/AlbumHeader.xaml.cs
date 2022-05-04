@@ -120,7 +120,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             BitmapImage bmp = new BitmapImage();
             borderBrush.ImageSource = bmp;
-            bmp.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + ALB.AlbumID + ".jpg", UriKind.Absolute);
+            bmp.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + ALB.ID + ".jpg", UriKind.Absolute);
 
 
             BitmapImage blurbmp = new BitmapImage();
@@ -186,7 +186,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void moreButton_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowPopupMenu(ALB, sender, Enumerators.MediaItemType.Album, true, new Point(0, 0));
+            PopupHelper.GetInstance(sender).ShowPopupMenu(ALB, true, new Point(0, 0));
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)

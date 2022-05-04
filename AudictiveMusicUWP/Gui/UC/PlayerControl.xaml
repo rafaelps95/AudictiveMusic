@@ -606,7 +606,7 @@
 
             
 
-            <ProgressBar Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="60,0,0,0" Height="4" Background="Transparent" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Name="MusicProgress" Opacity="0.3" Padding="0" />
+            <ProgressBar Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="0,0,0,0" Height="4" Background="Transparent" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Name="MusicProgress" Opacity="0.3" Padding="0" />
             <Grid x:Name="compactViewContent" Height="60" VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -628,21 +628,30 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" CornerRadius="0,0,5,0" Margin="0,0,5,0" Width="60" Height="60" Background="#FF333333" Name="SmallCoverContainer">
-                            <TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="35" FontFamily="{ThemeResource IconFont}" Foreground="#FF666666" />
-                            <Image Stretch="UniformToFill">
-                                <Image.Source>
-                                    <BitmapImage x:Name="compactAlbumBitmap" ImageFailed="currentAlbumBitmap_ImageFailed" />
-                                </Image.Source>
-                            </Image>
+                        <Grid Grid.Column="0" CornerRadius="0,0,5,0" Margin="0,0,5,0" Width="60" Height="60" Name="SmallCoverContainer">
+                            <!--<TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="35" FontFamily="{ThemeResource IconFont}" Foreground="#FF666666" />-->
+                            <Border CornerRadius="5" Margin="10">
+                                <Border.Background>
+                                    <ImageBrush Stretch="UniformToFill">
+                                        <ImageBrush.ImageSource>
+                                            <BitmapImage x:Name="compactAlbumBitmap" ImageFailed="currentAlbumBitmap_ImageFailed" />
+                                        </ImageBrush.ImageSource>
+                                    </ImageBrush>
+                                </Border.Background>
+                                <!--<Image Stretch="UniformToFill">
+                                    <Image.Source>
+                                        <BitmapImage x:Name="compactAlbumBitmap" ImageFailed="currentAlbumBitmap_ImageFailed" />
+                                    </Image.Source>
+                                </Image>-->
+                            </Border>
                         </Grid>
-                        <Grid Margin="0,5,-10,10" Grid.Column="1">
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <TextBlock Text="{Binding ElementName=SongName, Path=Text}" Grid.Row="0" TextTrimming="CharacterEllipsis" FontSize="15" FontWeight="Medium" IsTextScaleFactorEnabled="False" />
-                            <TextBlock Text="{Binding ElementName=ArtistName, Path=Text}" Grid.Row="1" TextTrimming="CharacterEllipsis" VerticalAlignment="Bottom" Margin="0,5,0,0" FontSize="14" FontWeight="Thin" IsTextScaleFactorEnabled="False" Opacity="0.7" />
+                            <TextBlock Text="{Binding ElementName=ArtistName, Path=Text}" Grid.Row="1" TextTrimming="CharacterEllipsis" Margin="0" FontSize="14" FontWeight="Thin" IsTextScaleFactorEnabled="False" Opacity="0.7" />
                         </Grid>
                     </Grid>
                 </Grid>

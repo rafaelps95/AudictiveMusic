@@ -55,12 +55,14 @@
         <Grid x:Name="acrillicPageBG" Grid.ColumnSpan="2" Visibility="Collapsed" Canvas.ZIndex="1" Opacity="0.2" Grid.Row="0" Grid.RowSpan="2" />
 
         <Frame x:Name="MainFrame" Grid.Column="1" Canvas.ZIndex="2" Navigated="MainFrame_Navigated" Grid.Row="1" Grid.RowSpan="2" />
-        <Grid Grid.Column="1" RequestedTheme="{Binding ElementName=bottomNavBar, Path=RequestedTheme}" Height="{Binding ElementName=footerBlur, Path=Height}" Grid.Row="1" VerticalAlignment="Bottom" Canvas.ZIndex="-99">
+        <Grid Grid.Column="1" RequestedTheme="{Binding ElementName=navBar, Path=RequestedTheme}" Height="{Binding ElementName=footerBlur, Path=Height}" Grid.Row="1" VerticalAlignment="Bottom" Canvas.ZIndex="-99">
             <Grid.Background>
                 <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" />
             </Grid.Background>
         </Grid>
-        <local:NavigationBar Grid.Column="0" x:Name="leftNavBar" Tint="#FFDC572E" TintOpacity="0.6" IsBlurEnabled="False" Canvas.ZIndex="3" Visibility="Collapsed" Orientation="Vertical" ActionRequested="bottomNavBar_ActionRequested" HorizontalAlignment="Left" Width="65" Grid.Row="1" VerticalAlignment="Stretch" />
+        <local:NavigationBar x:Name="navBar" Grid.Column="1" Canvas.ZIndex="3" Grid.Row="1" Orientation="Horizontal" Height="50" ActionRequested="bottomNavBar_ActionRequested" VerticalAlignment="Bottom" />
+
+        <!--<local:NavigationBar Grid.Column="0" x:Name="leftNavBar" Tint="#FFDC572E" TintOpacity="0.6" IsBlurEnabled="False" Canvas.ZIndex="3" Visibility="Collapsed" Orientation="Vertical" ActionRequested="bottomNavBar_ActionRequested" HorizontalAlignment="Left" Width="65" Grid.Row="1" VerticalAlignment="Stretch" />-->
         <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" x:Name="searchContainer" Visibility="Collapsed" Canvas.ZIndex="2">
 
         </Grid>
@@ -75,9 +77,11 @@
                     <SolidColorBrush x:Name="footerBackgroundColor" Color="#FFDC572E" Opacity="0.5" />
                 </Rectangle.Fill>
             </Rectangle>
-            <local:PlayerControl x:Name="player" TooltipRequested="Player_TooltipRequested" TooltipDismissed="Player_TooltipDismissed" ViewChanged="player_ViewChanged" HorizontalAlignment="Stretch" Margin="{Binding ElementName=MainFrame, Path=Margin}" VerticalAlignment="Stretch" />
-            <local:NavigationBar x:Name="bottomNavBar" Visibility="Collapsed" Orientation="Horizontal" Height="50" ActionRequested="bottomNavBar_ActionRequested" VerticalAlignment="Bottom" />
+            <!--<local:NavigationBar x:Name="bottomNavBar" Visibility="Collapsed" Orientation="Horizontal" Height="50" ActionRequested="bottomNavBar_ActionRequested" VerticalAlignment="Bottom" />-->
         </Grid>
+
+        <local:PlayerControl x:Name="player" Grid.Column="1" Grid.Row="1" Canvas.ZIndex="4" TooltipRequested="Player_TooltipRequested" TooltipDismissed="Player_TooltipDismissed" ViewChanged="player_ViewChanged" HorizontalAlignment="Stretch" Margin="{Binding ElementName=MainFrame, Path=Margin}" VerticalAlignment="Stretch" />
+
 
         <Grid Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" x:Name="customPopupsArea" Visibility="Collapsed" Canvas.ZIndex="13">
 

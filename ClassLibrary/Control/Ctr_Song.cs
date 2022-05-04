@@ -5,14 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace ClassLibrary.Control
 {
     public class Ctr_Song
     {
-        public delegate void FavoritesChangedEventArgs();
-
-        public static event FavoritesChangedEventArgs FavoritesChanged;
+        public static event RoutedEventHandler FavoritesChanged;
 
         private static Ctr_Song instance;
 
@@ -71,7 +70,12 @@ namespace ClassLibrary.Control
 
         public bool SetFavoriteState(Song song, bool state)
         {
-            return SongDao.SetSongFavoriteState(song, state);
+            bool result = SongDao.SetSongFavoriteState(song, state);
+
+            if (result)
+                FavoritesChanged?.Invoke(this, new RoutedEventArgs());
+
+            return result;
         }
 
         public List<Song> GetFavoriteSongs()
@@ -93,6 +97,5 @@ namespace ClassLibrary.Control
         {
             return SongDao.RemoveSong(song);
         }
-
     }
 }

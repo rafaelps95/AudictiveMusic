@@ -31,8 +31,8 @@
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.2" To="0">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.2" To="0">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
@@ -47,8 +47,8 @@
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.2" To="0">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.2" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0" To="0">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
@@ -63,8 +63,8 @@
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.2" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.2" To="0">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.3" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0" To="0">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
@@ -98,8 +98,8 @@
                                     </VisualState>
                                     <VisualState x:Name="Checked">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.4" To="1">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.4" To="1">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
@@ -114,14 +114,14 @@
                                     </VisualState>
                                     <VisualState x:Name="CheckedPointerOver">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Icon">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.2" To="1">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.2" To="1">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
@@ -136,8 +136,8 @@
                                     </VisualState>
                                     <VisualState x:Name="CheckedPressed">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.1" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.2" To="1">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.1" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.2" To="1">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
@@ -193,7 +193,7 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
 
-                            <Rectangle x:Name="Background" Opacity="0" Fill="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                            <Border x:Name="Background" Opacity="0" CornerRadius="5" Margin="5,5,5,10" Background="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
 
                             <Grid HorizontalAlignment="Center" VerticalAlignment="Stretch" Margin="0">
                                 <Grid.RowDefinitions>
@@ -216,7 +216,7 @@
 
         <Style x:Key="VerticalNavigationButtonStyle" TargetType="ToggleButton">
             <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
-            <Setter Property="Padding" Value="5,5,5,0"/>
+            <Setter Property="Padding" Value="5"/>
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -234,48 +234,74 @@
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.2" To="0">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.2" To="0">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="iconTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="0">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="textTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="0">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" Duration="0:0:0.1" To="0" />
+
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Icon">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="0.6"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="0.6"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.2" To="0">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.1" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.2" To="0">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="iconTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="{Binding ActualHeight, ElementName=ContentPresenter, Converter={StaticResource NavigationBarConverterIcon}}">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="textTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="{Binding ActualHeight, ElementName=ContentPresenter, Converter={StaticResource NavigationBarConverterLabel}}">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" To="0.6" />
+
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Icon">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="0.6"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="0.6"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.2" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.2" To="0">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.2" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.2" To="0">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="iconTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="{Binding ActualHeight, ElementName=ContentPresenter, Converter={StaticResource NavigationBarConverterIcon}}">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="textTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="{Binding ActualHeight, ElementName=ContentPresenter, Converter={StaticResource NavigationBarConverterLabel}}">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" To="0.6" />
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Icon">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="0.6"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="0.6"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
@@ -301,46 +327,56 @@
                                     </VisualState>
                                     <VisualState x:Name="Checked">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.4" To="1">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.1" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.4" To="1">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="iconTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="{Binding ActualHeight, ElementName=ContentPresenter, Converter={StaticResource NavigationBarConverterIcon}}">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="textTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="{Binding ActualHeight, ElementName=ContentPresenter, Converter={StaticResource NavigationBarConverterLabel}}">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" To="1" />
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Icon">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="CheckedPointerOver">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0" />
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Icon">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.2" To="1">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.2" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.4" To="1">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
                                             </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="iconTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="{Binding ActualHeight, ElementName=ContentPresenter, Converter={StaticResource NavigationBarConverterIcon}}">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="textTranslate" Storyboard.TargetProperty="Y" Duration="0:0:0.2" To="{Binding ActualHeight, ElementName=ContentPresenter, Converter={StaticResource NavigationBarConverterLabel}}">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" To="1" />
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Icon">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="CheckedPressed">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.1" />
-                                            <DoubleAnimation Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.2" To="1">
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" To="0.2" />
+                                            <DoubleAnimation EnableDependentAnimation="True" Storyboard.TargetName="checkMarkScale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.2" To="1">
                                                 <DoubleAnimation.EasingFunction>
                                                     <CircleEase EasingMode="EaseOut" />
                                                 </DoubleAnimation.EasingFunction>
@@ -396,15 +432,24 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
 
-                            <Rectangle x:Name="Background" Opacity="0" Fill="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                            <Border x:Name="Background" Opacity="0" CornerRadius="5" Margin="5,5,5,5" Background="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
 
-                            <Grid HorizontalAlignment="Left" Width="65" VerticalAlignment="Stretch" Margin="0,13">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" x:Name="Icon" Opacity="0.6" Text="{TemplateBinding Tag}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontFamily="{ThemeResource IconFont}" FontSize="18" />
-                                <TextBlock Grid.Row="1" x:Name="ContentPresenter" Opacity="0.6" AutomationProperties.AccessibilityView="Raw" Text="{TemplateBinding Content}" TextAlignment="Center" Margin="5,2,5,0" VerticalAlignment="Stretch" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+                            <Grid Height="50" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,13">
+                                <!--<Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>-->
+                                <TextBlock RenderTransformOrigin="0.5,0.5" Grid.Row="0" x:Name="Icon" Opacity="0.6" Text="{TemplateBinding Tag}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="{ThemeResource IconFont}" FontSize="18" IsTextScaleFactorEnabled="False">
+                                <TextBlock.RenderTransform>
+                                        <TranslateTransform x:Name="iconTranslate" Y="0" />
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                                <TextBlock RenderTransformOrigin="0.5,0.5" Grid.Row="1" x:Name="ContentPresenter" Opacity="0" AutomationProperties.AccessibilityView="Raw" Text="{TemplateBinding Content}" TextAlignment="Center" Margin="5,2,5,0" VerticalAlignment="Center" MaxLines="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" IsTextScaleFactorEnabled="False">
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform x:Name="textTranslate" Y="0" />
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+
                                 <Rectangle RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2" x:Name="checkMark" Fill="{ThemeResource ApplicationForegroundThemeBrush}" Width="2" VerticalAlignment="Stretch" HorizontalAlignment="Left">
                                     <Rectangle.RenderTransform>
                                         <ScaleTransform x:Name="checkMarkScale" ScaleY="0" />
@@ -445,10 +490,15 @@
                 <RowDefinition Height="*" />
 
             </Grid.RowDefinitions>
-            <ToggleButton x:Name="startButton" x:Uid="StartMenu" Tag="" Click="StartMenuButton_Click" Content="Start" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            <ToggleButton x:Name="collectionButton" x:Uid="CollectionMenu" Tag="" Click="CollectionMenuButton_Click" Content="Collection" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            <ToggleButton x:Uid="PlaylistsMenu" Tag="" Click="PlaylistsMenuButton_Click" Content="Playlists" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            <ToggleButton x:Uid="SearchMenu" Tag="" x:Name="searchButton" Click="searchButton_Click" Content="Search"  Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <local:NavigationBarItem x:Name="startButton" Text="Início" Icon="" Click="StartMenuButton_Click" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <local:NavigationBarItem x:Name="collectionButton" Text="Biblioteca" Icon="" Click="CollectionMenuButton_Click" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <local:NavigationBarItem x:Name="playlistsButton" Text="Listas de reprodução" Icon="" Click="PlaylistsMenuButton_Click" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <local:NavigationBarItem x:Name="searchButton" Text="Pesquisar" Icon="" Click="searchButton_Click" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+            <!--<ToggleButton x:Name="startButton" x:Uid="StartMenu" Tag="" Click="StartMenuButton_Click" Content="Start" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />-->
+            <!--<ToggleButton x:Name="collectionButton" x:Uid="CollectionMenu" Tag="" Click="CollectionMenuButton_Click" Content="Collection" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />-->
+            <!--<ToggleButton x:Uid="PlaylistsMenu" Tag="" Click="PlaylistsMenuButton_Click" Content="Playlists" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />-->
+            <!--<ToggleButton x:Uid="SearchMenu" Tag="" x:Name="searchButton" Click="searchButton_Click" Content="Search"  Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />-->
 
         </Grid>
 

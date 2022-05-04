@@ -11,29 +11,31 @@ namespace AudictiveMusicUWP.Gui.Util
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            DateTimeOffset dateTime = (DateTimeOffset)value;
-            TimeSpan ts = DateTimeOffset.Now.ToUniversalTime().Subtract(dateTime);
-
             string str = "";
 
-            if (ts.Days >= 1)
+            if (value != null)
             {
-                str = $"{ts.Days.ToString()}d";
+                DateTimeOffset dateTime = (DateTimeOffset)value;
+                TimeSpan ts = DateTimeOffset.Now.ToUniversalTime().Subtract(dateTime);
+
+                if (ts.Days >= 1)
+                {
+                    str = $"{ts.Days.ToString()}d";
+                }
+                else if (ts.Hours >= 1 && ts.Hours <= 24)
+                {
+                    str = $"{ts.Hours.ToString()}h";
+                }
+                else if (ts.Minutes >= 1 && ts.Minutes <= 60)
+                {
+                    str = $"{ts.Minutes.ToString()}m";
+                }
+                else if (ts.Minutes < 1)
+                {
+                    str = $"{ts.Seconds.ToString()}s";
+                }
+
             }
-            else if (ts.Hours >= 1 && ts.Hours <= 24)
-            {
-                str = $"{ts.Hours.ToString()}h";
-            }
-            else if (ts.Minutes >= 1 && ts.Minutes <= 60)
-            {
-                str = $"{ts.Minutes.ToString()}m";
-            }
-            else if (ts.Minutes < 1)
-            {
-                str = $"{ts.Seconds.ToString()}s";
-            }
-            
-            
 
 
             return str;

@@ -302,7 +302,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateArtistPopup(Artist artist, object sender, Point point)
         {
-            this.ShowPopupMenu(artist, sender, Enumerators.MediaItemType.Artist, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(artist, true, point);
         }
 
         private void SortByButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -413,53 +413,54 @@ namespace AudictiveMusicUWP.Gui.Pages
             listView.SelectAll();
         }
 
-        private async void SelectionItemsBar_PlaySelected(object sender, SelectedItemsBar.PlayMode playMode)
+        private void SelectionItemsBar_PlaySelected(object sender, SelectedItemsBar.PlayMode playMode)
         {
-            List<string> list = new List<string>();
+            List<MediaItem> list = new List<MediaItem>();
 
-            foreach (Artist artist in listView.SelectedItems)
+            foreach (Artist album in listView.SelectedItems)
             {
-                List<string> songs = await PlayerController.FetchSongs(artist, Enumerators.MediaItemType.Artist);
-                list.AddRange(songs);
+                list.Add(album);
             }
 
             if (playMode == SelectedItemsBar.PlayMode.Play)
-                PlayerController.Play(list, Enumerators.MediaItemType.ListOfStrings);
+                PlayerController.Play(list);
             else
-                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings, true);
+                PlayerController.AddToQueue(list, true);
 
             DisableSelectionMode();
         }
 
         private async void SelectionItemsBar_AddSelected(object sender, SelectedItemsBar.AddMode addMode)
         {
-            List<string> list = new List<string>();
+            List<MediaItem> mediaItems = new List<MediaItem>();
 
             foreach (Artist artist in listView.SelectedItems)
             {
-                List<string> songs = await PlayerController.FetchSongs(artist, Enumerators.MediaItemType.Artist);
-                list.AddRange(songs);
+                mediaItems.Add(artist);
             }
+
+            List<string> list = await Collection.FetchSongs(mediaItems);
 
             if (addMode == SelectedItemsBar.AddMode.AddToPlaylist)
                 PlaylistHelper.RequestPlaylistPicker(this, list);
             else
-                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings);
+                PlayerController.AddToQueue(list);
 
             DisableSelectionMode();
         }
 
         private async void SelectionItemsBar_ShareSelected(object sender, RoutedEventArgs e)
         {
-            List<string> list = new List<string>();
+            List<MediaItem> mediaItems = new List<MediaItem>();
 
             foreach (Artist artist in listView.SelectedItems)
             {
-                List<string> songs = await PlayerController.FetchSongs(artist, Enumerators.MediaItemType.Artist);
-                list.AddRange(songs);
+                mediaItems.Add(artist);
             }
 
-            await this.ShareMediaItem(list, Enumerators.MediaItemType.ListOfStrings);
+            List<string> list = await Collection.FetchSongs(mediaItems);
+
+            await ShareHelper.Instance.Share(list);
 
             DisableSelectionMode();
         }

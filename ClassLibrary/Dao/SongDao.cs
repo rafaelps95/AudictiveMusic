@@ -9,13 +9,9 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary.Dao
 {
-    public class SongDao
+    internal class SongDao
     {
-        public delegate void FavoritesChangedEventArgs();
-
-        public static event FavoritesChangedEventArgs FavoritesChanged;
-
-        public static bool AddSongs(List<Song> songs)
+        internal static bool AddSongs(List<Song> songs)
         {
             bool result = false;
 
@@ -85,7 +81,7 @@ namespace ClassLibrary.Dao
                         Song song = songs[i];
                         if (song != null)
                         {
-                            title.Value = song.Title;
+                            title.Value = song.Name;
                             artist.Value = song.Artist;
                             album.Value = song.Album;
                             genre.Value = song.Genre;
@@ -120,7 +116,7 @@ namespace ClassLibrary.Dao
 
 
 
-        //public static bool AddSong(Song song)
+        //internal static bool AddSong(Song song)
         //{
         //    bool result = false;
 
@@ -133,7 +129,7 @@ namespace ClassLibrary.Dao
         //        SqliteCommand command = new SqliteCommand();
         //        command.Connection = db;
         //        command.CommandText = @"INSERT INTO songs (Title,Artist,Album,Genre,Year,Track,AlbumID,URI,HexColor,Star,DateAdded) VALUES (@TITLE, @ARTIST, @ALBUM, @GENRE, @YEAR, @TRACK, @ALBUMID, @URI, @HEXCOLOR, 0, @DATEADDED);";
-        //        command.Parameters.AddWithValue("@TITLE", song.Title);
+        //        command.Parameters.AddWithValue("@TITLE", song.Name);
         //        command.Parameters.AddWithValue("@ARTIST", song.Artist);
         //        command.Parameters.AddWithValue("@ALBUM", song.Album);
         //        command.Parameters.AddWithValue("@GENRE", song.Genre);
@@ -160,7 +156,7 @@ namespace ClassLibrary.Dao
         //    return result;
         //}
 
-        public static List<Song> GetSongsByArtist(Artist artist)
+        internal static List<Song> GetSongsByArtist(Artist artist)
         {
             List<Song> list = new List<Song>();
             Song song;
@@ -183,7 +179,7 @@ new SqliteConnection("Filename=database.db");
                 {
                     song = new Song();
                     song.ID = query.GetString(0);
-                    song.Title = query.GetString(1);
+                    song.Name = query.GetString(1);
                     song.Artist = query.GetString(2);
                     song.Album = query.GetString(3);
                     song.Genre = query.GetString(4);
@@ -211,7 +207,7 @@ new SqliteConnection("Filename=database.db");
 
         }
 
-        public static List<Song> GetSongsByAlbum(Album album)
+        internal static List<Song> GetSongsByAlbum(Album album)
         {
             List<Song> list = new List<Song>();
             Song song;
@@ -226,7 +222,7 @@ new SqliteConnection("Filename=database.db");
                 command.Connection = db;
 
                 command.CommandText = "SELECT * FROM songs WHERE AlbumID = @ALBUMID ";
-                command.Parameters.AddWithValue("@ALBUMID", album.AlbumID);
+                command.Parameters.AddWithValue("@ALBUMID", album.ID);
 
                 SqliteDataReader query = command.ExecuteReader();
 
@@ -234,7 +230,7 @@ new SqliteConnection("Filename=database.db");
                 {
                     song = new Song();
                     song.ID = query.GetString(0);
-                    song.Title = query.GetString(1);
+                    song.Name = query.GetString(1);
                     song.Artist = query.GetString(2);
                     song.Album = query.GetString(3);
                     song.Genre = query.GetString(4);
@@ -262,7 +258,7 @@ new SqliteConnection("Filename=database.db");
 
         }
 
-        public static Song GetSong(Song song)
+        internal static Song GetSong(Song song)
         {
             bool result;
             SqliteConnection db =
@@ -282,7 +278,7 @@ new SqliteConnection("Filename=database.db");
                 while (query.Read())
                 {
                     song.ID = query.GetString(0);
-                    song.Title = query.GetString(1);
+                    song.Name = query.GetString(1);
                     song.Artist = query.GetString(2);
                     song.Album = query.GetString(3);
                     song.Genre = query.GetString(4);
@@ -313,7 +309,7 @@ new SqliteConnection("Filename=database.db");
                 return null;
         }
 
-        public static List<Song> GetSongsByPath(string path)
+        internal static List<Song> GetSongsByPath(string path)
         {
             List<Song> list = new List<Song>();
             Song song;
@@ -336,7 +332,7 @@ new SqliteConnection("Filename=database.db");
                 {
                     song = new Song();
                     song.ID = query.GetString(0);
-                    song.Title = query.GetString(1);
+                    song.Name = query.GetString(1);
                     song.Artist = query.GetString(2);
                     song.Album = query.GetString(3);
                     song.Genre = query.GetString(4);
@@ -363,7 +359,7 @@ new SqliteConnection("Filename=database.db");
             return list;
         }
 
-        public static List<Song> GetSongs(bool sort)
+        internal static List<Song> GetSongs(bool sort)
         {
             List<Song> list = new List<Song>();
             Song song;
@@ -385,7 +381,7 @@ new SqliteConnection("Filename=database.db");
                 {
                     song = new Song();
                     song.ID = query.GetString(0);
-                    song.Title = query.GetString(1);
+                    song.Name = query.GetString(1);
                     song.Artist = query.GetString(2);
                     song.Album = query.GetString(3);
                     song.Genre = query.GetString(4);
@@ -415,7 +411,7 @@ new SqliteConnection("Filename=database.db");
 
         }
 
-        public static List<string> GetAllSongsPaths()
+        internal static List<string> GetAllSongsPaths()
         {
             List<string> list = new List<string>();
 
@@ -449,7 +445,7 @@ new SqliteConnection("Filename=database.db");
             return list;
         }
 
-        public static List<Song> GetFavoriteSongs()
+        internal static List<Song> GetFavoriteSongs()
         {
             List<Song> list = new List<Song>();
             Song song;
@@ -471,7 +467,7 @@ new SqliteConnection("Filename=database.db");
                 {
                     song = new Song();
                     song.ID = query.GetString(0);
-                    song.Title = query.GetString(1);
+                    song.Name = query.GetString(1);
                     song.Artist = query.GetString(2);
                     song.Album = query.GetString(3);
                     song.Genre = query.GetString(4);
@@ -501,7 +497,7 @@ new SqliteConnection("Filename=database.db");
 
         }
 
-        public static bool SongExists(Song song)
+        internal static bool SongExists(Song song)
         {
             int result = 0;
             SqliteConnection db =
@@ -538,7 +534,7 @@ new SqliteConnection("Filename=database.db");
                 return true;
         }
 
-        public static bool UpdateSong(Song song)
+        internal static bool UpdateSong(Song song)
         {
             bool result = false;
 
@@ -553,7 +549,7 @@ new SqliteConnection("Filename=database.db");
                     command.Connection = db;
 
                     command.CommandText = "UPDATE songs SET Title = @TITLE, Artist = @ARTIST, Album = @ALBUM, Genre = @GENRE, Year = @YEAR, Track = @TRACK, AlbumID = @ALBUMID, URI = @URI, HexColor = @HEXCOLOR WHERE ID = @ID;";
-                    command.Parameters.AddWithValue("@TITLE", song.Title);
+                    command.Parameters.AddWithValue("@TITLE", song.Name);
                     command.Parameters.AddWithValue("@ARTIST", song.Artist);
                     command.Parameters.AddWithValue("@ALBUM", song.Album);
                     command.Parameters.AddWithValue("@GENRE", song.Genre);
@@ -581,8 +577,18 @@ new SqliteConnection("Filename=database.db");
             return result;
         }
 
-        public static bool SetSongFavoriteState(Song song, bool state)
+        /// <summary>
+        /// Returns true if the state changed.
+        /// Returns false if the state hasn't changed or an error occurred
+        /// </summary>
+        /// <param name="song"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        internal static bool SetSongFavoriteState(Song song, bool state)
         {
+            if (song.IsFavorite == state)
+                return false;
+
             bool result = false;
 
             SqliteConnection db =
@@ -611,12 +617,10 @@ new SqliteConnection("Filename=database.db");
                 db.Close();
             }
 
-            FavoritesChanged?.Invoke();
-
             return result;
         }
 
-        public static bool RemoveSong(Song song)
+        internal static bool RemoveSong(Song song)
         {
             bool result = false;
 

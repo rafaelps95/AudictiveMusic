@@ -81,7 +81,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreatePlaylistPopup(Playlist playlist, object sender, Point point)
         {
-            this.ShowPopupMenu(playlist, sender, Enumerators.MediaItemType.Playlist, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(playlist, true, point);
         }
 
         private void PlaylistItem_Holding(object sender, HoldingRoutedEventArgs e)

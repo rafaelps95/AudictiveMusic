@@ -155,17 +155,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             MessageService.SendMessageToBackground(new AddSongsToPlaylist(list, false));
         }
 
-        private async void shareAlbum_Click(object sender, RoutedEventArgs e)
-        {
-            if (await this.ShareMediaItem(Album, Enumerators.MediaItemType.Album) == false)
-            {
-                string message = ApplicationInfo.Current.Resources.GetString("ShareErrorMessage").Replace("%", "0x001");
-
-                MessageDialog md = new MessageDialog(message);
-                await md.ShowAsync();
-            }
-        }
-
         private void SongItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             if (e.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Touch)
@@ -186,12 +175,12 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
         }
 
         private void moreOptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowPopupMenu(Album, sender, Enumerators.MediaItemType.Album, true, new Point(0, 0));
+            PopupHelper.GetInstance(sender).ShowPopupMenu(Album, true, new Point(0, 0));
         }
 
         private async void SongsList_ItemClick(object sender, ItemClickEventArgs e)

@@ -228,7 +228,7 @@ namespace BackgroundAudioAgent
 
             if (LastFm.Current.IsAuthenticated && ApplicationSettings.IsScrobbleEnabled && ApplicationInfo.Current.HasInternetConnection)
             {
-                Scrobble scrobble = new Scrobble(song.Artist, song.Album, song.Title, DateTimeOffset.Now.ToUniversalTime());
+                Scrobble scrobble = new Scrobble(song.Artist, song.Album, song.Name, DateTimeOffset.Now.ToUniversalTime());
                 var response = await LastFm.Current.Client.Scrobbler.ScrobbleAsync(scrobble);
             }
 
@@ -853,7 +853,7 @@ namespace BackgroundAudioAgent
                                 {
                                     new AdaptiveText()
                                     {
-                                        Text = song.Title,
+                                        Text = song.Name,
                                         HintMaxLines = 2,
                                         HintWrap = true,
                                         HintStyle = AdaptiveTextStyle.Body,
@@ -907,7 +907,7 @@ namespace BackgroundAudioAgent
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = song.Title,
+                                        Text = song.Name,
                                         HintWrap = false,
                                         HintStyle = AdaptiveTextStyle.Base,
                                     },
@@ -966,7 +966,7 @@ namespace BackgroundAudioAgent
                                     },
                                     new AdaptiveText()
                                     {
-                                        Text = song.Title,
+                                        Text = song.Name,
                                         HintStyle = AdaptiveTextStyle.Body,
                                         HintAlign = AdaptiveTextAlign.Center
                                     },
@@ -1077,7 +1077,7 @@ namespace BackgroundAudioAgent
                 if (song != null)
                 {
                     
-                    smtc.DisplayUpdater.MusicProperties.Title = song.Title;
+                    smtc.DisplayUpdater.MusicProperties.Title = song.Name;
                     smtc.DisplayUpdater.MusicProperties.Artist = song.Artist;
                     smtc.DisplayUpdater.MusicProperties.AlbumTitle = song.Album;
 
@@ -1085,7 +1085,7 @@ namespace BackgroundAudioAgent
                     {
                         try
                         {
-                            smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Album() { AlbumID = song.AlbumID }.GetCoverUri());
+                            smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Album() { ID = song.AlbumID }.GetCoverUri());
                         }
                         catch
                         {
@@ -1107,9 +1107,9 @@ namespace BackgroundAudioAgent
                 {
                     if (LastFm.Current.IsAuthenticated && ApplicationSettings.IsScrobbleEnabled && ApplicationInfo.Current.HasInternetConnection)
                     {
-                        Scrobble scrobble = new Scrobble(song.Artist, song.Album, song.Title, DateTimeOffset.Now.ToUniversalTime());
+                        Scrobble scrobble = new Scrobble(song.Artist, song.Album, song.Name, DateTimeOffset.Now.ToUniversalTime());
                         LastResponse response = await LastFm.Current.Client.Track.UpdateNowPlayingAsync(scrobble);
-                        Debug.WriteLine("UPDATING LASTFM NOW PLAYING:\n" + song.Title + "\n" + response.Status);
+                        Debug.WriteLine("UPDATING LASTFM NOW PLAYING:\n" + song.Name + "\n" + response.Status);
                     }
                 }
             }

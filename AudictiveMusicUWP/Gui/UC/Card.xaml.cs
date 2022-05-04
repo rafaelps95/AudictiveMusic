@@ -18,6 +18,7 @@ namespace AudictiveMusicUWP.Gui.UC
     public sealed partial class Card : UserControl
     {
         private Enumerators.MediaItemType ContextMode;
+        private MediaItem _mediaItem;
 
         public Card()
         {
@@ -25,15 +26,16 @@ namespace AudictiveMusicUWP.Gui.UC
             this.InitializeComponent();
         }
 
-        public void SetContext(object context)
+        public void SetContext(MediaItem context)
         {
             this.DataContext = context;
+            _mediaItem = context;
 
             if (context.GetType() == typeof(Song))
             {
                 this.ContextMode = Enumerators.MediaItemType.Song;
                 Song song = context as Song;
-                textRow1.Text = song.Title;
+                textRow1.Text = song.Name;
                 textRow2.Text = song.Artist;
 
                 Color color = ImageHelper.GetColorFromHex(song.HexColor);
@@ -44,7 +46,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 bmp.ImageFailed += Bmp_ImageFailed;
                 backgroundImage.ImageSource = bmp;
 
-                bmp.UriSource = new Album() { AlbumID = song.AlbumID }.GetCoverUri();
+                bmp.UriSource = new Album() { ID = song.AlbumID }.GetCoverUri();
             }
             else if (context.GetType() == typeof(Album))
             {
@@ -89,7 +91,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void dotsButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            this.ShowPopupMenu(this.DataContext, sender, this.ContextMode, true, e.GetPosition((FrameworkElement)sender));
+            PopupHelper.GetInstance(sender).ShowPopupMenu(_mediaItem, true, e.GetPosition((FrameworkElement)sender));
         }
     }
 }

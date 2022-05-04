@@ -6,21 +6,9 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ClassLibrary.Entities
 {
-    public class Album
+    public class Album : MediaItem
     {
-        public string Name
-        {
-            get;
-            set;
-        }
-
         public string Artist
-        {
-            get;
-            set;
-        }
-
-        public string AlbumID
         {
             get;
             set;
@@ -54,7 +42,7 @@ namespace ClassLibrary.Entities
 
         public Uri GetCoverUri()
         {
-            return new Uri("ms-appdata:///local/Covers/cover_" + this.AlbumID + ".jpg", UriKind.Absolute);
+            return new Uri("ms-appdata:///local/Covers/cover_" + this.ID + ".jpg", UriKind.Absolute);
         }
 
         public Color Color
@@ -68,7 +56,7 @@ namespace ClassLibrary.Entities
         public Album()
         {
             this.Name = string.Empty;
-            this.AlbumID = string.Empty;
+            this.ID = string.Empty;
             this.Year = 0;
             this.Genre = string.Empty;
             this.Artist = string.Empty;

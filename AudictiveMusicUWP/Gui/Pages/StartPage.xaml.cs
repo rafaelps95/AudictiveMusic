@@ -58,7 +58,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             LastFm.Current.Connected += LastFm_Connected;
             LastFm.Current.Disconnected += LastFm_Disconnected;
-            SongDao.FavoritesChanged += Collection_FavoritesChanged;
+            Ctr_Song.FavoritesChanged += Ctr_Song_FavoritesChanged;
             this.SizeChanged += StartPage_SizeChanged;
             this.Loaded += StartPage_Loaded;
             this.InitializeComponent();
@@ -67,6 +67,11 @@ namespace AudictiveMusicUWP.Gui.Pages
             favorites.CollectionChanged += Favorites_CollectionChanged;
 
             SetWebServiceButton(ApplicationInfo.Current.Resources.GetString("SignInLastFm"), WebServiceButton.WebService.LastFm);
+        }
+
+        private void Ctr_Song_FavoritesChanged(object sender, RoutedEventArgs e)
+        {
+            LoadFavorites();
         }
 
         private void SetWebServiceButton(string text, WebServiceButton.WebService service)
@@ -331,11 +336,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             UpdateScrollButtons();
         }
 
-        private void Collection_FavoritesChanged()
-        {
-            LoadFavorites();
-        }
-
         private void LoadRecommendation()
         {
             Song song = Ctr_Song.Current.GetRandomSong();
@@ -439,7 +439,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 else
                     user = new LastUser();
 
-                ((Button)sender).ShowLastFmPopupMenu(user);
+                PopupHelper.GetInstance(sender).ShowLastFmPopupMenu(user);
             }
             else
             {
@@ -464,7 +464,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 else
                     user = new LastUser();
 
-                ((FrameworkElement)sender).ShowLastFmPopupMenu(user);
+                PopupHelper.GetInstance(sender).ShowLastFmPopupMenu(user);
             }
             else
             {
@@ -493,7 +493,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
 
         }
 

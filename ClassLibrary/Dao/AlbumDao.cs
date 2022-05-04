@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary.Dao
 {
-    public class AlbumDao
+    internal class AlbumDao
     {
-        public static Album GetAlbum(Album album)
+        internal static Album GetAlbum(Album album)
         {
             SqliteConnection db =
         new SqliteConnection("Filename=database.db");
@@ -23,7 +23,7 @@ namespace ClassLibrary.Dao
                 command.Connection = db;
 
                 command.CommandText = "SELECT Artist, Album, Genre, Year, HexColor FROM songs WHERE AlbumID = @ALBUMID ";
-                command.Parameters.AddWithValue("@ALBUMID", album.AlbumID);
+                command.Parameters.AddWithValue("@ALBUMID", album.ID);
 
                 SqliteDataReader query = command.ExecuteReader();
 
@@ -50,7 +50,7 @@ namespace ClassLibrary.Dao
             return album;
         }
 
-        public static List<Album> GetAlbumsByArtist(Artist artist)
+        internal static List<Album> GetAlbumsByArtist(Artist artist)
         {
             List<Album> list = new List<Album>();
             List<Song> listOfSongs = SongDao.GetSongsByArtist(artist);
@@ -59,9 +59,9 @@ namespace ClassLibrary.Dao
             {
                 foreach (Song s in listOfSongs)
                 {
-                    if (list.Exists(a => a.AlbumID == s.AlbumID) == false)
+                    if (list.Exists(a => a.ID == s.AlbumID) == false)
                     {
-                        aux = GetAlbum(new Album() { AlbumID = s.AlbumID });
+                        aux = GetAlbum(new Album() { ID = s.AlbumID });
                         list.Add(aux);
                     }
                 }

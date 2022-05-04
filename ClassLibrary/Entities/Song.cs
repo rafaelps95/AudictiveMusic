@@ -8,23 +8,8 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ClassLibrary.Entities
 {
-    public class Song : INotifyPropertyChanged
+    public class Song : MediaItem, INotifyPropertyChanged
     {
-
-        public string Name
-        {
-            get
-            {
-                return Title;
-            }
-        }
-
-        public string Title
-        {
-            get;
-            set;
-        }
-
         public string Artist
         {
             get;
@@ -64,12 +49,6 @@ namespace ClassLibrary.Entities
         }
 
         public string AlbumID
-        {
-            get;
-            set;
-        }
-
-        public string ID
         {
             get;
             set;
@@ -132,7 +111,7 @@ namespace ClassLibrary.Entities
 
         public Song()
         {
-            Title = string.Empty;
+            Name = string.Empty;
             Artist = string.Empty;
             Album = string.Empty;
             AlbumID = string.Empty;

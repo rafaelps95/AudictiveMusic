@@ -99,7 +99,7 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             this.CurrentView = currentView;
 
-            foreach (ToggleButton e in buttonsContainer.Children)
+            foreach (NavigationBarItem e in buttonsContainer.Children)
             {
                 e.IsChecked = false;
                 e.IsHitTestVisible = true;
@@ -107,18 +107,18 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (this.CurrentView == NavigationView.Home)
             {
-                (buttonsContainer.Children[0] as ToggleButton).IsChecked = true;
-                (buttonsContainer.Children[0] as ToggleButton).IsHitTestVisible = false;
+                (buttonsContainer.Children[0] as NavigationBarItem).IsChecked = true;
+                (buttonsContainer.Children[0] as NavigationBarItem).IsHitTestVisible = false;
             }
             else if (this.CurrentView == NavigationView.Collection)
             {
-                (buttonsContainer.Children[1] as ToggleButton).IsChecked = true;
-                (buttonsContainer.Children[1] as ToggleButton).IsHitTestVisible = false;
+                (buttonsContainer.Children[1] as NavigationBarItem).IsChecked = true;
+                (buttonsContainer.Children[1] as NavigationBarItem).IsHitTestVisible = false;
             }
             else if (this.CurrentView == NavigationView.Playlists)
             {
-                (buttonsContainer.Children[2] as ToggleButton).IsChecked = true;
-                (buttonsContainer.Children[2] as ToggleButton).IsHitTestVisible = false;
+                (buttonsContainer.Children[2] as NavigationBarItem).IsChecked = true;
+                (buttonsContainer.Children[2] as NavigationBarItem).IsHitTestVisible = false;
             }
         }
 
@@ -130,12 +130,12 @@ namespace AudictiveMusicUWP.Gui.UC
 
                 for (int i = 0; i < buttonsContainer.Children.Count; i++)
                 {
-                    ((ToggleButton)buttonsContainer.Children[i]).Style = this.Resources["HorizontalNavigationButtonStyle"] as Style;
-                    ((ToggleButton)buttonsContainer.Children[i]).MinHeight = 0;
-                    Grid.SetColumnSpan((ToggleButton)buttonsContainer.Children[i], 1);
-                    Grid.SetColumn((ToggleButton)buttonsContainer.Children[i], i);
-                    Grid.SetRowSpan((ToggleButton)buttonsContainer.Children[i], 6);
-                    Grid.SetRow((ToggleButton)buttonsContainer.Children[i], 0);
+                    ((NavigationBarItem)buttonsContainer.Children[i]).Orientation = Orientation.Horizontal;
+                    ((NavigationBarItem)buttonsContainer.Children[i]).MinHeight = 0;
+                    Grid.SetColumnSpan((NavigationBarItem)buttonsContainer.Children[i], 1);
+                    Grid.SetColumn((NavigationBarItem)buttonsContainer.Children[i], i);
+                    Grid.SetRowSpan((NavigationBarItem)buttonsContainer.Children[i], 6);
+                    Grid.SetRow((NavigationBarItem)buttonsContainer.Children[i], 0);
 
                 }
             }
@@ -144,12 +144,12 @@ namespace AudictiveMusicUWP.Gui.UC
                 backgroundContainer.Visibility = Visibility.Visible;
                 for (int i = 0; i < buttonsContainer.Children.Count; i++)
                 {
-                    ((ToggleButton)buttonsContainer.Children[i]).Style = this.Resources["VerticalNavigationButtonStyle"] as Style;
-                    ((ToggleButton)buttonsContainer.Children[i]).MinHeight = 50;
-                    Grid.SetColumnSpan((ToggleButton)buttonsContainer.Children[i], 4);
-                    Grid.SetColumn((ToggleButton)buttonsContainer.Children[i], 0);
-                    Grid.SetRowSpan((ToggleButton)buttonsContainer.Children[i], 1);
-                    Grid.SetRow((ToggleButton)buttonsContainer.Children[i], i + 1);
+                    ((NavigationBarItem)buttonsContainer.Children[i]).Orientation = Orientation.Vertical;
+                    ((NavigationBarItem)buttonsContainer.Children[i]).MinHeight = 50;
+                    Grid.SetColumnSpan((NavigationBarItem)buttonsContainer.Children[i], 4);
+                    Grid.SetColumn((NavigationBarItem)buttonsContainer.Children[i], 0);
+                    Grid.SetRowSpan((NavigationBarItem)buttonsContainer.Children[i], 1);
+                    Grid.SetRow((NavigationBarItem)buttonsContainer.Children[i], i + 1);
 
                 }
             }

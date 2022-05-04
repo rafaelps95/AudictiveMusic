@@ -2,10 +2,8 @@
 
 namespace ClassLibrary.Entities
 {
-    public class FolderItem
+    public class FolderItem : MediaItem
     {
-        public string Name { get; set; }
-
         public string Path { get; set; }
 
         public bool IsFolder { get; set; }

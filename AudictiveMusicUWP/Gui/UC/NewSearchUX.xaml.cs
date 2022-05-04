@@ -474,7 +474,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void CreateAlbumPopup(Album album, object sender, Point point)
         {
-            this.ShowPopupMenu(album, sender, Enumerators.MediaItemType.Album, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(album, true, point);
         }
 
         private void playAlbumButton_Click(object sender, RoutedEventArgs e)
@@ -509,7 +509,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
         }
 
         private void Artist_ImageOpened(object sender, RoutedEventArgs e)
@@ -634,7 +634,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void CreateArtistPopup(Artist artist, object sender, Point point)
         {
-            this.ShowPopupMenu(artist, sender, Enumerators.MediaItemType.Artist, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(artist, true, point);
         }
 
         private void artistsList_ItemClick(object sender, ItemClickEventArgs e)
@@ -706,7 +706,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             foreach (Song song in allSongs)
             {
-                title = song.Title;
+                title = song.Name;
                 artist = song.Artist;
                 album = song.Album;
                 genre = song.Genre;
@@ -729,11 +729,11 @@ namespace AudictiveMusicUWP.Gui.UC
                         }
 
                         albumAUX = new Album();
-                        if (listOfAlbums.Exists(a => a.AlbumID == song.AlbumID) == false)
+                        if (listOfAlbums.Exists(a => a.ID == song.AlbumID) == false)
                         {
                             albumAUX.Name = album;
                             albumAUX.Artist = artist;
-                            albumAUX.AlbumID = song.AlbumID;
+                            albumAUX.ID = song.AlbumID;
                             albumAUX.Year = Convert.ToInt32(song.Year);
                             albumAUX.Genre = song.Genre;
                             albumAUX.HexColor = song.HexColor;
@@ -744,11 +744,11 @@ namespace AudictiveMusicUWP.Gui.UC
                     else if (album.ToLower().Contains(searchTerm.ToLower()))
                     {
                         albumAUX = new Album();
-                        if (listOfAlbums.Exists(a => a.AlbumID == song.AlbumID) == false)
+                        if (listOfAlbums.Exists(a => a.ID == song.AlbumID) == false)
                         {
                             albumAUX.Name = album;
                             albumAUX.Artist = artist;
-                            albumAUX.AlbumID = song.AlbumID;
+                            albumAUX.ID = song.AlbumID;
                             albumAUX.Year = Convert.ToInt32(song.Year);
                             albumAUX.Genre = song.Genre;
                             albumAUX.HexColor = song.HexColor;
@@ -781,7 +781,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 albums.Visibility = Visibility.Visible;
             }
 
-            songsList.ItemsSource = listOfSongs.OrderBy(s => s.Title).ToList();
+            songsList.ItemsSource = listOfSongs.OrderBy(s => s.Name).ToList();
             albumsList.ItemsSource = listOfAlbums.OrderBy(s => s.Name).ToList();
             artistsList.ItemsSource = listOfArtists.OrderBy(s => s.Name).ToList();
 

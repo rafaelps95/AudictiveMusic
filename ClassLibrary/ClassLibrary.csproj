@@ -126,6 +126,7 @@
     <Compile Include="Entities\CustomLastUser.cs" />
     <Compile Include="Entities\FolderItem.cs" />
     <Compile Include="Entities\LastFmFriendsResponse.cs" />
+    <Compile Include="Entities\MediaItem.cs" />
     <Compile Include="Entities\Playlist.cs" />
     <Compile Include="Entities\Song.cs" />
     <Compile Include="Enums.cs" />

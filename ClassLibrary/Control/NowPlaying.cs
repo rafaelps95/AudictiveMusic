@@ -104,13 +104,13 @@ namespace ClassLibrary.Control
                 {
 
                     ApplicationSettings.NextSong = NowPlaying.Current.Songs[currentTrackIndex + 1];
-                    Song s = Ctr_Song.Current.GetSong(new Song() { SongURI = ApplicationSettings.NextSong });
+                    Song song = Ctr_Song.Current.GetSong(new Song() { SongURI = ApplicationSettings.NextSong });
 
-                    if (s != null)
+                    if (song != null)
                     {
-                        string nextArtist = s.Artist;
-                        string nextSong = s.Title;
-                        string albumID = s.AlbumID;
+                        string nextArtist = song.Artist;
+                        string nextSong = song.Name;
+                        string albumID = song.AlbumID;
 
 
                         if (ApplicationSettings.NextSongInActionCenterEnabled == false)

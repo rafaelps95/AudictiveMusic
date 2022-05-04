@@ -245,7 +245,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            this.ShowPopupMenu(song, sender, Enumerators.MediaItemType.Song, true, point);
+            PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
         }
 
         private void listView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -265,77 +265,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                     //listViewItem.IsEnabled = false;
                 }
             }
-        }
-
-        private async void topPlay_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> list = new List<string>();
-
-            foreach (object obj in listView.SelectedItems)
-            {
-                FolderItem item = obj as FolderItem;
-                if (item.IsFolder)
-                {
-                    list.AddRange(await Ctr_FolderItem.GetSongs(item));
-                }
-                else
-                {
-                    if (StorageHelper.IsMusicFile(item.Path))
-                        list.Add(item.Path);
-                }
-            }
-
-            if (list.Count == 0)
-                return;
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
-        }
-
-        private async void topAdd_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> list = new List<string>();
-
-            foreach (object obj in listView.SelectedItems)
-            {
-                FolderItem item = obj as FolderItem;
-                if (item.IsFolder)
-                {
-                    list.AddRange(await Ctr_FolderItem.GetSongs(item));
-                }
-                else
-                {
-                    if (StorageHelper.IsMusicFile(item.Path))
-                        list.Add(item.Path);
-                }
-            }
-
-            PlaylistHelper.RequestPlaylistPicker(this, list);
-
-            DisableSelectionMode();
-        }
-
-        private async void topMore_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> list = new List<string>();
-
-            foreach (object obj in listView.SelectedItems)
-            {
-                FolderItem item = obj as FolderItem;
-                if (item.IsFolder)
-                {
-                    list.AddRange(await Ctr_FolderItem.GetSongs(item));
-                }
-                else
-                {
-                    if (StorageHelper.IsMusicFile(item.Path))
-                        list.Add(item.Path);
-                }
-            }
-
-            if (list.Count == 0)
-                return;
-
-            this.ShowPopupMenu(list, sender, Enumerators.MediaItemType.ListOfStrings);
         }
 
         private void selection_Tapped(object sender, TappedRoutedEventArgs e)
@@ -432,9 +361,9 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
 
             if (playMode == SelectedItemsBar.PlayMode.Play)
-                PlayerController.Play(list, Enumerators.MediaItemType.ListOfStrings);
+                PlayerController.Play(list);
             else
-                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings, true);
+                PlayerController.AddToQueue(list, true);
 
             DisableSelectionMode();
         }
@@ -460,7 +389,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (addMode == SelectedItemsBar.AddMode.AddToPlaylist)
                 PlaylistHelper.RequestPlaylistPicker(this, list);
             else
-                PlayerController.AddToQueue(list, Enumerators.MediaItemType.ListOfStrings);
+                PlayerController.AddToQueue(list);
 
             DisableSelectionMode();
         }
@@ -483,7 +412,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 }
             }
 
-            await this.ShareMediaItem(list, Enumerators.MediaItemType.ListOfStrings);
+            await ShareHelper.Instance.Share(list);
 
             DisableSelectionMode();
         }

@@ -132,7 +132,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Control\" />
-    <Folder Include="Dao\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

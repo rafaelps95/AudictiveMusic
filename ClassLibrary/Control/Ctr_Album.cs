@@ -35,7 +35,7 @@ namespace ClassLibrary.Control
                     {
                         Name = song.Album,
                         Artist = song.Artist,
-                        AlbumID = song.AlbumID,
+                        ID = song.AlbumID,
                         Year = Convert.ToInt32(song.Year),
                         Genre = song.Genre,
                         HexColor = song.HexColor

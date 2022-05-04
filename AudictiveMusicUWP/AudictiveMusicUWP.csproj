@@ -126,6 +126,9 @@
     <Compile Include="Gui\UC\FluentButton.xaml.cs">
       <DependentUpon>FluentButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\UC\NavigationBarItem.xaml.cs">
+      <DependentUpon>NavigationBarItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\UC\SelectedItemsBar.xaml.cs">
       <DependentUpon>SelectedItemsBar.xaml</DependentUpon>
     </Compile>
@@ -153,7 +156,7 @@
     <Compile Include="Gui\Util\AlbumItemHelper.cs" />
     <Compile Include="Gui\Util\LongPressEventArgs.cs" />
     <Compile Include="Gui\Util\Converters.cs" />
-    <Compile Include="Gui\Util\PlayerController.cs" />
+    <Compile Include="PlayerController.cs" />
     <Compile Include="Purchase\PurchaseHelper.cs" />
     <Compile Include="Gui\Pages\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
@@ -507,6 +510,10 @@
     <Page Include="Gui\UC\ModernProgressBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\UC\NavigationBarItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\UC\NewSearchUX.xaml">
       <Generator>MSBuild:Compile</Generator>

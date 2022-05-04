@@ -17,15 +17,36 @@ using static ClassLibrary.Helpers.Enumerators;
 
 namespace AudictiveMusicUWP.Gui.Util
 {
-    public static class PopupHelper
+    public class PopupHelper
     {
-        private static ResourceLoader res = new ResourceLoader();
-        private static object page;
+        private static readonly object _lock = new object();
 
-        public static void ShowPopupMenu(this FrameworkElement fwe, object mediaItem, object sender, MediaItemType mediaItemType, bool showAtPoint = false, Point point = default(Point))
+        private static PopupHelper _instance;
+
+        private object _sender;
+
+        public static PopupHelper GetInstance(object sender)
         {
-            page = fwe;
+            if (_instance == null)
+            {
+                lock (_lock)
+                {
+                    if (_instance == null)
+                        _instance = new PopupHelper();
+                }
+            }
 
+            _instance._sender = sender;
+            return _instance;
+        }
+
+        private PopupHelper()
+        {
+
+        }
+
+        public void ShowPopupMenu(MediaItem mediaItem, bool showAtPoint = false, Point point = default(Point))
+        {
             MenuFlyout menu = new MenuFlyout();
             menu.Placement = Windows.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Right;
 
@@ -36,7 +57,7 @@ namespace AudictiveMusicUWP.Gui.Util
             };
             item1.Click += (s, a) =>
             {
-                PlayerController.Play(mediaItem, mediaItemType);
+                PlayerController.Play(mediaItem);
             };
 
             menu.Items.Add(item1);
@@ -48,7 +69,7 @@ namespace AudictiveMusicUWP.Gui.Util
             };
             item2.Click += (s, a) =>
             {
-                PlayerController.AddToQueue(mediaItem, mediaItemType, true);
+                PlayerController.AddToQueue(mediaItem, true);
             };
 
             menu.Items.Add(item2);
@@ -64,7 +85,7 @@ namespace AudictiveMusicUWP.Gui.Util
             };
             item3.Click += (s, a) =>
             {
-                PlayerController.AddToQueue(mediaItem, mediaItemType);
+                PlayerController.AddToQueue(mediaItem);
             };
 
             menu.Items.Add(item3);
@@ -76,9 +97,9 @@ namespace AudictiveMusicUWP.Gui.Util
             };
             item4.Click += async (s, a) =>
             {
-                List<string> list = await PlayerController.FetchSongs(mediaItem, mediaItemType);
+                List<string> list = await Collection.FetchSongs(mediaItem);
 
-                PlaylistHelper.RequestPlaylistPicker(sender, list);
+                PlaylistHelper.RequestPlaylistPicker(_sender, list);
             };
 
             menu.Items.Add(item4);
@@ -94,7 +115,7 @@ namespace AudictiveMusicUWP.Gui.Util
             };
             item5.Click += async (s, a) =>
             {
-                if (await page.ShareMediaItem(mediaItem, mediaItemType) == false)
+                if (await ShareHelper.Instance.Share(mediaItem) == false)
                 {
                     MessageDialog md = new MessageDialog(ApplicationInfo.Current.Resources.GetString("ShareErrorMessage"));
                     await md.ShowAsync();
@@ -103,7 +124,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
             menu.Items.Add(item5);
 
-            if (mediaItemType == MediaItemType.Playlist)
+            if (mediaItem.GetType() == typeof(Playlist))
             {
                 Playlist playlist = mediaItem as Playlist;
                 MenuFlyoutItem item = new MenuFlyoutItem()
@@ -113,14 +134,14 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item.Click += (s, a) =>
                 {
-                    PlaylistHelper.DeletePlaylist(sender, playlist);
+                    PlaylistHelper.DeletePlaylist(_sender, playlist);
                 };
 
                 menu.Items.Add(item);
             }
 
 
-            if (mediaItemType == MediaItemType.Song)
+            if (mediaItem.GetType() == typeof(Song))
             {
                 menu.Items.Add(new MenuFlyoutSeparator());
 
@@ -155,7 +176,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 menu.Items.Add(item6);
             }
 
-            if (mediaItemType == MediaItemType.Song || mediaItemType == MediaItemType.Album)
+            if (mediaItem.GetType() == typeof(Song) || mediaItem.GetType() == typeof(Album))
             {
                 menu.Items.Add(new MenuFlyoutSeparator());
 
@@ -167,25 +188,15 @@ namespace AudictiveMusicUWP.Gui.Util
                 item7.Click += (s, a) =>
                 {
                     Artist artist = new Artist();
-                    if (mediaItemType == MediaItemType.Album)
-                    {
-                        Album album = mediaItem as Album;
-                        artist.Name = album.Artist;
-                    }
-                    else
-                    {
-                        Song song = mediaItem as Song;
-                        artist.Name = song.Artist;
-                    }
+                    artist.Name = mediaItem.Name;
 
-                    NavigationHelper.Navigate(sender, typeof(ArtistPage), artist);
+                    NavigationHelper.Navigate(_sender, typeof(ArtistPage), artist);
                 };
 
                 menu.Items.Add(item7);
 
-                if (mediaItemType != MediaItemType.Album)
+                if (mediaItem.GetType() == typeof(Song))
                 {
-
                     MenuFlyoutItem item8 = new MenuFlyoutItem()
                     {
                         Text = ApplicationInfo.Current.Resources.GetString("GoToAlbumString"),
@@ -198,28 +209,28 @@ namespace AudictiveMusicUWP.Gui.Util
                         {
                             Name = song.Album,
                             Artist = song.Artist,
-                            AlbumID = song.AlbumID,
+                            ID = song.AlbumID,
                             Year = Convert.ToInt32(song.Year),
                             Genre = song.Genre,
                             HexColor = song.HexColor
                         };
 
-                        NavigationHelper.Navigate(sender, typeof(AlbumPage), album);
+                        NavigationHelper.Navigate(_sender, typeof(AlbumPage), album);
                     };
 
                     menu.Items.Add(item8);
                 }
             }
 
-            menu.ShowAt(sender as FrameworkElement);
+            menu.ShowAt(_sender as FrameworkElement);
 
             if (showAtPoint)
             {
-                menu.ShowAt(sender as FrameworkElement, point);
+                menu.ShowAt(_sender as FrameworkElement, point);
             }
         }
 
-        public static void ShowLastFmPopupMenu(this FrameworkElement fwe, LastUser user)
+        public void ShowLastFmPopupMenu(LastUser user)
         {
             MenuFlyout mf = new MenuFlyout();
 
@@ -233,7 +244,7 @@ namespace AudictiveMusicUWP.Gui.Util
                 mfi.Click += (s, a) =>
                 {
 
-                    LastFm.Current.RequestLogin(fwe);
+                    LastFm.Current.RequestLogin(_sender);
                 };
 
                 mf.Items.Add(mfi);
@@ -249,7 +260,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi.Click += (s, a) =>
                     {
-                        NavigationHelper.Navigate(fwe, typeof(LastFmProfilePage), user);
+                        NavigationHelper.Navigate(_sender, typeof(LastFmProfilePage), user);
                     };
 
                     mf.Items.Add(mfi);
@@ -261,7 +272,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi2.Click += (s, a) =>
                     {
-                        NavigationHelper.Navigate(fwe, typeof(Settings), "path=scrobble");
+                        NavigationHelper.Navigate(_sender, typeof(Settings), "path=scrobble");
                     };
 
                     mf.Items.Add(mfi2);
@@ -287,14 +298,14 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi.Click += (s, a) =>
                     {
-                        NavigationHelper.Navigate(fwe, typeof(LastFmProfilePage), user);
+                        NavigationHelper.Navigate(_sender, typeof(LastFmProfilePage), user);
                     };
 
                     mf.Items.Add(mfi);
                 }
             }
 
-            mf.ShowAt(fwe);
+            mf.ShowAt(_sender as FrameworkElement);
         }
     }
 }

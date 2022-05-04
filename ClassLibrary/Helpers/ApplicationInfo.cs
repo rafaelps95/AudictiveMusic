@@ -338,9 +338,9 @@ namespace ClassLibrary.Helpers
             }
         }
 
-        public ApplicationInfo()
+        private ApplicationInfo()
         {
-            //LoadCoversFolder();
+
         }
 
         private async void LoadCoversFolder()
