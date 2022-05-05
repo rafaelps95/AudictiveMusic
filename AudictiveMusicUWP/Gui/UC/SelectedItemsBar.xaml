@@ -40,8 +40,8 @@
                         <FlyoutBase.AttachedFlyout>
                             <MenuFlyout Placement="Bottom">
                                 <MenuFlyout.Items>
-                                    <MenuFlyoutItem Text="Adicionar à fila" Click="AddToQueueButton_Click" />
-                                    <MenuFlyoutItem Text="Adicionar à lista de reprodução" Click="AddToPlaylistButton_Click"/>
+                                    <MenuFlyoutItem x:Uid="AddToNowPlaying" Text="Adicionar à fila" Click="AddToQueueButton_Click" />
+                                    <MenuFlyoutItem x:Uid="AddToPlaylistMenu" Text="Adicionar à lista de reprodução" Click="AddToPlaylistButton_Click"/>
                                 </MenuFlyout.Items>
                             </MenuFlyout>
                         </FlyoutBase.AttachedFlyout>

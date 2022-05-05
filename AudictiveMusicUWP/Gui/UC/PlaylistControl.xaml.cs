@@ -33,46 +33,6 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private bool reordering { get => tempDragItem != null; }
 
-        private void applyAcrylicAccent(Panel panel)
-        {
-            BlendEffectMode blendmode = BlendEffectMode.Overlay;
-
-            var graphicsEffect = new BlendEffect
-            {
-                Mode = blendmode,
-                Background = new ColorSourceEffect()
-                {
-                    Name = "Tint",
-                    Color = Colors.Transparent,
-                },
-
-                Foreground = new GaussianBlurEffect()
-                {
-                    Name = "Blur",
-                    Source = new CompositionEffectSourceParameter("Backdrop"),
-                    BlurAmount = 18.0f,
-                    BorderMode = EffectBorderMode.Hard,
-                }
-            };
-
-            var blurEffectFactory = _compositor.CreateEffectFactory(graphicsEffect,
-                new[] { "Blur.BlurAmount", "Tint.Color" });
-
-            _brush = blurEffectFactory.CreateBrush();
-
-            var destinationBrush = _compositor.CreateBackdropBrush();
-            _brush.SetSourceParameter("Backdrop", destinationBrush);
-
-            _sprite.Size = new Vector2((float)panel.ActualWidth, (float)panel.ActualHeight);
-            _sprite.Brush = _brush;
-
-            ElementCompositionPreview.SetElementChildVisual(panel, _sprite);
-        }
-
-        Compositor _compositor;
-        SpriteVisual _sprite;
-        CompositionEffectBrush _brush;
-
         public enum EditMode
         {
             Enabled,
@@ -95,19 +55,8 @@ namespace AudictiveMusicUWP.Gui.UC
             MusicPlaylist.ItemsSource = PlaylistList;
             CurrentTrackIndex = -1;
             editMode = EditMode.Disabled;
-            SetAcrylic();
             //if (ApplicationInfo.Current.IsMobile == false)
             //_compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
-        }
-
-        private void SetAcrylic()
-        {
-            if (ApplicationInfo.Current.GetDeviceFormFactorType() != ApplicationInfo.DeviceFormFactorType.Phone)
-            {
-                _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
-                _sprite = _compositor.CreateSpriteVisual();
-                applyAcrylicAccent(blurOverlay);
-            }
         }
 
         private void PlaylistList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -401,15 +350,6 @@ namespace AudictiveMusicUWP.Gui.UC
 
             sb.Children.Add(ca);
             sb.Begin();
-        }
-
-        private void BlurOverlay_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (ApplicationInfo.Current.GetDeviceFormFactorType() != ApplicationInfo.DeviceFormFactorType.Phone)
-            {
-                if (_sprite != null)
-                    _sprite.Size = e.NewSize.ToVector2();
-            }
         }
     }
 }

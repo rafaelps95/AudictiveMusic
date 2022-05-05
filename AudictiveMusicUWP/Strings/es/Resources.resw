@@ -393,7 +393,7 @@
   <data name="PlaylistEditorTitle.Text" xml:space="preserve">
     <value>Para reordenar la lista de reproducción, toque, mantenga y arrastre la canción que desea. Usted puede también seleccionar más de una y arrastrarlos juntos.</value>
   </data>
-  <data name="PlaylistsMenu.Content" xml:space="preserve">
+  <data name="PlaylistsMenu.Text" xml:space="preserve">
     <value>Listas de reproducción</value>
   </data>
   <data name="RemoveSongEditor.Content" xml:space="preserve">
@@ -780,7 +780,7 @@
   <data name="WindowsColorSettings.Content" xml:space="preserve">
     <value>Configuración de color de Windows</value>
   </data>
-  <data name="SearchMenu.Content" xml:space="preserve">
+  <data name="SearchMenu.Text" xml:space="preserve">
     <value>Búsqueda</value>
   </data>
   <data name="AboutBtn.Content" xml:space="preserve">
@@ -951,7 +951,7 @@
   <data name="Collection.Text" xml:space="preserve">
     <value>Colección</value>
   </data>
-  <data name="CollectionMenu.Content" xml:space="preserve">
+  <data name="CollectionMenu.Text" xml:space="preserve">
     <value>Colección</value>
   </data>
   <data name="GoToAlbumString" xml:space="preserve">
@@ -972,7 +972,7 @@
   <data name="RemoveFromFavoritesString" xml:space="preserve">
     <value>Eliminar de favoritos</value>
   </data>
-  <data name="StartMenu.Content" xml:space="preserve">
+  <data name="StartMenu.Text" xml:space="preserve">
     <value>Inicio</value>
   </data>
   <data name="SuggestionForYou.Text" xml:space="preserve">
@@ -1217,5 +1217,11 @@
   </data>
   <data name="AddTo" xml:space="preserve">
     <value>Agregar</value>
+  </data>
+  <data name="CollectionButton.Content" xml:space="preserve">
+    <value>Colección</value>
+  </data>
+  <data name="TransparencySettingsItem.Text" xml:space="preserve">
+    <value>Efectos de transparencia</value>
   </data>
 </root>

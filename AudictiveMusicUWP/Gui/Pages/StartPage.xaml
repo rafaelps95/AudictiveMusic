@@ -89,7 +89,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <local:WebServiceButton Grid.Column="0" Service="LastFm" SizeChanged="HeaderRightButtons_SizeChanged" x:Name="lastFmButton" VerticalAlignment="Stretch" FontSize="20" Tapped="lastFmButton_Tapped"/>
-                    <!--<Button Grid.Column="1" Width="55" x:Name="settingsButton" VerticalAlignment="Stretch" FontFamily="{ThemeResource IconFont}" FontSize="20" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="settingsButton_Click" Content="" Style="{StaticResource IconButtonStyle}" />-->
+                    <!--<Button Grid.Column="1" Width="55" x:Name="settingsButton" VerticalAlignment="Stretch" FontFamily="{ThemeResource IconFont}" FontSize="20" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="settingsButton_Click" Content="" Style="{StaticResource ModernIconButtonStyle}" />-->
                 </Grid>
             </Grid>
 
@@ -141,7 +141,7 @@
                                     </Button.Background>
                                 </Button>
 
-                                <Button Tag="" x:Uid="CollectionMenu" Content="Biblioteca" x:Name="collectionButton" Click="collectionButton_Click" FontSize="22" Grid.Column="1" Style="{StaticResource CircleButtonStyleWithLabel}" Margin="16,7,16,7">
+                                <Button Tag="" x:Uid="CollectionButton" Content="Biblioteca" x:Name="collectionButton" Click="collectionButton_Click" FontSize="22" Grid.Column="1" Style="{StaticResource CircleButtonStyleWithLabel}" Margin="16,7,16,7">
                                     <Button.Background>
                                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                             <LinearGradientBrush.RelativeTransform>

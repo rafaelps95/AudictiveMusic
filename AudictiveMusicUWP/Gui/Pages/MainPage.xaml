@@ -27,14 +27,19 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <local:Acrylic x:Name="acrylic" AcrylicMode="Window" Contrast="0.3" BlurOpacity="0.8" IsBlurEnabled="True" Grid.ColumnSpan="2" Grid.RowSpan="3" />
+
         <!--<Grid x:Name="TintGrid" Grid.ColumnSpan="2" Grid.RowSpan="3" Opacity="0.1" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" />-->
         <Grid x:Name="titleBar" Grid.ColumnSpan="2" Canvas.ZIndex="2000" Loaded="titleBar_Loaded">
-            <Grid x:Name="titleBarDragArea">
-                <Grid.Background>
+            <!--<Grid x:Name="titleBarAcrylic" Background="Transparent" IsHitTestVisible="False" Opacity="0.5" />-->
+
+            <Grid x:Name="titleBarDragArea" Background="Transparent">
+                <!--<Grid.Background>
                     <SolidColorBrush x:Name="titleBarBackgroundBrush" Color="#FFDC572E" Opacity="0.8" />
-                </Grid.Background>
-                <Grid x:Name="titleBarAcrillic" Background="Transparent" IsHitTestVisible="False" Opacity="0.5" />
+                </Grid.Background>-->
             </Grid>
+
+            <!--<Rectangle x:Name="titleBarLine" Height="1" Fill="#66999999" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />-->
             <!--<Grid Background="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}" IsHitTestVisible="False" Opacity="0.4" />-->
             <Grid Canvas.ZIndex="2">
                 <Grid.ColumnDefinitions>
@@ -52,14 +57,16 @@
             </Grid>
         </Grid>
 
-        <Grid x:Name="acrillicPageBG" Grid.ColumnSpan="2" Visibility="Collapsed" Canvas.ZIndex="1" Opacity="0.2" Grid.Row="0" Grid.RowSpan="2" />
-
-        <Frame x:Name="MainFrame" Grid.Column="1" Canvas.ZIndex="2" Navigated="MainFrame_Navigated" Grid.Row="1" Grid.RowSpan="2" />
+        <!--<Grid x:Name="acrillicPageBG" Grid.ColumnSpan="2" Visibility="Collapsed" Canvas.ZIndex="1" Opacity="0.2" Grid.Row="0" Grid.RowSpan="2" />-->
+        <Border x:Name="frameBorder" CornerRadius="10,0,0,0" BorderBrush="#66999999" BorderThickness="1,1,0,0" Background="{ThemeResource DefaultPageBackgroundBrush}" Grid.Column="1" Grid.Row="1" Canvas.ZIndex="2" Grid.RowSpan="2">
+            <Frame x:Name="MainFrame" Navigated="MainFrame_Navigated" />
+        </Border>
         <Grid Grid.Column="1" RequestedTheme="{Binding ElementName=navBar, Path=RequestedTheme}" Height="{Binding ElementName=footerBlur, Path=Height}" Grid.Row="1" VerticalAlignment="Bottom" Canvas.ZIndex="-99">
             <Grid.Background>
                 <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" />
             </Grid.Background>
         </Grid>
+
         <local:NavigationBar x:Name="navBar" Grid.Column="1" Canvas.ZIndex="3" Grid.Row="1" Orientation="Horizontal" Height="50" ActionRequested="bottomNavBar_ActionRequested" VerticalAlignment="Bottom" />
 
         <!--<local:NavigationBar Grid.Column="0" x:Name="leftNavBar" Tint="#FFDC572E" TintOpacity="0.6" IsBlurEnabled="False" Canvas.ZIndex="3" Visibility="Collapsed" Orientation="Vertical" ActionRequested="bottomNavBar_ActionRequested" HorizontalAlignment="Left" Width="65" Grid.Row="1" VerticalAlignment="Stretch" />-->
@@ -67,16 +74,17 @@
 
         </Grid>
 
-        <Grid x:Name="Footer" Grid.Column="1" SizeChanged="Footer_SizeChanged" Canvas.ZIndex="2" Grid.Row="1">
-            <Grid x:Name="footerBlur" Opacity="1" VerticalAlignment="Bottom" />
-            <Rectangle x:Name="rectangleToMakeColorDarker" Fill="#555555" Height="{Binding ElementName=footerBlur, Path=Height}" Opacity="0.3" VerticalAlignment="Bottom">
+        <Grid x:Name="Footer" Grid.Column="1" Canvas.ZIndex="2" Grid.Row="1">
+            <!--<Grid x:Name="footerBlur" Opacity="1" VerticalAlignment="Bottom" />-->
+            <local:Acrylic x:Name="footerAcrylic" VerticalAlignment="Bottom" IsBlurEnabled="True" BlurOpacity="1" TintOpacity="0.5" AcrylicMode="App" Contrast="0.5" />
+            <!--<Rectangle x:Name="rectangleToMakeColorDarker" Fill="#555555" Height="{Binding ElementName=footerBlur, Path=Height}" Opacity="0.3" VerticalAlignment="Bottom">
 
-            </Rectangle>
-            <Rectangle Height="{Binding ElementName=footerBlur, Path=Height}" VerticalAlignment="Bottom">
+            </Rectangle>-->
+            <!--<Rectangle Height="{Binding ElementName=footerBlur, Path=Height}" VerticalAlignment="Bottom">
                 <Rectangle.Fill>
                     <SolidColorBrush x:Name="footerBackgroundColor" Color="#FFDC572E" Opacity="0.5" />
                 </Rectangle.Fill>
-            </Rectangle>
+            </Rectangle>-->
             <!--<local:NavigationBar x:Name="bottomNavBar" Visibility="Collapsed" Orientation="Horizontal" Height="50" ActionRequested="bottomNavBar_ActionRequested" VerticalAlignment="Bottom" />-->
         </Grid>
 

@@ -81,6 +81,20 @@ namespace AudictiveMusicUWP.Gui.UC
             }
         }
 
+
+
+        public double BlurOpacity
+        {
+            get { return (double)GetValue(BlurOpacityProperty); }
+            set { SetValue(BlurOpacityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for BlurOpacity.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BlurOpacityProperty =
+            DependencyProperty.Register("BlurOpacity", typeof(double), typeof(NavigationBar), new PropertyMetadata(0.2));
+
+
+
         public static readonly DependencyProperty IsBlurEnabledProperty =
             DependencyProperty.Register("IsBlurEnabled", typeof(bool), typeof(NavigationBar), new PropertyMetadata(false));
 
@@ -142,6 +156,7 @@ namespace AudictiveMusicUWP.Gui.UC
             else
             {
                 backgroundContainer.Visibility = Visibility.Visible;
+
                 for (int i = 0; i < buttonsContainer.Children.Count; i++)
                 {
                     ((NavigationBarItem)buttonsContainer.Children[i]).Orientation = Orientation.Vertical;

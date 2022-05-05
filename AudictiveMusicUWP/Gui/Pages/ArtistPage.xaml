@@ -155,7 +155,7 @@
                                                 <Border.Background>
                                                     <SolidColorBrush Color="{Binding Color}" Opacity="1" />
                                                 </Border.Background>
-                                                <Button IsHitTestVisible="False" Style="{StaticResource IconButtonStyle}" Content="" FontSize="30" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" x:Name="playAlbumButton" VerticalAlignment="Center" HorizontalAlignment="Center" Click="playAlbumButton_Click" />
+                                                <Button IsHitTestVisible="False" Style="{StaticResource ModernIconButtonStyle}" Content="" FontSize="30" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" x:Name="playAlbumButton" VerticalAlignment="Center" HorizontalAlignment="Center" Click="playAlbumButton_Click" />
                                             </Border>
                                             <RepeatButton Visibility="Visible" Interval="1000" x:Name="repeatButton" ClickMode="Hover" Click="repeatButton_Click" PointerEntered="repeatButton_PointerEntered" PointerReleased="repeatButton_PointerReleased" PointerPressed="repeatButton_PointerPressed" PointerExited="repeatButton_PointerExited" VerticalAlignment="Stretch" Delay="1000" RequiresPointer="WhenEngaged" HorizontalAlignment="Stretch" Opacity="0" />
                                         </Grid>

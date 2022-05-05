@@ -39,7 +39,7 @@
 
     <Grid>
         <ProgressRing x:Name="progress" IsActive="true" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Width="50" Height="50" />
-        <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5" Opacity="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5" Opacity="1">
             <Grid.RenderTransform>
                 <ScaleTransform ScaleX="0.9" ScaleY="0.9" x:Name="layoutRootScale" />
             </Grid.RenderTransform>
@@ -55,9 +55,6 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Grid.Background>
-                    <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" />
-                </Grid.Background>
                 <TextBlock x:Name="pageTitle" x:Uid="AboutTitle" Text="Sobre" VerticalAlignment="Center" Margin="12,0" FontWeight="Bold" FontSize="25" />
             </Grid>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" ZoomMode="Disabled">

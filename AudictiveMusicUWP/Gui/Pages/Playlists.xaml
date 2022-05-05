@@ -120,13 +120,13 @@
             </Grid.RenderTransform>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="48" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <!--<TextBlock Text="" FontSize="200" Opacity="0.05" FontFamily="{ThemeResource IconFont}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.RowSpan="3" />-->
-                <Grid Grid.Row="0">
+                <Grid Grid.Row="0" Margin="0,5">
                     <TextBlock x:Name="pageTitle" x:Uid="Playlists" VerticalAlignment="Center" Margin="12,0" Text="Listas de reprodução" TextTrimming="CharacterEllipsis" FontWeight="Bold" FontSize="25" />
                 </Grid>
 

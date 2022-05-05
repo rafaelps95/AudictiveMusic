@@ -158,10 +158,6 @@
                             </Grid.ChildrenTransitions>
                             <TextBlock TextAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2" x:Uid="Permissions" Text="Permissões" Margin="12" FontSize="20" FontWeight="Thin" />
                             <TextBlock TextAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" x:Uid="PermissionsDownloadLastFm" Text="Permite o envio de informações à terceiros para obter as imagens dos artistas em sua biblioteca?" TextWrapping="WrapWholeWords" Margin="12,12,12,12" />
-                            <!--<StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
-                            <ToggleButton Grid.Row="2" x:Name="sendInfoYes" Click="sendInfoYes_Click" Style="{StaticResource IconToggleButtonStyle}" FontFamily="{ThemeResource IconFont}" Content="" Margin="12" HorizontalAlignment="Stretch" />
-                            <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="True" x:Name="sendInfoNo" Click="sendInfoNo_Click" Style="{StaticResource IconToggleButtonStyle}" FontFamily="{ThemeResource IconFont}" Content="" Margin="12" HorizontalAlignment="Stretch" />
-                        </StackPanel>-->
                             <ToggleButton Grid.Row="2" x:Uid="YesBtn" x:Name="sendInfoYes" Click="sendInfoYes_Click" Content="Sim" Margin="12" HorizontalAlignment="Stretch" />
                             <ToggleButton Grid.Row="2" Grid.Column="1" IsChecked="True" x:Uid="NoBtn" x:Name="sendInfoNo" Click="sendInfoNo_Click" Content="Não" Margin="12" HorizontalAlignment="Stretch" />
 

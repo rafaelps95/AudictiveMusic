@@ -95,6 +95,12 @@
                                     </local:SettingsItemDropDownList.Items>
                                 </local:SettingsItemDropDownList>
 
+                                <local:SettingsItemSeparator />
+
+                                <local:SettingsItem x:Name="TransparencySettingsItem" x:Uid="TransparencySettingsItem" Icon="&#xE2AC;" IconSize="16">
+                                    <ToggleSwitch x:Name="TransparencyToggleSwitch" />
+                                </local:SettingsItem>
+
                                 <local:SettingsItemSeparator Visibility="{Binding ElementName=LockScreenSettingsItem, Path=Visibility}" />
 
                                 <local:SettingsItem x:Name="LockScreenSettingsItem" x:Uid="LockScreenSettingsItem" Icon="" IconSize="16">

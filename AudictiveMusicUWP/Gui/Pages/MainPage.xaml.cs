@@ -76,15 +76,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
         }
 
-
-        // COMPONENTS NEEDED TO BLUR THE SURFACES (IN-APP BLUR OR GLASS-LIKE EFFECT)
-        private CompositionEffectBrush _brush;
-        private Compositor _compositor;
-        private SpriteVisual footerBlurSprite;
-        private SpriteVisual backgroundHostSprite;
-        private SpriteVisual menuHostSprite;
-        private SpriteVisual titleBarHostSprite;
-
         private CoreApplicationViewTitleBar coreTitleBar;
         public LastFmLoginControl lastFmLoginControl;
         private NewSearchUX searchUI;
@@ -106,7 +97,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             this.SizeChanged += MainPage_SizeChanged;
             this.Loaded += MainPage_Loaded;
             this.InitializeComponent();
-            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
 
             Application.Current.Suspending += Current_Suspending;
             playlistPicker = null;
@@ -117,6 +107,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
             ApplicationSettings.ThemeChanged += ApplicationSettings_ThemeChanged;
+            ApplicationSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
             PlaylistHelper.PlaylistChanged += PlaylistHelper_PlaylistChanged;
             PlaylistHelper.PlaylistPickerRequested += PlaylistHelper_PlaylistPickerRequested;
             StorageHelper.LibraryPickerRequested += StorageHelper_LibraryPickerRequested;
@@ -130,6 +121,11 @@ namespace AudictiveMusicUWP.Gui.Pages
             InAppNotificationHelper.NotificationReceived += InAppNotificationHelper_NotificationReceived;
             InAppNotificationHelper.NotificationDismissed += InAppNotificationHelper_NotificationDismissed;
 
+        }
+
+        private void ApplicationSettings_TransparencyEffectToggled(object sender, RoutedEventArgs e)
+        {
+            SetAcrylic();
         }
 
         private void PageHelper_OffsetChangeRequested(double offset)
@@ -281,108 +277,16 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            SetUpFluentDesign();
+            SetAcrylic();
         }
 
-        public void SetUpFluentDesign()
+        public void SetAcrylic()
         {
-            bool transparencyEnabled = false;
-
-            if (ApplicationData.Current.LocalSettings.Values.ContainsKey("EnableTransparency"))
-            {
-                transparencyEnabled = (bool)ApplicationData.Current.LocalSettings.Values["EnableTransparency"];
-            }
-            else
-            {
-                transparencyEnabled = true;
-            }
-
-            if (transparencyEnabled)
-            {
-                //menuHostSprite = _compositor.CreateSpriteVisual();
-                //titleBarHostSprite = _compositor.CreateSpriteVisual();
-                //footerBlurSprite = _compositor.CreateSpriteVisual();
-                //backgroundHostSprite = _compositor.CreateSpriteVisual();
+            acrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
+            footerAcrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
 
 
-                //if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateHostBackdropBrush"))
-                //{
-                //    if (ApplicationInfo.Current.IsMobile == false && ApplicationInfo.Current.IsTabletModeEnabled == false)
-                //    {
-                //        /// transparência no menu
-                //        //acrillic.Visibility = Visibility.Visible;
-                //        //menuHostSprite.Size = new Vector2((float)acrillic.ActualWidth, (float)acrillic.ActualHeight);
-
-                //        //menuHostSprite.Brush = _compositor.CreateHostBackdropBrush();
-
-                //        //ElementCompositionPreview.SetElementChildVisual(acrillic, menuHostSprite);
-
-
-                //        /// transparência no fundo
-                //        acrillicPageBG.Visibility = Visibility.Visible;
-                //        backgroundHostSprite.Size = new Vector2((float)this.ActualWidth, (float)this.ActualHeight);
-
-                //        backgroundHostSprite.Brush = _compositor.CreateHostBackdropBrush();
-
-                //        ElementCompositionPreview.SetElementChildVisual(acrillicPageBG, backgroundHostSprite);
-
-
-                //        /// transparência na barra de título
-                //        titleBarAcrillic.Visibility = Visibility.Visible;
-                //        titleBarHostSprite.Size = new Vector2((float)this.ActualWidth, (float)coreTitleBar.Height);
-
-                //        titleBarHostSprite.Brush = _compositor.CreateHostBackdropBrush();
-
-                //        ElementCompositionPreview.SetElementChildVisual(titleBarAcrillic, titleBarHostSprite);
-                //    }
-                //}
-
-            }
-            else
-            {
-                menuHostSprite = null;
-                footerBlurSprite = null;
-                titleBarHostSprite = null;
-                backgroundHostSprite = null;
-            }
-
-
-            /*acrillic.Visibility = */acrillicPageBG.Visibility = titleBarAcrillic.Visibility = transparencyEnabled ? Visibility.Visible : Visibility.Collapsed;
-
-            footerBlurSprite = _compositor.CreateSpriteVisual();
-
-            BlendEffectMode blendmode = BlendEffectMode.Overlay;
-
-            var graphicsEffect = new BlendEffect
-            {
-                Mode = blendmode,
-                Background = new ColorSourceEffect()
-                {
-                    Name = "Tint",
-                    Color = Colors.Transparent,
-                },
-
-                Foreground = new GaussianBlurEffect()
-                {
-                    Name = "Blur",
-                    Source = new CompositionEffectSourceParameter("Backdrop"),
-                    BlurAmount = 18.0f,
-                    BorderMode = EffectBorderMode.Hard,
-                }
-            };
-
-            var blurEffectFactory = _compositor.CreateEffectFactory(graphicsEffect,
-                new[] { "Blur.BlurAmount", "Tint.Color" });
-
-            _brush = blurEffectFactory.CreateBrush();
-
-            var destinationBrush = _compositor.CreateBackdropBrush();
-            _brush.SetSourceParameter("Backdrop", destinationBrush);
-
-            footerBlurSprite.Size = new Vector2((float)Footer.ActualWidth, (float)Footer.ActualHeight);
-            footerBlurSprite.Brush = _brush;
-
-            ElementCompositionPreview.SetElementChildVisual(footerBlur, footerBlurSprite);
+            //acrillic.Visibility = acrillicPageBG.Visibility = titleBarAcrillic.Visibility = transparencyEnabled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void SetTitleBar()
@@ -410,10 +314,6 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
         {
-            if (titleBarHostSprite != null)
-            {
-                titleBarHostSprite.Size = new Size(this.ActualWidth, sender.Height).ToVector2();
-            }
 
             titleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Visible;
         }
@@ -425,20 +325,16 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (menuHostSprite != null)
-            {
-                menuHostSprite.Size = e.NewSize.ToVector2();
-            }
+            //if (menuHostSprite != null)
+            //{
+            //    menuHostSprite.Size = leftMenuAcrylic.RenderSize.ToVector2();
+            //}
 
-            if (backgroundHostSprite != null)
-            {
-                backgroundHostSprite.Size = e.NewSize.ToVector2();
-            }
+            //if (backgroundHostSprite != null)
+            //{
+            //    backgroundHostSprite.Size = e.NewSize.ToVector2();
+            //}
 
-            if (titleBarHostSprite != null)
-            {
-                titleBarHostSprite.Size = new Size(this.ActualWidth, coreTitleBar.Height).ToVector2();
-            }
 
             SetMenuLayout(e.NewSize);
 
@@ -476,11 +372,13 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             if (ApplicationInfo.Current.IsWideView == false)
             {
-                footerBlur.Height = ApplicationInfo.Current.FooterHeight;
+                footerAcrylic.Height = ApplicationInfo.Current.FooterHeight;
                 player.SetCompactViewMargin(new Thickness(0, 0, 0, 50));
 
                 //if (player.Mode == PlayerControl.DisplayMode.Compact)
                 //    bottomNavBar.Visibility = Visibility.Visible;
+                frameBorder.CornerRadius = new CornerRadius(0);
+                frameBorder.BorderThickness = new Thickness(0);
                 navBar.Orientation = Orientation.Horizontal;
                 navBar.Height = 50;
                 navBar.Width = double.NaN;
@@ -495,13 +393,19 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
             else
             {
-                footerBlur.Height = 60;
+                footerAcrylic.Height = 60;
                 player.SetCompactViewMargin(new Thickness(0, 0, 0, 0));
                 navBar.Orientation = Orientation.Vertical;
                 navBar.Height = double.NaN;
                 navBar.Width = 65;
                 navBar.VerticalAlignment = VerticalAlignment.Stretch;
-                navBar.TintOpacity = 0.6;
+                frameBorder.CornerRadius = new CornerRadius(10, 0, 0, 0);
+                frameBorder.BorderThickness = new Thickness(1, 1, 0, 0);
+                //if (ApplicationSettings.TransparencyEnabled)
+                //    navBar.TintOpacity = 0.3;
+                //else
+                //    navBar.TintOpacity = 0.6;
+
                 Grid.SetColumn(navBar, 0);
                 Grid.SetRow(navBar, 1);
                 Grid.SetRowSpan(navBar, 2);
@@ -530,7 +434,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                     if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
                         ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
 
-                    titleBar.Background = new SolidColorBrush(Colors.Black);
+                    //titleBar.Background = new SolidColorBrush(Colors.Black);
                 }
             }
             else
@@ -543,7 +447,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                     if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
                         ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
 
-                    titleBar.Background = new SolidColorBrush(Colors.White);
+                    //titleBar.Background = new SolidColorBrush(Colors.White);
                 }
             }
 
@@ -561,7 +465,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 EasingFunction = new SineEase() { EasingMode = EasingMode.EaseOut }
             };
 
-            Storyboard.SetTarget(ca, navBar);
+            Storyboard.SetTarget(ca, acrylic);
             Storyboard.SetTargetProperty(ca, "Tint");
 
             sb.Children.Add(ca);
@@ -570,26 +474,14 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 To = newColor,
                 Duration = TimeSpan.FromMilliseconds(395),
+                EnableDependentAnimation = true,
                 EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
             };
 
-            Storyboard.SetTarget(ca1, footerBackgroundColor);
-            Storyboard.SetTargetProperty(ca1, "Color");
+            Storyboard.SetTarget(ca1, footerAcrylic);
+            Storyboard.SetTargetProperty(ca1, "Tint");
 
             sb.Children.Add(ca1);
-
-            ColorAnimation ca2 = new ColorAnimation()
-            {
-                To = newColor,
-                Duration = TimeSpan.FromMilliseconds(395),
-                EnableDependentAnimation = false,
-                EasingFunction = new SineEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(ca2, titleBarBackgroundBrush);
-            Storyboard.SetTargetProperty(ca2, "Color");
-
-            sb.Children.Add(ca2);
 
             await Task.Delay(100);
             sb.Begin();
@@ -1514,14 +1406,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                     CreateSearchGrid();
 
                 OpenSearchPane();
-            }
-        }
-
-        private void Footer_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (footerBlurSprite != null)
-            {
-                footerBlurSprite.Size = e.NewSize.ToVector2();
             }
         }
 

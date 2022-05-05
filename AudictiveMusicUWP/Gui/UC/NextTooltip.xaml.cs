@@ -16,10 +16,6 @@ namespace AudictiveMusicUWP.Gui.UC
 {
     public sealed partial class NextTooltip : UserControl
     {
-        private Compositor _compositor;
-        private SpriteVisual blurSprite;
-        private CompositionEffectBrush _brush;
-
         public string Status
         {
             get { return ((string)GetValue(StatusProperty)); }
@@ -102,58 +98,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         public NextTooltip()
         {
-            this.Loaded += NextTooltip_Loaded;
-            this.SizeChanged += NextTooltip_SizeChanged;
             this.InitializeComponent();
-
-            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
-        }
-
-        private void NextTooltip_Loaded(object sender, RoutedEventArgs e)
-        {
-            BlendEffectMode blendmode = BlendEffectMode.Overlay;
-
-            // Create a chained effect graph using a BlendEffect, blending color and blur
-            var graphicsEffect = new BlendEffect
-            {
-                Mode = blendmode,
-                Background = new ColorSourceEffect()
-                {
-                    Name = "Tint",
-                    Color = Colors.Transparent,
-                },
-
-                Foreground = new GaussianBlurEffect()
-                {
-                    Name = "Blur",
-                    Source = new CompositionEffectSourceParameter("Backdrop"),
-                    BlurAmount = 10.0f,
-                    BorderMode = EffectBorderMode.Hard,
-                }
-            };
-
-            var blurEffectFactory = _compositor.CreateEffectFactory(graphicsEffect,
-                new[] { "Blur.BlurAmount", "Tint.Color" });
-
-            // Create EffectBrush, BackdropBrush and SpriteVisual
-            _brush = blurEffectFactory.CreateBrush();
-
-            var destinationBrush = _compositor.CreateBackdropBrush();
-            _brush.SetSourceParameter("Backdrop", destinationBrush);
-
-            blurSprite = _compositor.CreateSpriteVisual();
-            blurSprite.Size = new Vector2((float)this.ActualWidth, (float)this.ActualHeight);
-            blurSprite.Brush = _brush;
-
-            ElementCompositionPreview.SetElementChildVisual(acrylic, blurSprite);
-        }
-
-        private void NextTooltip_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (blurSprite != null)
-            {
-                blurSprite.Size = e.NewSize.ToVector2();
-            }
         }
 
         private void image_ImageFailed(object sender, ExceptionRoutedEventArgs e)

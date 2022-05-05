@@ -42,7 +42,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Grid.Row="0" Text="{Binding DisplayName}" FontSize="14" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                                     <TextBlock Text="{Binding Path}" Grid.Row="1" Margin="0,5" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                    <Button Style="{StaticResource IconButtonStyle}" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Center" Margin="5" Content="" Click="removeButton_Click" MinWidth="40" />
+                                    <Button Style="{StaticResource ModernIconButtonStyle}" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Center" Margin="5" Content="" Click="removeButton_Click" MinWidth="40" />
                                 </Grid>
 
                             </DataTemplate>

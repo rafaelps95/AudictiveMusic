@@ -48,7 +48,7 @@
                 </Ellipse.Fill>
             </Ellipse>
 
-            <!--<Button PointerEntered="border_PointerEntered" PointerMoved="border_PointerMoved" PointerExited="border_PointerExited" PointerPressed="border_PointerPressed" PointerReleased="border_PointerReleased" PointerCanceled="border_PointerCanceled" PointerCaptureLost="border_PointerCaptureLost" Style="{StaticResource IconButtonStyle}" Content="{Binding Glyph, ElementName=root}" FontSize="30" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" x:Name="actionButton" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed" Click="runAction_Click" />-->
+            <!--<Button PointerEntered="border_PointerEntered" PointerMoved="border_PointerMoved" PointerExited="border_PointerExited" PointerPressed="border_PointerPressed" PointerReleased="border_PointerReleased" PointerCanceled="border_PointerCanceled" PointerCaptureLost="border_PointerCaptureLost" Style="{StaticResource ModernIconButtonStyle}" Content="{Binding Glyph, ElementName=root}" FontSize="30" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" x:Name="actionButton" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed" Click="runAction_Click" />-->
         </Grid>
     </Border>
 </UserControl>

@@ -298,7 +298,7 @@
         </Storyboard>
 
         <Storyboard x:Key="fadeInBlur">
-            <DoubleAnimation Duration="0:0:0.1" To="1" Storyboard.TargetName="blurBG" Storyboard.TargetProperty="Opacity" EnableDependentAnimation="False">
+            <DoubleAnimation Duration="0:0:0.1" To="1" Storyboard.TargetName="acrylic" Storyboard.TargetProperty="Opacity" EnableDependentAnimation="False">
                 <DoubleAnimation.EasingFunction>
                     <CircleEase EasingMode="EaseOut" />
                 </DoubleAnimation.EasingFunction>
@@ -344,7 +344,7 @@
             </Grid>
             
 
-            <Grid x:Name="blurBG" Opacity="0" IsHitTestVisible="False" />
+            <local:Acrylic x:Name="acrylic" AcrylicMode="App" BlurOpacity="1" IsBlurEnabled="False" Opacity="0" IsHitTestVisible="False" />
 
             <Grid IsHitTestVisible="False">
                 <Grid.Background>
@@ -518,10 +518,10 @@
             <Grid Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="1" IsTapEnabled="True" Canvas.ZIndex="5" PointerPressed="dismissArea_PointerPressed" IsHitTestVisible="False" x:Name="dismissArea" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button x:Name="optionsButton" Click="optionsButton_Click" RequestedTheme="Dark" Width="55" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" FontSize="20" Content="">
+                <Button x:Name="optionsButton" Click="optionsButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="">
 
                 </Button>
-                <Button x:Name="closeButton" Click="closeButton_Click" RequestedTheme="Dark" Width="55" Style="{StaticResource IconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontFamily="{ThemeResource IconFont}" FontSize="20" Content="" />
+                <Button x:Name="closeButton" Click="closeButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="" />
             </StackPanel>
 
             <Grid RequestedTheme="Dark" x:Name="PlayerControlsContainer" MaxWidth="500">
@@ -556,9 +556,9 @@
                         </TextBlock>
                     </Border>
                     <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-                        <Button x:Name="playlistButton" IsEnabled="False" Click="playlistButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource IconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5"/>
-                        <ToggleButton x:Name="repeatToggleButton" IsEnabled="False" IsThreeState="True" IsTextScaleFactorEnabled="False" Click="Repeat_Click" FontFamily="{ThemeResource IconFont}" Content="" Style="{StaticResource IconToggleButtonStyle}" Foreground="White" FontSize="18" Margin="0,5" />
-                        <Button x:Name="shuffleButton" IsEnabled="False" Click="shuffleButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource IconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5" />
+                        <Button x:Name="playlistButton" IsEnabled="False" Click="playlistButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5"/>
+                        <ToggleButton x:Name="repeatToggleButton" IsEnabled="False" IsThreeState="True" IsTextScaleFactorEnabled="False" Click="Repeat_Click" FontFamily="{ThemeResource IconFont}" Content="" Style="{StaticResource ModernIconToggleButtonStyle}" Foreground="White" FontSize="18" Margin="0,5" />
+                        <Button x:Name="shuffleButton" IsEnabled="False" Click="shuffleButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5" />
 
                     </StackPanel>
                 </StackPanel>
@@ -568,8 +568,8 @@
                 <!--<TextBlock x:Name="AlbumName" IsHitTestVisible="False" Visibility="Collapsed" Text="" TextTrimming="CharacterEllipsis" />-->
 
                 <StackPanel Orientation="Horizontal" x:Name="MusicControlButtonsPanel">
-                    <Button x:Name="previousButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" FontFamily="{ThemeResource IconFont}" Foreground="White" FontSize="20" Click="previousButton_Click" Content="&#xE622;" Style="{StaticResource IconButtonStyle}" />
-                    <Button Content="{Binding ElementName=PlayPauseButton, Path=Tag}" Margin="10,0" Foreground="White" Height="50" Width="50" FontSize="20" Click="playPauseButton_Click" Style="{StaticResource CircleButtonStyle}">
+                    <Button x:Name="previousButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" Foreground="White" Click="previousButton_Click" Content="&#xE622;" Style="{StaticResource ModernIconButtonStyle}" />
+                    <Button Content="{Binding ElementName=PlayPauseButton, Path=Content}" Margin="10,0" Foreground="White" Height="50" Width="50" FontSize="20" Click="playPauseButton_Click" Style="{StaticResource CircleButtonStyle}">
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <LinearGradientBrush.RelativeTransform>
@@ -581,7 +581,7 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="nextButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" FontFamily="{ThemeResource IconFont}" Foreground="White" FontSize="20" Click="nextButton_Click" Content="&#xE623;" Style="{StaticResource IconButtonStyle}" />
+                    <Button x:Name="nextButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" Foreground="White" Click="nextButton_Click" Content="&#xE623;" Style="{StaticResource ModernIconButtonStyle}" />
                 </StackPanel>
 
                 <Slider x:Name="musicSlider" IsThumbToolTipEnabled="False" Foreground="White" Style="{StaticResource ProgressSliderStyle}" />
@@ -622,13 +622,17 @@
                     </Grid.Background>
                 </Grid>
 
-                <Grid Grid.Row="0" Background="Transparent" RenderTransformOrigin="0.5,0.5" Name="PlayerBottomBarInfo" Tapped="OpenPlayer_Tapped">
+                <Grid Grid.Row="0" Background="Transparent" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" Name="PlayerBottomBarInfo" Tapped="OpenPlayer_Tapped" PointerCanceled="PlayerBottomBarInfoPointerCanceled" PointerCaptureLost="PlayerBottomBarInfoPointerCaptureLost" PointerEntered="PlayerBottomBarInfoPointerEntered" PointerExited="PlayerBottomBarInfoPointerExited" PointerPressed="PlayerBottomBarInfoPointerPressed" PointerReleased="PlayerBottomBarInfoPointerReleased">
+                    <Border x:Name="compactPlayerHoverIndicator" Opacity="0" CornerRadius="5" Margin="5,5,5,5" Background="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    </Border>
+                    <TextBlock x:Name="compactPlayerExpandIndicator" Text="&#xE010;" FontSize="16" Opacity="0" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Margin="0,0,10,0" FontFamily="{ThemeResource IconFont}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" CornerRadius="0,0,5,0" Margin="0,0,5,0" Width="60" Height="60" Name="SmallCoverContainer">
+                        <Grid Grid.Column="0" CornerRadius="0,0,5,0" Margin="0,0,0,0" Width="60" Height="60" Name="SmallCoverContainer">
                             <!--<TextBlock Text="" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="35" FontFamily="{ThemeResource IconFont}" Foreground="#FF666666" />-->
                             <Border CornerRadius="5" Margin="10">
                                 <Border.Background>
@@ -645,21 +649,21 @@
                                 </Image>-->
                             </Border>
                         </Grid>
-                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                        <Grid Grid.Column="1" VerticalAlignment="Center" Margin="0,0,25,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <TextBlock Text="{Binding ElementName=SongName, Path=Text}" Grid.Row="0" TextTrimming="CharacterEllipsis" FontSize="15" FontWeight="Medium" IsTextScaleFactorEnabled="False" />
-                            <TextBlock Text="{Binding ElementName=ArtistName, Path=Text}" Grid.Row="1" TextTrimming="CharacterEllipsis" Margin="0" FontSize="14" FontWeight="Thin" IsTextScaleFactorEnabled="False" Opacity="0.7" />
+                            <TextBlock Text="{Binding ElementName=ArtistName, Path=Text}" Grid.Row="1" TextTrimming="CharacterEllipsis" Margin="0" FontSize="14" IsTextScaleFactorEnabled="False" Opacity="0.7" />
                         </Grid>
                     </Grid>
                 </Grid>
 
-                <StackPanel Margin="0,0,0,0" Grid.Column="1" Orientation="Horizontal" Visibility="Visible" HorizontalAlignment="Right" Name="CompactControlButtons">
-                    <Button IsEnabled="{Binding ElementName=previousButton, Path=IsEnabled}" Style="{StaticResource PlayerBarControlsButtonStyle}" PointerEntered="previousButton_PointerEntered" Holding="previousButton_Holding" PointerPressed="previousButton_PointerEntered" PointerCaptureLost="previousButton_PointerExited" PointerExited="previousButton_PointerExited" PointerReleased="previousButton_PointerExited" FontSize="19" Background="Transparent" Click="previousButton_Click" Tag="&#xE622;" Padding="0" VerticalAlignment="Stretch" Margin="20,0,0,0" />
-                    <Button Style="{StaticResource PlayerBarControlsButtonStyle}" FontSize="19" Background="Transparent" Click="playPauseButton_Click" Name="PlayPauseButton" Tag="&#xF5B0;" Padding="0" VerticalAlignment="Stretch" Margin="0,0,0,0" />
-                    <Button IsEnabled="{Binding ElementName=nextButton, Path=IsEnabled}" Style="{StaticResource PlayerBarControlsButtonStyle}" PointerEntered="nextButton_PointerEntered" Holding="nextButton_Holding" PointerPressed="nextButton_PointerEntered" PointerCaptureLost="nextButton_PointerExited" PointerExited="nextButton_PointerExited" PointerReleased="nextButton_PointerExited" FontSize="19" Background="Transparent" Click="nextButton_Click" Tag="&#xE623;" Padding="0" VerticalAlignment="Stretch" Margin="0,0,0,0" />
+                <StackPanel Margin="0,0,0,0" Grid.Column="1" Orientation="Horizontal" Visibility="Visible" VerticalAlignment="Center" HorizontalAlignment="Right" Name="CompactControlButtons">
+                    <Button IsEnabled="{Binding ElementName=previousButton, Path=IsEnabled}" Style="{StaticResource ModernIconButtonStyle}" PointerEntered="previousButton_PointerEntered" Holding="previousButton_Holding" PointerPressed="previousButton_PointerEntered" PointerCaptureLost="previousButton_PointerExited" PointerExited="previousButton_PointerExited" PointerReleased="previousButton_PointerExited" Background="Transparent" Click="previousButton_Click" Content="&#xE622;" />
+                    <Button Style="{StaticResource ModernIconButtonStyle}" Background="Transparent" Click="playPauseButton_Click" Name="PlayPauseButton" Content="&#xF5B0;" />
+                    <Button IsEnabled="{Binding ElementName=nextButton, Path=IsEnabled}" Style="{StaticResource ModernIconButtonStyle}" PointerEntered="nextButton_PointerEntered" Holding="nextButton_Holding" PointerPressed="nextButton_PointerEntered" PointerCaptureLost="nextButton_PointerExited" PointerExited="nextButton_PointerExited" PointerReleased="nextButton_PointerExited" Background="Transparent" Click="nextButton_Click" Content="&#xE623;" />
                 </StackPanel>
             </Grid>
         </Grid>

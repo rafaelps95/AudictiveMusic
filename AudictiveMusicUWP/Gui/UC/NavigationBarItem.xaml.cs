@@ -60,20 +60,20 @@ namespace AudictiveMusicUWP.Gui.UC
                 contentGrid.Margin = new Thickness(0, 13, 0, 13);
                 contentPresenter.TextWrapping = TextWrapping.WrapWholeWords;
                 contentPresenter.MaxLines = 2;
-                checkMark.HorizontalAlignment = HorizontalAlignment.Left;
-                checkMark.VerticalAlignment = VerticalAlignment.Stretch;
-                checkMark.Width = 2;
-                checkMark.Height = double.NaN;
+                //checkMark.HorizontalAlignment = HorizontalAlignment.Left;
+                //checkMark.VerticalAlignment = VerticalAlignment.Stretch;
+                //checkMark.Width = 2;
+                //checkMark.Height = double.NaN;
             }
             else
             {
                 contentGrid.Margin = new Thickness(13, 0, 13, 0);
                 contentPresenter.TextWrapping = TextWrapping.NoWrap;
                 contentPresenter.MaxLines = 1;
-                checkMark.HorizontalAlignment = HorizontalAlignment.Stretch;
-                checkMark.VerticalAlignment = VerticalAlignment.Bottom;
-                checkMark.Height = 2;
-                checkMark.Width = double.NaN;
+                //checkMark.HorizontalAlignment = HorizontalAlignment.Stretch;
+                //checkMark.VerticalAlignment = VerticalAlignment.Bottom;
+                //checkMark.Height = 2;
+                //checkMark.Width = double.NaN;
             }
         }
 
@@ -187,17 +187,17 @@ namespace AudictiveMusicUWP.Gui.UC
 
             storyboard.Children.Add(da1);
 
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
+            //DoubleAnimation da2 = new DoubleAnimation()
+            //{
+            //    To = 1,
+            //    Duration = TimeSpan.FromMilliseconds(200),
+            //    EnableDependentAnimation = true,
+            //};
 
-            Storyboard.SetTarget(da2, checkMarkScale);
-            Storyboard.SetTargetProperty(da2, "ScaleY");
+            //Storyboard.SetTarget(da2, checkMarkScale);
+            //Storyboard.SetTargetProperty(da2, "ScaleY");
 
-            storyboard.Children.Add(da2);
+            //storyboard.Children.Add(da2);
 
             DoubleAnimation da3 = new DoubleAnimation()
             {
@@ -258,17 +258,17 @@ namespace AudictiveMusicUWP.Gui.UC
 
             storyboard.Children.Add(da1);
 
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
+            //DoubleAnimation da2 = new DoubleAnimation()
+            //{
+            //    To = 0,
+            //    Duration = TimeSpan.FromMilliseconds(200),
+            //    EnableDependentAnimation = true,
+            //};
 
-            Storyboard.SetTarget(da2, checkMarkScale);
-            Storyboard.SetTargetProperty(da2, "ScaleY");
+            //Storyboard.SetTarget(da2, checkMarkScale);
+            //Storyboard.SetTargetProperty(da2, "ScaleY");
 
-            storyboard.Children.Add(da2);
+            //storyboard.Children.Add(da2);
 
             DoubleAnimation da3 = new DoubleAnimation()
             {
@@ -328,17 +328,17 @@ namespace AudictiveMusicUWP.Gui.UC
 
             storyboard.Children.Add(da1);
 
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
+            //DoubleAnimation da2 = new DoubleAnimation()
+            //{
+            //    To = 0,
+            //    Duration = TimeSpan.FromMilliseconds(200),
+            //    EnableDependentAnimation = true,
+            //};
 
-            Storyboard.SetTarget(da2, checkMarkScale);
-            Storyboard.SetTargetProperty(da2, "ScaleY");
+            //Storyboard.SetTarget(da2, checkMarkScale);
+            //Storyboard.SetTargetProperty(da2, "ScaleY");
 
-            storyboard.Children.Add(da2);
+            //storyboard.Children.Add(da2);
 
             DoubleAnimation da3 = new DoubleAnimation()
             {
@@ -396,17 +396,17 @@ namespace AudictiveMusicUWP.Gui.UC
 
             storyboard.Children.Add(da1);
 
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
+            //DoubleAnimation da2 = new DoubleAnimation()
+            //{
+            //    To = 0,
+            //    Duration = TimeSpan.FromMilliseconds(200),
+            //    EnableDependentAnimation = true,
+            //};
 
-            Storyboard.SetTarget(da2, checkMarkScale);
-            Storyboard.SetTargetProperty(da2, "ScaleY");
+            //Storyboard.SetTarget(da2, checkMarkScale);
+            //Storyboard.SetTargetProperty(da2, "ScaleY");
 
-            storyboard.Children.Add(da2);
+            //storyboard.Children.Add(da2);
 
             //DoubleAnimation da3 = new DoubleAnimation()
             //{

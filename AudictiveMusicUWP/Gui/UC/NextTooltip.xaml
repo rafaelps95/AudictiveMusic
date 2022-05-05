@@ -6,52 +6,49 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Height="100"
+    Height="60"
     Width="320"
     x:Name="root"
     VerticalAlignment="Bottom"
     HorizontalAlignment="Right">
 
     <Grid>
-        <Grid x:Name="acrylic" />
+        <local:Acrylic x:Name="acrylic" BlurOpacity="1" AcrylicMode="App" IsBlurEnabled="True" Tint="{Binding AccentColor, ElementName=root}" TintOpacity="0.4" />
         <Grid>
             <Grid.Background>
                 <SolidColorBrush Color="{ThemeResource SystemChromeMediumColor}" Opacity="0.3" />
             </Grid.Background>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid Grid.RowSpan="4" Grid.ColumnSpan="2" Opacity="0.4">
-                <Grid.Background>
-                    <SolidColorBrush Color="{Binding AccentColor, ElementName=root}" />
-                </Grid.Background>
-            </Grid>
-            <Grid x:Name="imageGrid" Height="100" Width="100" Grid.RowSpan="4">
-                <Grid>
-                    <Grid.Background>
+            <Grid x:Name="imageGrid" Margin="10">
+                <Border CornerRadius="5">
+                    <Border.Background>
                         <ImageBrush x:Name="fallbackBrush" Stretch="UniformToFill" />
-                    </Grid.Background>
-                </Grid>
-                <Grid>
-                    <Grid.Background>
+                    </Border.Background>
+                </Border>
+                <Border CornerRadius="5">
+                    <Border.Background>
                         <ImageBrush x:Name="imageBrush" ImageFailed="image_ImageFailed" ImageSource="{Binding Source, ElementName=root}" Stretch="UniformToFill" />
-                    </Grid.Background>
-                </Grid>
+                    </Border.Background>
+                </Border>
             </Grid>
-            <TextBlock Text="{Binding Status, ElementName=root}" Margin="5" Grid.Column="1">
-                <TextBlock.Foreground>
-                    <SolidColorBrush Color="{ThemeResource SystemBaseMediumColor}" />
-                </TextBlock.Foreground>
-            </TextBlock>
-            <TextBlock Text="{Binding Title, ElementName=root}" TextTrimming="CharacterEllipsis" FontWeight="Medium" FontSize="16" Grid.Row="1" Grid.Column="1" Margin="5,0,5,5" />
-            <TextBlock Text="{Binding Subtitle, ElementName=root}" TextTrimming="CharacterEllipsis" FontWeight="Thin" FontSize="12" Grid.Row="2" Grid.Column="1" Margin="5,0,5,5" />
+            <Grid Grid.Column="1" Margin="0,0,5,0" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <!--<TextBlock Text="{Binding Status, ElementName=root}" FontSize="11">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{ThemeResource SystemBaseMediumColor}" />
+                    </TextBlock.Foreground>
+                </TextBlock>-->
+                <TextBlock Text="{Binding Title, ElementName=root}" TextTrimming="CharacterEllipsis" FontWeight="Medium" FontSize="14" Grid.Row="1" />
+                <TextBlock Text="{Binding Subtitle, ElementName=root}" TextTrimming="CharacterEllipsis" FontWeight="Thin" FontSize="11" Grid.Row="2" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

@@ -450,7 +450,7 @@
   <data name="NowPlayingMenu.Content" xml:space="preserve">
     <value>Now playing</value>
   </data>
-  <data name="PlaylistsMenu.Content" xml:space="preserve">
+  <data name="PlaylistsMenu.Text" xml:space="preserve">
     <value>Playlists</value>
   </data>
   <data name="SettingsMenu.Content" xml:space="preserve">
@@ -792,7 +792,7 @@
   <data name="WindowsColorSettings.Content" xml:space="preserve">
     <value>System color settings</value>
   </data>
-  <data name="SearchMenu.Content" xml:space="preserve">
+  <data name="SearchMenu.Text" xml:space="preserve">
     <value>Search</value>
   </data>
   <data name="AboutBtn.Content" xml:space="preserve">
@@ -963,7 +963,7 @@
   <data name="Collection.Text" xml:space="preserve">
     <value>Collection</value>
   </data>
-  <data name="CollectionMenu.Content" xml:space="preserve">
+  <data name="CollectionMenu.Text" xml:space="preserve">
     <value>Collection</value>
   </data>
   <data name="GoToAlbumString" xml:space="preserve">
@@ -984,7 +984,7 @@
   <data name="RemoveFromFavoritesString" xml:space="preserve">
     <value>Remove from favorites</value>
   </data>
-  <data name="StartMenu.Content" xml:space="preserve">
+  <data name="StartMenu.Text" xml:space="preserve">
     <value>Home</value>
   </data>
   <data name="SuggestionForYou.Text" xml:space="preserve">
@@ -1226,5 +1226,11 @@
   </data>
   <data name="AddTo" xml:space="preserve">
     <value>Add</value>
+  </data>
+  <data name="CollectionButton.Content" xml:space="preserve">
+    <value>Collection</value>
+  </data>
+  <data name="TransparencySettingsItem.Text" xml:space="preserve">
+    <value>Transparency effects</value>
   </data>
 </root>

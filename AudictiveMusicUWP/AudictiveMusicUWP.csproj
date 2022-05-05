@@ -123,6 +123,9 @@
     <Compile Include="Gui\Pages\LFM\TopMediaPage.xaml.cs">
       <DependentUpon>TopMediaPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\UC\Acrylic.xaml.cs">
+      <DependentUpon>Acrylic.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\UC\FluentButton.xaml.cs">
       <DependentUpon>FluentButton.xaml</DependentUpon>
     </Compile>
@@ -452,6 +455,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Pages\ThemeSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\UC\Acrylic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

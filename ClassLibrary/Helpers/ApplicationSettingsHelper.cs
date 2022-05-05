@@ -35,6 +35,7 @@ namespace ClassLibrary.Helpers
         public static event RoutedEventArgs CurrentThemeColorChanged;
         public static event RoutedEventArgs ThemeBackgroundPreferenceChanged;
         public static event ThemeChangedEventHandler ThemeChanged;
+        public static event RoutedEventHandler TransparencyEffectToggled;
 
         public static AppState AppState
         {
@@ -636,6 +637,23 @@ namespace ClassLibrary.Helpers
             set
             {
                 SaveSettingsValue("DisplayTapToResumeToast", value);
+            }
+        }
+
+        public static bool TransparencyEnabled
+        {
+            get
+            {
+                object value = ReadSettingsValue("TransparencyEnabled");
+                if (value == null)
+                    return true;
+                else
+                    return (bool)value;
+            }
+            set
+            {
+                SaveSettingsValue("TransparencyEnabled", value);
+                TransparencyEffectToggled?.Invoke(null, new Windows.UI.Xaml.RoutedEventArgs());
             }
         }
 

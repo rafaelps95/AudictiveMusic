@@ -108,7 +108,7 @@
                     <Border.Background>
                         <SolidColorBrush Color="{Binding Color}" Opacity="1" />
                     </Border.Background>
-                    <!--<Button IsHitTestVisible="False" Style="{StaticResource IconButtonStyle}" Content="" FontSize="30" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" x:Name="playAlbumButton" VerticalAlignment="Center" HorizontalAlignment="Center" Click="playAlbumButton_Click" />-->
+                    <!--<Button IsHitTestVisible="False" Style="{StaticResource ModernIconButtonStyle}" Content="" FontSize="30" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" x:Name="playAlbumButton" VerticalAlignment="Center" HorizontalAlignment="Center" Click="playAlbumButton_Click" />-->
                 </Border>
                 <RepeatButton Visibility="Visible" Interval="1000" x:Name="repeatButton" ClickMode="Hover" Click="repeatButton_Click" PointerEntered="repeatButton_PointerEntered" PointerReleased="repeatButton_PointerExited" PointerPressed="repeatButton_PointerExited" PointerExited="repeatButton_PointerExited" PointerCanceled="repeatButton_PointerExited" PointerCaptureLost="repeatButton_PointerExited" VerticalAlignment="Stretch" Delay="1000" RequiresPointer="WhenEngaged" HorizontalAlignment="Stretch" Opacity="0" />
             </Grid>
@@ -116,7 +116,7 @@
                 <TextBlock Margin="0,5,0,0" Grid.Row="1" Text="{Binding Name}" FontSize="13" FontWeight="Bold" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Left" />
                 <TextBlock Margin="0,5,0,5" Grid.Row="2" Text="{Binding Artist}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextAlignment="Left" />
             </StackPanel>
-            <Button RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" FontWeight="Bold" Margin="0,3,-5,0" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" Content="" Tapped="action_Click" FontFamily="{ThemeResource IconFont}" VerticalAlignment="Center" Grid.Row="1">
+            <Button RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" FontWeight="Bold" Margin="0,3,-5,0" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource ModernIconButtonStyle}" Content="" Tapped="action_Click" FontFamily="{ThemeResource IconFont}" VerticalAlignment="Center" Grid.Row="1">
                 <Button.RenderTransform>
                     <CompositeTransform Rotation="-90" />
                 </Button.RenderTransform>

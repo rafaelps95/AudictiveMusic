@@ -52,7 +52,8 @@
 
             <TextBlock x:Name="playlistRemoveGlyph" IsHitTestVisible="False" Text="&#xE107;" FontFamily="{ThemeResource IconFont}" FontSize="28" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
         </Grid>
-        <Grid x:Name="blurOverlay" SizeChanged="BlurOverlay_SizeChanged" Grid.Row="0" Grid.Column="1" />
+        <!--<Grid x:Name="blurOverlay" SizeChanged="BlurOverlay_SizeChanged" Grid.Row="0" Grid.Column="1" />-->
+        <local:Acrylic AcrylicMode="App" IsBlurEnabled="True" BlurOpacity="1" x:Name="acrylic" Contrast="0" Grid.Row="0" Grid.Column="1" TintOpacity="0.2" />
         <Grid Background="{ThemeResource DefaultPageBackgroundBrush}" Grid.Row="0" Grid.Column="1" Opacity="0.6" />
         <Grid x:Name="TintGrid" Grid.Row="0" Grid.Column="1" Opacity="0.2" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" />
 
@@ -95,7 +96,7 @@
             <Grid.Background>
                 <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" Opacity="0.1" />
             </Grid.Background>
-            <Button VerticalAlignment="Stretch" Width="55" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource IconButtonStyle}" FontFamily="{ThemeResource IconFont}" FontSize="22" Background="Transparent" Name="SavePlaylistButton" Click="SavePlaylist_Click" IsEnabled="True" Content="" HorizontalAlignment="Left" />
+            <Button VerticalAlignment="Stretch" Width="55" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource ModernIconButtonStyle}" FontFamily="{ThemeResource IconFont}" FontSize="22" Background="Transparent" Name="SavePlaylistButton" Click="SavePlaylist_Click" IsEnabled="True" Content="" HorizontalAlignment="Left" />
         </Grid>-->
     </Grid>
 </UserControl>

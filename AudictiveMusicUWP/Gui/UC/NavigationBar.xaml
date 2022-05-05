@@ -466,11 +466,12 @@
 
     <Grid>
         <Grid x:Name="backgroundContainer" Visibility="Collapsed" SizeChanged="backgroundContainer_SizeChanged" Loaded="backgroundContainer_Loaded">
-            <Grid.Background>
+            <!--<Grid.Background>
                 <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" Opacity="1" />
-            </Grid.Background>
-            <Grid x:Name="blurGrid" Opacity="0.4" />
+            </Grid.Background>-->
+            <Grid x:Name="blurGrid" Opacity="{Binding BlurOpacity, ElementName=root}" />
         </Grid>
+
         <Grid x:Name="buttonsContainer">
             <Grid.Background>
                 <SolidColorBrush x:Name="buttonsContainerColor" Color="{Binding ElementName=root, Path=Tint}" Opacity="{Binding ElementName=root, Path=TintOpacity}" />
@@ -490,10 +491,10 @@
                 <RowDefinition Height="*" />
 
             </Grid.RowDefinitions>
-            <local:NavigationBarItem x:Name="startButton" Text="Início" Icon="" Click="StartMenuButton_Click" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            <local:NavigationBarItem x:Name="collectionButton" Text="Biblioteca" Icon="" Click="CollectionMenuButton_Click" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            <local:NavigationBarItem x:Name="playlistsButton" Text="Listas de reprodução" Icon="" Click="PlaylistsMenuButton_Click" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            <local:NavigationBarItem x:Name="searchButton" Text="Pesquisar" Icon="" Click="searchButton_Click" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <local:NavigationBarItem x:Name="startButton" x:Uid="StartMenu" Icon="" Click="StartMenuButton_Click" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <local:NavigationBarItem x:Name="collectionButton" x:Uid="CollectionMenu" Icon="" Click="CollectionMenuButton_Click" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <local:NavigationBarItem x:Name="playlistsButton" x:Uid="PlaylistsMenu" Icon="" Click="PlaylistsMenuButton_Click" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <local:NavigationBarItem x:Name="searchButton" x:Uid="SearchMenu" Icon="" Click="searchButton_Click" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 
             <!--<ToggleButton x:Name="startButton" x:Uid="StartMenu" Tag="" Click="StartMenuButton_Click" Content="Start" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />-->
             <!--<ToggleButton x:Name="collectionButton" x:Uid="CollectionMenu" Tag="" Click="CollectionMenuButton_Click" Content="Collection" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />-->

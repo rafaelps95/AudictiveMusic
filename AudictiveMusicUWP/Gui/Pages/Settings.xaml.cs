@@ -122,6 +122,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             LimitedConnectionToggleSwitch.Toggled -= CelullarDownloadToggleSwitch_Toggled;
             WhatsNextNotification.Toggled -= WhatsNextNotification_Toggled;
             TapToResumeSwitch.Toggled -= TapToResumeSwitch_Toggled;
+            TransparencyToggleSwitch.Toggled -= TransparencyToggleSwitch_Toggled;
 
             Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
             sb.Begin();
@@ -133,6 +134,10 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (ApplicationInfo.Current.GetDeviceFormFactorType() != ApplicationInfo.DeviceFormFactorType.Phone)
             {
                 LockScreenSettingsItem.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                //TransparencySettingsItem.Visibility = Visibility.Collapsed;
             }
 
             if (ApiInformation.IsMethodPresent("Windows.Storage.StorageLibrary", "RequestAddFolderAsync")
@@ -157,6 +162,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             UpdateDropDownItemAdditionalInfo(ColorSettingsItem);
             CustomColorSettingsSection.Visibility = ApplicationSettings.ThemeColorPreference == 2 ? Visibility.Visible : Visibility.Collapsed;
 
+            TransparencyToggleSwitch.IsOn = ApplicationSettings.TransparencyEnabled;
 
             SendInfoToggleSwitch.IsOn = ApplicationSettings.DownloadEnabled;
 
@@ -174,6 +180,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             LoadTimerSettings();
 
             AppThemeSettingsItem.SelectionChanged += AppThemeSettingsItem_SelectionChanged;
+            TransparencyToggleSwitch.Toggled += TransparencyToggleSwitch_Toggled;
             BackgroundPreferencesSettingsItem.SelectionChanged += BackgroundPreferencesSettingsItem_SelectionChanged;
             ColorSettingsItem.SelectionChanged += ColorSettingsItem_SelectionChanged;   
             LockScreenToggleSwitch.Toggled += LockScreenToggleSwitch_Toggled;
@@ -204,6 +211,11 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
 
             }
+        }
+
+        private void TransparencyToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationSettings.TransparencyEnabled = TransparencyToggleSwitch.IsOn;
         }
 
         private void ColorSettingsItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
