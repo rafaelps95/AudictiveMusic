@@ -721,7 +721,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
                     ToolTip toolTip = new ToolTip();
                     toolTip.Content = ApplicationSettings.CurrentSong.Name + " " + ApplicationInfo.Current.Resources.GetString("By") + ApplicationSettings.CurrentSong.Artist;
-                    ToolTipService.SetToolTip(PlayerBottomBarInfo, toolTip);
+                    ToolTipService.SetToolTip(compactBarExpandButton, toolTip);
                 }
                 else
                 {
@@ -1732,17 +1732,17 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             Storyboard storyboard = new Storyboard();
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0.1,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EnableDependentAnimation = true,
-            };
+            //DoubleAnimation da1 = new DoubleAnimation()
+            //{
+            //    To = 0.1,
+            //    Duration = TimeSpan.FromMilliseconds(300),
+            //    EnableDependentAnimation = true,
+            //};
 
-            Storyboard.SetTarget(da1, compactPlayerHoverIndicator);
-            Storyboard.SetTargetProperty(da1, "Opacity");
+            //Storyboard.SetTarget(da1, compactPlayerHoverIndicator);
+            //Storyboard.SetTargetProperty(da1, "Opacity");
 
-            storyboard.Children.Add(da1);
+            //storyboard.Children.Add(da1);
 
             DoubleAnimation da2 = new DoubleAnimation()
             {
@@ -1800,17 +1800,17 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             Storyboard storyboard = new Storyboard();
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EnableDependentAnimation = true,
-            };
+            //DoubleAnimation da1 = new DoubleAnimation()
+            //{
+            //    To = 0,
+            //    Duration = TimeSpan.FromMilliseconds(300),
+            //    EnableDependentAnimation = true,
+            //};
 
-            Storyboard.SetTarget(da1, compactPlayerHoverIndicator);
-            Storyboard.SetTargetProperty(da1, "Opacity");
+            //Storyboard.SetTarget(da1, compactPlayerHoverIndicator);
+            //Storyboard.SetTargetProperty(da1, "Opacity");
 
-            storyboard.Children.Add(da1);
+            //storyboard.Children.Add(da1);
 
             DoubleAnimation da2 = new DoubleAnimation()
             {
@@ -1868,17 +1868,17 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             Storyboard storyboard = new Storyboard();
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0.2,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EnableDependentAnimation = true,
-            };
+            //DoubleAnimation da1 = new DoubleAnimation()
+            //{
+            //    To = 0.2,
+            //    Duration = TimeSpan.FromMilliseconds(300),
+            //    EnableDependentAnimation = true,
+            //};
 
-            Storyboard.SetTarget(da1, compactPlayerHoverIndicator);
-            Storyboard.SetTargetProperty(da1, "Opacity");
+            //Storyboard.SetTarget(da1, compactPlayerHoverIndicator);
+            //Storyboard.SetTargetProperty(da1, "Opacity");
 
-            storyboard.Children.Add(da1);
+            //storyboard.Children.Add(da1);
 
             DoubleAnimation da2 = new DoubleAnimation()
             {
@@ -1906,6 +1906,11 @@ namespace AudictiveMusicUWP.Gui.UC
 
             storyboard.Begin();
 
+        }
+
+        private void CompactBarExpandButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Mode = DisplayMode.Full;
         }
     }
 }

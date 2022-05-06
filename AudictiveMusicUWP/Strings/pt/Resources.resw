@@ -1224,4 +1224,10 @@
   <data name="TransparencySettingsItem.Text" xml:space="preserve">
     <value>Efeitos de transparência</value>
   </data>
+  <data name="PerformanceSettingsItem.AdditionalInfo" xml:space="preserve">
+    <value>Restringe o efeito acrílico a certas superfícies, tal como a barra de reprodução</value>
+  </data>
+  <data name="PerformanceSettingsItem.Text" xml:space="preserve">
+    <value>Modo desempenho</value>
+  </data>
 </root>

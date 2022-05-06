@@ -187,8 +187,20 @@ namespace AudictiveMusicUWP.Gui.Util
                 };
                 item7.Click += (s, a) =>
                 {
+                    string artistName;
+                    if (mediaItem.GetType() == typeof(Song))
+                    {
+                        Song song = mediaItem as Song;
+                        artistName = song.Artist;
+                    }
+                    else
+                    {
+                        Album album = mediaItem as Album;
+                        artistName = album.Artist;
+                    }
+
                     Artist artist = new Artist();
-                    artist.Name = mediaItem.Name;
+                    artist.Name = artistName;
 
                     NavigationHelper.Navigate(_sender, typeof(ArtistPage), artist);
                 };

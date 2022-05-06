@@ -36,6 +36,7 @@ namespace ClassLibrary.Helpers
         public static event RoutedEventArgs ThemeBackgroundPreferenceChanged;
         public static event ThemeChangedEventHandler ThemeChanged;
         public static event RoutedEventHandler TransparencyEffectToggled;
+        public static event RoutedEventHandler PerformanceModeToggled;
 
         public static AppState AppState
         {
@@ -654,6 +655,23 @@ namespace ClassLibrary.Helpers
             {
                 SaveSettingsValue("TransparencyEnabled", value);
                 TransparencyEffectToggled?.Invoke(null, new Windows.UI.Xaml.RoutedEventArgs());
+            }
+        }
+
+        public static bool IsPerformanceModeOn
+        {
+            get
+            {
+                object value = ReadSettingsValue("PerformanceModeEnabled");
+                if (value == null)
+                    return false;
+                else
+                    return (bool)value;
+            }
+            set
+            {
+                SaveSettingsValue("PerformanceModeEnabled", value);
+                PerformanceModeToggled?.Invoke(null, new Windows.UI.Xaml.RoutedEventArgs());
             }
         }
 

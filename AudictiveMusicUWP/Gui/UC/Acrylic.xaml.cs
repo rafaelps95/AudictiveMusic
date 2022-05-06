@@ -69,6 +69,15 @@ namespace AudictiveMusicUWP.Gui.UC
         public static readonly DependencyProperty ContrastProperty =
             DependencyProperty.Register("Contrast", typeof(double), typeof(Acrylic), new PropertyMetadata(0));
 
+        public Color ContrastColor
+        {
+            get { return (Color)GetValue(ContrastColorProperty); }
+            set { SetValue(ContrastColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Contrast.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ContrastColorProperty =
+            DependencyProperty.Register("ContrastColor", typeof(Color), typeof(Acrylic), new PropertyMetadata(Colors.Black));
 
 
         public Color Tint

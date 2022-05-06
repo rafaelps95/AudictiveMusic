@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AudictiveMusicUWP.Gui.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -138,6 +139,8 @@ namespace AudictiveMusicUWP.Gui.UC
                 title.Margin = new Thickness(10, 15, 10, 0);
                 title.VerticalAlignment = VerticalAlignment.Bottom;
             }
+
+            shadowBorder.ApplyShadow();
         }
 
         public void ChangeView(State state)
@@ -179,8 +182,20 @@ namespace AudictiveMusicUWP.Gui.UC
                 Storyboard.SetTarget(da1, ArrowIconRotation);
                 Storyboard.SetTargetProperty(da1, "Angle");
 
+                DoubleAnimation da2 = new DoubleAnimation()
+                {
+                    To = 0,
+                    Duration = TimeSpan.FromMilliseconds(200),
+                    EnableDependentAnimation = true,
+                    EasingFunction = se
+                };
+
+                Storyboard.SetTarget(da2, shadowBorder);
+                Storyboard.SetTargetProperty(da2, "Opacity");
+
                 sb.Children.Add(da);
                 sb.Children.Add(da1);
+                sb.Children.Add(da2);
 
                 sb.Completed += (snd, args) =>
                 {
@@ -220,8 +235,20 @@ namespace AudictiveMusicUWP.Gui.UC
                 Storyboard.SetTarget(da1, ArrowIconRotation);
                 Storyboard.SetTargetProperty(da1, "Angle");
 
+                DoubleAnimation da2 = new DoubleAnimation()
+                {
+                    To = 1,
+                    Duration = TimeSpan.FromMilliseconds(200),
+                    EnableDependentAnimation = true,
+                    EasingFunction = se
+                };
+
+                Storyboard.SetTarget(da2, shadowBorder);
+                Storyboard.SetTargetProperty(da2, "Opacity");
+
                 sb.Children.Add(da);
                 sb.Children.Add(da1);
+                sb.Children.Add(da2);
 
                 sb.Completed += (snd, args) =>
                 {

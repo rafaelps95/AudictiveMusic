@@ -15,7 +15,7 @@
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="DefaultPageBackgroundBrush" Color="#303030" />
-                    <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#552D2D2D" />
+                    <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#2D2D2D" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemBackgroundBrush" Color="#FF353535" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemPointerOverBackgroundBrush" Color="#FF474747" />
                     <x:Boolean x:Key="IsDarkTheme">true</x:Boolean>
@@ -27,6 +27,8 @@
             
             <local:ApplicationAccentColor x:Key="ApplicationAccentColor"/>
             <FontFamily x:Key="IconFont">ms-appx:///Assets/Segoe Fluent Icons.ttf#Segoe Fluent Icons</FontFamily>
+
+            <SolidColorBrush x:Key="DialogDismissBrush" Color="#33404040" />
 
             <JumpListItemForegroundConverter x:Key="ForegroundConverter" Disabled="#FF444444" Enabled="{ThemeResource SystemControlHighlightAccentBrush}"/>
 

@@ -57,7 +57,7 @@ namespace ClassLibrary.Helpers
             Color color;
 
             if (isDark)
-                color = Color.FromArgb(255, 105, 105, 105);
+                color = Color.FromArgb(255, 85, 85, 85);
             else
                 color = Color.FromArgb(255, 220, 220, 220);
             return color;

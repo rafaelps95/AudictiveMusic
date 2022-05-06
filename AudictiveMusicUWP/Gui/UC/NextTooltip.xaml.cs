@@ -1,4 +1,6 @@
-﻿using Microsoft.Graphics.Canvas.Effects;
+﻿using AudictiveMusicUWP.Gui.Util;
+using ClassLibrary.Helpers;
+using Microsoft.Graphics.Canvas.Effects;
 using System;
 using System.Numerics;
 using Windows.UI;
@@ -98,7 +100,31 @@ namespace AudictiveMusicUWP.Gui.UC
 
         public NextTooltip()
         {
+            this.Loaded += NextTooltip_Loaded;
             this.InitializeComponent();
+
+            ApplicationSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
+            ApplicationSettings.PerformanceModeToggled += ApplicationSettings_PerformanceModeToggled;
+        }
+
+        private void NextTooltip_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetAcrylic();
+        }
+
+        private void ApplicationSettings_PerformanceModeToggled(object sender, RoutedEventArgs e)
+        {
+            SetAcrylic();
+        }
+
+        private void ApplicationSettings_TransparencyEffectToggled(object sender, RoutedEventArgs e)
+        {
+            SetAcrylic();
+        }
+
+        private void SetAcrylic()
+        {
+            acrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
         }
 
         private void image_ImageFailed(object sender, ExceptionRoutedEventArgs e)

@@ -1233,4 +1233,10 @@
   <data name="TransparencySettingsItem.Text" xml:space="preserve">
     <value>Transparency effects</value>
   </data>
+  <data name="PerformanceSettingsItem.AdditionalInfo" xml:space="preserve">
+    <value>Restrict the acrylic effect to certain surfaces, such as the player bar</value>
+  </data>
+  <data name="PerformanceSettingsItem.Text" xml:space="preserve">
+    <value>Performance mode</value>
+  </data>
 </root>

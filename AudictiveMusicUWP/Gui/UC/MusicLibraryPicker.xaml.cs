@@ -31,54 +31,20 @@ namespace AudictiveMusicUWP.Gui.UC
             this.Loaded += MusicLibraryPicker_Loaded;
             this.InitializeComponent();
 
-            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+            //_compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
         }
 
         private void MusicLibraryPicker_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (blurSprite != null)
-            {
-                blurSprite.Size = e.NewSize.ToVector2();
-            }
+            //if (blurSprite != null)
+            //{
+            //    blurSprite.Size = e.NewSize.ToVector2();
+            //}
         }
 
         private void MusicLibraryPicker_Loaded(object sender, RoutedEventArgs e)
         {
-            BlendEffectMode blendmode = BlendEffectMode.Overlay;
-
-            // Create a chained effect graph using a BlendEffect, blending color and blur
-            var graphicsEffect = new BlendEffect
-            {
-                Mode = blendmode,
-                Background = new ColorSourceEffect()
-                {
-                    Name = "Tint",
-                    Color = Colors.Transparent,
-                },
-
-                Foreground = new GaussianBlurEffect()
-                {
-                    Name = "Blur",
-                    Source = new CompositionEffectSourceParameter("Backdrop"),
-                    BlurAmount = 4.0f,
-                    BorderMode = EffectBorderMode.Hard,
-                }
-            };
-
-            var blurEffectFactory = _compositor.CreateEffectFactory(graphicsEffect,
-                new[] { "Blur.BlurAmount", "Tint.Color" });
-
-            // Create EffectBrush, BackdropBrush and SpriteVisual
-            _brush = blurEffectFactory.CreateBrush();
-
-            var destinationBrush = _compositor.CreateBackdropBrush();
-            _brush.SetSourceParameter("Backdrop", destinationBrush);
-
-            blurSprite = _compositor.CreateSpriteVisual();
-            blurSprite.Size = new Vector2((float)this.ActualWidth, (float)ApplicationInfo.Current.WindowSize.Height);
-            blurSprite.Brush = _brush;
-
-            ElementCompositionPreview.SetElementChildVisual(blur, blurSprite);
+            border.ApplyShadow();
         }
 
         public async void LoadFolders()

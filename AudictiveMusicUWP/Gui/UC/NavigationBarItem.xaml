@@ -9,16 +9,57 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="root">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,4,8,4"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="FocusVisualMargin" Value="-3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 
-    <Grid x:Name="RootGrid" Background="Transparent" PointerCanceled="RootGrid_PointerCanceled" PointerCaptureLost="RootGrid_PointerCaptureLost" PointerEntered="RootGrid_PointerEntered" PointerExited="RootGrid_PointerExited" PointerPressed="RootGrid_PointerPressed" PointerReleased="RootGrid_PointerReleased">
+    <Grid x:Name="RootGrid" Background="Transparent">
         <Border x:Name="Background" Opacity="0" CornerRadius="5" Margin="5,5,5,5" Background="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-
-        <Grid x:Name="contentGrid" Height="50" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,13">
+        <Button HorizontalAlignment="Stretch" Click="Button_Click" VerticalAlignment="Stretch" PointerCanceled="RootGrid_PointerCanceled" PointerCaptureLost="RootGrid_PointerCaptureLost" PointerEntered="RootGrid_PointerEntered" PointerExited="RootGrid_PointerExited" PointerPressed="RootGrid_PointerPressed" PointerReleased="RootGrid_PointerReleased"  />
+        <Grid x:Name="contentGrid" Height="50" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,13" IsHitTestVisible="False">
             <!--<Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>-->
-            <TextBlock RenderTransformOrigin="0.5,0.5" Grid.Row="0" x:Name="icon" Opacity="0.6" Text="{Binding Icon, ElementName=root}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="{ThemeResource IconFont}" FontSize="18" IsTextScaleFactorEnabled="False">
+            <TextBlock RenderTransformOrigin="0.5,0.5" Grid.Row="0" x:Name="icon" Opacity="1" Text="{Binding Icon, ElementName=root}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="{ThemeResource IconFont}" FontSize="18" IsTextScaleFactorEnabled="False">
                 <TextBlock.RenderTransform>
                     <TranslateTransform x:Name="iconTranslate" Y="0" />
                 </TextBlock.RenderTransform>

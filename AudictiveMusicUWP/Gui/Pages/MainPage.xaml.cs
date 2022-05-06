@@ -108,6 +108,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
             ApplicationSettings.ThemeChanged += ApplicationSettings_ThemeChanged;
             ApplicationSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
+            ApplicationSettings.PerformanceModeToggled += ApplicationSettings_PerformanceModeToggled;
             PlaylistHelper.PlaylistChanged += PlaylistHelper_PlaylistChanged;
             PlaylistHelper.PlaylistPickerRequested += PlaylistHelper_PlaylistPickerRequested;
             StorageHelper.LibraryPickerRequested += StorageHelper_LibraryPickerRequested;
@@ -121,6 +122,11 @@ namespace AudictiveMusicUWP.Gui.Pages
             InAppNotificationHelper.NotificationReceived += InAppNotificationHelper_NotificationReceived;
             InAppNotificationHelper.NotificationDismissed += InAppNotificationHelper_NotificationDismissed;
 
+        }
+
+        private void ApplicationSettings_PerformanceModeToggled(object sender, RoutedEventArgs e)
+        {
+            SetAcrylic();
         }
 
         private void ApplicationSettings_TransparencyEffectToggled(object sender, RoutedEventArgs e)
@@ -213,7 +219,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void ApplicationSettings_CurrentThemeColorChanged()
         {
-            UpdateThemeColor(ApplicationSettings.CurrentThemeColor);
+            UpdateThemeColor();
         }
 
         //private void CoreWindow_CharacterReceived(CoreWindow sender, CharacterReceivedEventArgs args)
@@ -278,11 +284,16 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             SetAcrylic();
+            UpdateThemeColor();
         }
 
         public void SetAcrylic()
         {
-            acrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
+            if (ApplicationSettings.IsPerformanceModeOn == false)
+                acrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
+            else
+                acrylic.IsBlurEnabled = false;
+
             footerAcrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
 
 
@@ -325,60 +336,27 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //if (menuHostSprite != null)
-            //{
-            //    menuHostSprite.Size = leftMenuAcrylic.RenderSize.ToVector2();
-            //}
-
-            //if (backgroundHostSprite != null)
-            //{
-            //    backgroundHostSprite.Size = e.NewSize.ToVector2();
-            //}
-
-
-            SetMenuLayout(e.NewSize);
-
-            if (e.NewSize.Width <= 400)
-            {
-                //acrillic.Visibility = Visibility.Collapsed;
-                //menu.DisplayMode = SplitViewDisplayMode.Overlay;
-                //menu.IsPaneOpen = false;
-                ////MenuBackgroundColor.Opacity = 1;
-                //MainFrame.Margin = new Thickness(0);
-            }
-            else if (e.NewSize.Width > 400 && e.NewSize.Width <= 700)
-            {
-                //if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateHostBackdropBrush"))
-                //    acrillic.Visibility = Visibility.Visible;
-                //menu.DisplayMode = SplitViewDisplayMode.CompactOverlay;
-                //menu.IsPaneOpen = false;
-                //MainFrame.Margin = new Thickness(54, 0, 0, 0);
-                ////MenuBackgroundColor.Opacity = 1;
-            }
-            else if (e.NewSize.Width > 700)
-            {
-                //if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateHostBackdropBrush"))
-                //    acrillic.Visibility = Visibility.Visible;
-                //menu.DisplayMode = SplitViewDisplayMode.CompactInline;
-                //menu.IsPaneOpen = true;
-                //MainFrame.Margin = new Thickness(274, 0, 0, 0);
-                ////MenuBackgroundColor.Opacity = 0.8;
-            }
+            UpdateView(e.NewSize);
         }
 
-        private void SetMenuLayout(Size newSize)
+        private void UpdateView(Size newSize)
         {
-            //mainAppSolidBG.Margin = new Thickness(0, 0, 0, ApplicationInfo.Current.FooterHeight);
-
             if (ApplicationInfo.Current.IsWideView == false)
             {
                 footerAcrylic.Height = ApplicationInfo.Current.FooterHeight;
                 player.SetCompactViewMargin(new Thickness(0, 0, 0, 50));
 
-                //if (player.Mode == PlayerControl.DisplayMode.Compact)
-                //    bottomNavBar.Visibility = Visibility.Visible;
+                if (ApplicationInfo.Current.IsMobile == false)
+                {
+                    frameBorder.BorderThickness = new Thickness(0, 1, 0, 0);
+                }
+                else
+                {
+                    frameBorder.BorderThickness = new Thickness(0);
+                }
+
                 frameBorder.CornerRadius = new CornerRadius(0);
-                frameBorder.BorderThickness = new Thickness(0);
+
                 navBar.Orientation = Orientation.Horizontal;
                 navBar.Height = 50;
                 navBar.Width = double.NaN;
@@ -388,8 +366,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                 Grid.SetRow(navBar, 1);
                 Grid.SetRowSpan(navBar, 1);
                 Canvas.SetZIndex(navBar, 3);
-
-                //leftNavBar.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -399,12 +375,16 @@ namespace AudictiveMusicUWP.Gui.Pages
                 navBar.Height = double.NaN;
                 navBar.Width = 65;
                 navBar.VerticalAlignment = VerticalAlignment.Stretch;
-                frameBorder.CornerRadius = new CornerRadius(10, 0, 0, 0);
-                frameBorder.BorderThickness = new Thickness(1, 1, 0, 0);
-                //if (ApplicationSettings.TransparencyEnabled)
-                //    navBar.TintOpacity = 0.3;
-                //else
-                //    navBar.TintOpacity = 0.6;
+                if (ApplicationInfo.Current.IsMobile == false)
+                {
+                    frameBorder.CornerRadius = new CornerRadius(10, 0, 0, 0);
+                    frameBorder.BorderThickness = new Thickness(1, 1, 0, 0);
+                }
+                else
+                {
+                    frameBorder.CornerRadius = new CornerRadius(0);
+                    frameBorder.BorderThickness = new Thickness(0);
+                }
 
                 Grid.SetColumn(navBar, 0);
                 Grid.SetRow(navBar, 1);
@@ -413,21 +393,19 @@ namespace AudictiveMusicUWP.Gui.Pages
                     Canvas.SetZIndex(navBar, 3);
                 else
                     Canvas.SetZIndex(navBar, 5);
-
-                //bottomNavBar.Visibility = Visibility.Collapsed;
-                //leftNavBar.Visibility = Visibility.Visible;
             }
         }
 
-        public async void UpdateThemeColor(Color newColor)
+        private async void UpdateThemeColor()
         {
+            Color newColor = ApplicationSettings.CurrentThemeColor;
             ApplicationAccentColor appAccentColor = Application.Current.Resources["ApplicationAccentColor"] as ApplicationAccentColor;
             appAccentColor.AccentColor = new SolidColorBrush(newColor);
 
             if (newColor.IsDarkColor())
             {
-                navBar.RequestedTheme = ElementTheme.Dark;
                 appAccentColor.ForegroundColor = new SolidColorBrush(Colors.White);
+                navBar.RequestedTheme = ElementTheme.Dark;
 
                 if (ApplicationInfo.Current.IsMobile == false)
                 {
@@ -439,8 +417,8 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
             else
             {
-                navBar.RequestedTheme = ElementTheme.Light;
                 appAccentColor.ForegroundColor = new SolidColorBrush(Colors.Black);
+                navBar.RequestedTheme = ElementTheme.Light;
 
                 if (ApplicationInfo.Current.IsMobile == false)
                 {
@@ -575,52 +553,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                     this.RequestedTheme = ElementTheme.Light;
                     break;
             };
-            //if (ApplicationData.Current.LocalSettings.Values.ContainsKey("AppTheme"))
-            //{
-            //    switch ((int)ApplicationData.Current.LocalSettings.Values["AppTheme"])
-            //    {
-            //        case 0:
-            //            //if (ApplicationInfo.Current.ColorEnabled == false)
-            //            //{
-            //            //    if (ApplicationInfo.Current.IsMobile == false)
-            //            //        ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
-            //            //}
-            //                this.RequestedTheme = ElementTheme.Dark;
-
-
-
-            //            break;
-            //        case 1:
-            //            //if (ApplicationInfo.Current.ColorEnabled == false)
-            //            //{
-            //            //    if (ApplicationInfo.Current.IsMobile == false)
-            //            //        ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
-            //            //}
-
-            //            this.RequestedTheme = ElementTheme.Light;
-
-            //            break;
-            //        case 2:
-            //            //if (ApplicationInfo.Current.ColorEnabled == false)
-            //            //{
-            //            //    if (ApplicationInfo.Current.IsMobile == false)
-            //            //    {
-            //            //        if ((bool)Application.Current.Resources["IsDarkTheme"])
-            //            //        {
-            //            //            ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.White;
-            //            //        }
-            //            //        else
-            //            //        {
-            //            //            ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
-            //            //        }
-            //            //    }
-            //            //}
-            //            this.RequestedTheme = ElementTheme.Default;
-
-            //            break;
-            //    }
-            //}
-
 
             if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.NoColor)
             {
@@ -1378,7 +1310,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             if (mode == PlayerControl.DisplayMode.Compact)
             {
-                SetMenuLayout(new Size(this.ActualWidth, this.ActualHeight));
+                UpdateView(new Size(this.ActualWidth, this.ActualHeight));
                 Canvas.SetZIndex(navBar, 3);
             }
             else

@@ -48,15 +48,64 @@ namespace AudictiveMusicUWP.Gui.UC
         public static readonly DependencyProperty CurrentTrackProperty = 
             DependencyProperty.Register("CurrentTrackIndex", typeof(int), typeof(PlaylistControl), new PropertyMetadata(0));
 
+
+
+
+
+        public Color AccentColor
+        {
+            get { return (Color)GetValue(AccentColorProperty); }
+            set { SetValue(AccentColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AccentColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AccentColorProperty =
+            DependencyProperty.Register("AccentColor", typeof(Color), typeof(PlaylistControl), new PropertyMetadata(Colors.Transparent));
+
+
+
         public PlaylistControl()
         {
             PlaylistList.CollectionChanged += PlaylistList_CollectionChanged;
+            this.Loaded += PlaylistControl_Loaded;
             this.InitializeComponent();
             MusicPlaylist.ItemsSource = PlaylistList;
             CurrentTrackIndex = -1;
             editMode = EditMode.Disabled;
+            ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
+            ApplicationSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
+            ApplicationSettings.PerformanceModeToggled += ApplicationSettings_PerformanceModeToggled;
             //if (ApplicationInfo.Current.IsMobile == false)
             //_compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+        }
+
+        private void ApplicationSettings_CurrentThemeColorChanged()
+        {
+            acrylic.Tint = ApplicationSettings.CurrentThemeColor;
+        }
+
+        private void PlaylistControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            acrylic.Tint = ApplicationSettings.CurrentThemeColor;
+            SetAcrylic();
+        }
+
+        private void ApplicationSettings_PerformanceModeToggled(object sender, RoutedEventArgs e)
+        {
+            SetAcrylic();
+        }
+
+        private void ApplicationSettings_TransparencyEffectToggled(object sender, RoutedEventArgs e)
+        {
+            SetAcrylic();
+        }
+
+        private void SetAcrylic()
+        {
+            if (ApplicationSettings.IsPerformanceModeOn == false)
+                acrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
+            else
+                acrylic.IsBlurEnabled = false;
         }
 
         private void PlaylistList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

@@ -157,7 +157,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void RootGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            Click?.Invoke(this, new RoutedEventArgs());
+            //Click?.Invoke(this, new RoutedEventArgs());
         }
 
         private void RootGrid_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
@@ -177,7 +177,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             DoubleAnimation da1 = new DoubleAnimation()
             {
-                To = 0.1,
+                To = 0.2,
                 Duration = TimeSpan.FromMilliseconds(300),
                 EnableDependentAnimation = true,
             };
@@ -225,7 +225,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             DoubleAnimation da5 = new DoubleAnimation()
             {
-                To = 0.6,
+                To = 1,
                 Duration = TimeSpan.FromMilliseconds(100),
                 EnableDependentAnimation = true,
             };
@@ -248,7 +248,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             DoubleAnimation da1 = new DoubleAnimation()
             {
-                To = 0.1,
+                To = 0.2,
                 Duration = TimeSpan.FromMilliseconds(300),
                 EnableDependentAnimation = true,
             };
@@ -296,7 +296,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             DoubleAnimation da5 = new DoubleAnimation()
             {
-                To = 0.6,
+                To = 1,
                 Duration = TimeSpan.FromMilliseconds(100),
                 EnableDependentAnimation = true,
             };
@@ -312,7 +312,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void BeginNormalAnimation()
         {
-            icon.Opacity = 0.6;
+            icon.Opacity = 1;
 
             Storyboard storyboard = new Storyboard();
 
@@ -386,7 +386,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             DoubleAnimation da1 = new DoubleAnimation()
             {
-                To = 0.2,
+                To = 0.3,
                 Duration = TimeSpan.FromMilliseconds(300),
                 EnableDependentAnimation = true,
             };
@@ -438,6 +438,11 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (this.IsChecked)
                 BeginCheckedAnimation();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Click?.Invoke(this, new RoutedEventArgs());
         }
     }
 }

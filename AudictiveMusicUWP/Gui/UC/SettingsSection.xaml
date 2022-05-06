@@ -225,6 +225,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Border x:Name="shadowBorder" Grid.RowSpan="2" Opacity="0" CornerRadius="5" Margin="15,2,15,0" />
         <Border x:Name="HeaderBorder" CornerRadius="5" Background="{Binding BackgroundBrush, ElementName=root}" BorderBrush="{ThemeResource BorderColor}" BorderThickness="1" Margin="15,2,15,0">
             <Grid>
                 <Button x:Name="expandButton" Visibility="Visible" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="0" Margin="0" BorderThickness="0" Style="{StaticResource ButtonExpandStyle}" Click="ChangeState_Click" />

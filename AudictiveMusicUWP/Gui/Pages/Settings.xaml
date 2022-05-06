@@ -87,7 +87,7 @@
                                 </TransitionCollection>
                             </StackPanel.ChildrenTransitions>
 
-                            <local:SettingsSection Margin="0,0,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="PersonalizationSection" x:Uid="PersonalizationMenuItem" Icon="" Title="Personalization">
+                            <local:SettingsSection Margin="0,13,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="PersonalizationSection" x:Uid="PersonalizationMenuItem" Icon="" Title="Personalization">
                                 <local:SettingsItemDropDownList x:Name="AppThemeSettingsItem" x:Uid="AppThemeSettingsItem" Icon="" IconSize="16">
                                     <local:SettingsItemDropDownList.Items>
                                         <ListBoxItem x:Uid="AppThemeDark" />
@@ -99,6 +99,10 @@
 
                                 <local:SettingsItem x:Name="TransparencySettingsItem" x:Uid="TransparencySettingsItem" Icon="&#xE2AC;" IconSize="16">
                                     <ToggleSwitch x:Name="TransparencyToggleSwitch" />
+                                </local:SettingsItem>
+
+                                <local:SettingsItem x:Name="PerformanceSettingsItem" x:Uid="PerformanceSettingsItem" Visibility="Collapsed" Icon="&#xE9D9;" IconSize="16">
+                                    <ToggleSwitch x:Name="PerformanceToggleSwitch" />
                                 </local:SettingsItem>
 
                                 <local:SettingsItemSeparator Visibility="{Binding ElementName=LockScreenSettingsItem, Path=Visibility}" />
@@ -127,7 +131,7 @@
                                     </local:SettingsItemDropDownList.Items>
                                 </local:SettingsItemDropDownList>
 
-                                <local:SettingsSection x:Name="CustomColorSettingsSection" x:Uid="CustomColorSettingsSection" SizeChanged="CustomColorSettingsSection_SizeChanged" Margin="-2,5" CurrentStateChanged="CustomColorSettingsSection_CurrentStateChanged" Icon="" IconSize="16" Visibility="Collapsed">
+                                <local:SettingsSection x:Name="CustomColorSettingsSection" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" x:Uid="CustomColorSettingsSection" SizeChanged="CustomColorSettingsSection_SizeChanged" Margin="-2,5" CurrentStateChanged="CustomColorSettingsSection_CurrentStateChanged" Icon="" IconSize="16" Visibility="Collapsed">
                                     <GridView IsItemClickEnabled="True" ItemClick="colorsList_ItemClick" Padding="5,10" SelectionMode="None" x:Name="colorsList" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled">
                                         <GridView.ItemsPanel>
                                             <ItemsPanelTemplate>

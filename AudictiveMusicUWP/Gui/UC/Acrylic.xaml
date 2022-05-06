@@ -14,12 +14,12 @@
         <Grid x:Name="blurGrid" Opacity="{Binding BlurOpacity, ElementName=root}" />
         <Grid>
             <Grid.Background>
-                <SolidColorBrush Color="Black" x:Name="contrastColor" Opacity="{Binding Contrast, ElementName=root}" />
+                <SolidColorBrush x:Name="tintColor" Color="{Binding ElementName=root, Path=Tint}" />
             </Grid.Background>
         </Grid>
         <Grid>
             <Grid.Background>
-                <SolidColorBrush x:Name="tintColor" Color="{Binding ElementName=root, Path=Tint}" />
+                <SolidColorBrush Color="{Binding ContrastColor, ElementName=root}" x:Name="contrastColor" Opacity="{Binding Contrast, ElementName=root}" />
             </Grid.Background>
         </Grid>
     </Grid>

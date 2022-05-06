@@ -15,7 +15,7 @@
         </TransitionCollection>
     </Page.Transitions>
 
-    <Grid Background="{ThemeResource DefaultPageBackgroundBrush}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <!--<RowDefinition Height="48" />-->
@@ -27,7 +27,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <local:Acrylic x:Name="acrylic" AcrylicMode="Window" Contrast="0.3" BlurOpacity="0.8" IsBlurEnabled="True" Grid.ColumnSpan="2" Grid.RowSpan="3" />
+        <local:Acrylic x:Name="acrylic" AcrylicMode="Window"  Contrast="0.2" BlurOpacity="0.8" IsBlurEnabled="True" Grid.ColumnSpan="2" Grid.RowSpan="3" />
 
         <!--<Grid x:Name="TintGrid" Grid.ColumnSpan="2" Grid.RowSpan="3" Opacity="0.1" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" />-->
         <Grid x:Name="titleBar" Grid.ColumnSpan="2" Canvas.ZIndex="2000" Loaded="titleBar_Loaded">
@@ -67,7 +67,7 @@
             </Grid.Background>
         </Grid>
 
-        <local:NavigationBar x:Name="navBar" Grid.Column="1" Canvas.ZIndex="3" Grid.Row="1" Orientation="Horizontal" Height="50" ActionRequested="bottomNavBar_ActionRequested" VerticalAlignment="Bottom" />
+        <local:NavigationBar x:Name="navBar" RequestedTheme="Dark" Grid.Column="1" Canvas.ZIndex="3" Grid.Row="1" Orientation="Horizontal" Height="50" ActionRequested="bottomNavBar_ActionRequested" VerticalAlignment="Bottom" />
 
         <!--<local:NavigationBar Grid.Column="0" x:Name="leftNavBar" Tint="#FFDC572E" TintOpacity="0.6" IsBlurEnabled="False" Canvas.ZIndex="3" Visibility="Collapsed" Orientation="Vertical" ActionRequested="bottomNavBar_ActionRequested" HorizontalAlignment="Left" Width="65" Grid.Row="1" VerticalAlignment="Stretch" />-->
         <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" x:Name="searchContainer" Visibility="Collapsed" Canvas.ZIndex="2">
@@ -76,7 +76,7 @@
 
         <Grid x:Name="Footer" Grid.Column="1" Canvas.ZIndex="2" Grid.Row="1">
             <!--<Grid x:Name="footerBlur" Opacity="1" VerticalAlignment="Bottom" />-->
-            <local:Acrylic x:Name="footerAcrylic" VerticalAlignment="Bottom" IsBlurEnabled="True" BlurOpacity="1" TintOpacity="0.5" AcrylicMode="App" Contrast="0.5" />
+            <local:Acrylic x:Name="footerAcrylic" VerticalAlignment="Bottom" IsBlurEnabled="True" BlurOpacity="1" TintOpacity="0.7" AcrylicMode="App" Contrast="0.3" />
             <!--<Rectangle x:Name="rectangleToMakeColorDarker" Fill="#555555" Height="{Binding ElementName=footerBlur, Path=Height}" Opacity="0.3" VerticalAlignment="Bottom">
 
             </Rectangle>-->

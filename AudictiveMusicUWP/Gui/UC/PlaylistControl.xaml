@@ -53,9 +53,7 @@
             <TextBlock x:Name="playlistRemoveGlyph" IsHitTestVisible="False" Text="&#xE107;" FontFamily="{ThemeResource IconFont}" FontSize="28" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
         </Grid>
         <!--<Grid x:Name="blurOverlay" SizeChanged="BlurOverlay_SizeChanged" Grid.Row="0" Grid.Column="1" />-->
-        <local:Acrylic AcrylicMode="App" IsBlurEnabled="True" BlurOpacity="1" x:Name="acrylic" Contrast="0" Grid.Row="0" Grid.Column="1" TintOpacity="0.2" />
-        <Grid Background="{ThemeResource DefaultPageBackgroundBrush}" Grid.Row="0" Grid.Column="1" Opacity="0.6" />
-        <Grid x:Name="TintGrid" Grid.Row="0" Grid.Column="1" Opacity="0.2" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" />
+        <local:Acrylic AcrylicMode="App" IsBlurEnabled="True" BlurOpacity="1" x:Name="acrylic" Grid.Row="0" Grid.Column="1" Tint="{Binding AccentColor, ElementName=root}" ContrastColor="{ThemeResource SystemChromeMediumColor}" Contrast="0.8" />
 
         <ProgressRing x:Name="progress" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="50" IsActive="False" />
         <ListView Grid.Column="1" Grid.Row="0" CanReorderItems="True" CanDragItems="True" AllowDrop="True" DragItemsStarting="MusicPlaylist_DragItemsStarting" DragItemsCompleted="MusicPlaylist_DragItemsCompleted" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Enabled" Name="MusicPlaylist">

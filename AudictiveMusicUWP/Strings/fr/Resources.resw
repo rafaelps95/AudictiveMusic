@@ -1218,4 +1218,10 @@
   <data name="TransparencySettingsItem.Text" xml:space="preserve">
     <value>Effets de transparence</value>
   </data>
+  <data name="PerformanceSettingsItem.AdditionalInfo" xml:space="preserve">
+    <value>Restreindre l'effet acrylique à certaines surfaces, comme la barre du lecteur</value>
+  </data>
+  <data name="PerformanceSettingsItem.Text" xml:space="preserve">
+    <value>Mode performance</value>
+  </data>
 </root>

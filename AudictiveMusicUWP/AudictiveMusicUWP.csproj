@@ -159,6 +159,7 @@
     <Compile Include="Gui\Util\AlbumItemHelper.cs" />
     <Compile Include="Gui\Util\LongPressEventArgs.cs" />
     <Compile Include="Gui\Util\Converters.cs" />
+    <Compile Include="Gui\Util\ShadowHelper.cs" />
     <Compile Include="PlayerController.cs" />
     <Compile Include="Purchase\PurchaseHelper.cs" />
     <Compile Include="Gui\Pages\About.xaml.cs">
