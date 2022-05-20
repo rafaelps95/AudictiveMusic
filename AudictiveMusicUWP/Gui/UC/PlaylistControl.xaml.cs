@@ -81,12 +81,22 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void ApplicationSettings_CurrentThemeColorChanged()
         {
-            acrylic.Tint = ApplicationSettings.CurrentThemeColor;
+            //if (ApplicationSettings.CurrentThemeColor.IsDarkColor())
+            //    this.RequestedTheme = ElementTheme.Dark;
+            //else
+            //    this.RequestedTheme = ElementTheme.Light;
+
+            //acrylic.AcrylicTint = ApplicationSettings.CurrentThemeColor;
         }
 
         private void PlaylistControl_Loaded(object sender, RoutedEventArgs e)
         {
-            acrylic.Tint = ApplicationSettings.CurrentThemeColor;
+            //if (ApplicationSettings.CurrentThemeColor.IsDarkColor())
+            //    this.RequestedTheme = ElementTheme.Dark;
+            //else
+            //    this.RequestedTheme = ElementTheme.Light;
+
+            //acrylic.AcrylicTint = ApplicationSettings.CurrentThemeColor;
             SetAcrylic();
         }
 
@@ -103,9 +113,9 @@ namespace AudictiveMusicUWP.Gui.UC
         private void SetAcrylic()
         {
             if (ApplicationSettings.IsPerformanceModeOn == false)
-                acrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
+                acrylic.AcrylicEnabled = ApplicationSettings.TransparencyEnabled;
             else
-                acrylic.IsBlurEnabled = false;
+                acrylic.AcrylicEnabled = false;
         }
 
         private void PlaylistList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -163,6 +173,14 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             PlaylistList.CollectionChanged -= PlaylistList_CollectionChanged;
             PlaylistList.Add(item);
+            PlaylistList.CollectionChanged += PlaylistList_CollectionChanged;
+        }
+
+        public void AddRange(List<Song> list)
+        {
+            PlaylistList.CollectionChanged -= PlaylistList_CollectionChanged;
+            foreach (Song song in list)
+                PlaylistList.Add(song);
             PlaylistList.CollectionChanged += PlaylistList_CollectionChanged;
         }
 
@@ -399,6 +417,11 @@ namespace AudictiveMusicUWP.Gui.UC
 
             sb.Children.Add(ca);
             sb.Begin();
+        }
+
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageService.SendMessageToBackground(new ClearPlaylistMessage());
         }
     }
 }

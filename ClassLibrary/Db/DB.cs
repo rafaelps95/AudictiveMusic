@@ -21,6 +21,7 @@ namespace ClassLibrary.Db
             CreatePlaylistsTable();
             CreatePlaylistsSongsTable();
             CreateLastPlaylistSongsTable();
+            CreatePendingScrobblesTable();
         }
 
         public static bool CreateSongsTable()
@@ -166,6 +167,43 @@ namespace ClassLibrary.Db
             }
 
             ImportLastPlaylistXMLToDatabase();
+
+            return result;
+        }
+
+        private static bool CreatePendingScrobblesTable()
+        {
+            bool result = false;
+            // CREATE SONGS TABLE
+            try
+            {
+
+                db.Open();
+
+                String tableCommand = "CREATE TABLE IF NOT EXISTS pendingscrobbles" +
+                    "(ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "URI VARCHAR(255) NULL, " +
+                    "Title VARCHAR(255) NULL, " +
+                    "Artist VARCHAR(255) NULL, " +
+                    "Album VARCHAR(255) NULL, " +
+                    "Time DateTime)";
+
+
+                SqliteCommand createTable = new SqliteCommand(tableCommand, db);
+
+                createTable.ExecuteNonQuery();
+
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERRO!!! " + ex.Message);
+            }
+            finally
+            {
+                db.Close();
+            }
+
 
             return result;
         }

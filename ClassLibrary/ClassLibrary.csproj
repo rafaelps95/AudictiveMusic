@@ -110,13 +110,16 @@
     <Compile Include="Control\Ctr_Artist.cs" />
     <Compile Include="Control\Ctr_Album.cs" />
     <Compile Include="Control\Ctr_FolderItem.cs" />
+    <Compile Include="Control\Ctr_PendingScrobble.cs" />
     <Compile Include="Control\Ctr_Song.cs" />
     <Compile Include="Control\NowPlaying.cs" />
+    <Compile Include="Control\PlayerController.cs" />
     <Compile Include="Dao\Dao_NowPlaying.cs" />
     <Compile Include="Dao\Dao_Playlist.cs" />
     <Compile Include="Control\LastFmUserApiExtension.cs" />
     <Compile Include="Dao\AlbumDao.cs" />
     <Compile Include="Dao\ArtistDao.cs" />
+    <Compile Include="Dao\PendingScrobbleDao.cs" />
     <Compile Include="Dao\SongDao.cs" />
     <Compile Include="Db\DB.cs" />
     <Compile Include="Entities\Album.cs" />
@@ -127,6 +130,7 @@
     <Compile Include="Entities\FolderItem.cs" />
     <Compile Include="Entities\LastFmFriendsResponse.cs" />
     <Compile Include="Entities\MediaItem.cs" />
+    <Compile Include="Entities\PendingScrobble.cs" />
     <Compile Include="Entities\Playlist.cs" />
     <Compile Include="Entities\Song.cs" />
     <Compile Include="Enums.cs" />

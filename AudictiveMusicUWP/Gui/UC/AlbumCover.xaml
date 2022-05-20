@@ -1,0 +1,62 @@
+﻿<UserControl
+    x:Class="AudictiveMusicUWP.Gui.UC.AlbumCover"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AudictiveMusicUWP.Gui.UC"
+    xmlns:converter="using:AudictiveMusicUWP.Gui.Util"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    x:Name="root">
+
+    <UserControl.Resources>
+        <converter:FavoriteHeartConverter x:Key="FavoriteHeartConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="Transparent" VerticalAlignment="Bottom" x:Name="albumGrid" PointerExited="AlbumGrid_PointerExited" PointerCanceled="AlbumGrid_PointerCanceled" PointerCaptureLost="AlbumGrid_PointerCaptureLost">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Border x:Name="shadow" CornerRadius="10" Grid.RowSpan="2" Opacity="0" />
+        <Border x:Name="actionBar" Opacity="0" RenderTransformOrigin="0.5,0.5" IsHitTestVisible="False" CornerRadius="10,10,0,0" BorderThickness="1,1,1,0" BorderBrush="{ThemeResource SystemControlBackgroundChromeMediumBrush}" Background="{ThemeResource DefaultPageBackgroundBrush}" Margin="0,0,0,-20">
+            <Border.RenderTransform>
+                <TranslateTransform x:Name="actionBarTranslate" Y="20" />
+            </Border.RenderTransform>
+            <Grid Margin="0,0,0,20">
+                <Grid Margin="0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Style="{StaticResource ModernIconButtonStyle}" Content="" PointerReleased="NavigationBarItem_PointerReleased" Click="NavigationBarItem_Click" />
+                    <Button Style="{StaticResource ModernIconButtonStyle}" Content="" Grid.Column="1" Click="NavigationBarItem_Click_1" />
+                    <!--<local:NavigationBarItem PointerReleased="NavigationBarItem_PointerReleased" Click="NavigationBarItem_Click" Icon="" Text="Artista" />
+                    <local:NavigationBarItem PointerReleased="NavigationBarItem_PointerReleased_1" Click="NavigationBarItem_Click_1" Grid.Column="1" Icon="" Text="Adicionar" />-->
+                </Grid>
+            </Grid>
+        </Border>
+        <Border x:Name="albumCover" Grid.Row="1" HorizontalAlignment="Center" Height="{Binding CoverSize, ElementName=root}" Width="{Binding CoverSize, ElementName=root}" PointerEntered="albumCover_PointerEntered" IsDoubleTapEnabled="True" DoubleTapped="albumCover_DoubleTapped" CornerRadius="10">
+            <Border.Background>
+                <ImageBrush>
+                    <ImageBrush.ImageSource>
+                        <BitmapImage x:Name="bitmap"
+                                         ImageOpened="Bitmap_ImageOpened"
+                                                         ImageFailed="Bitmap_ImageFailed"/>
+                    </ImageBrush.ImageSource>
+                </ImageBrush>
+            </Border.Background>
+            <Grid>
+                <Grid Holding="albumCover_Holding" IsHoldingEnabled="True" Tapped="albumCover_Tapped" Background="Transparent" />
+                <TextBlock RenderTransformOrigin="0.5,0.5" x:Name="loveIndicator" Text="" Opacity="0" IsHitTestVisible="False" FontSize="75" FontFamily="{ThemeResource IconFont}" TextAlignment="Center" VerticalAlignment="Center" Foreground="#FF930A0A">
+                    <TextBlock.RenderTransform>
+                        <ScaleTransform x:Name="loveIndicatorScale" ScaleX="0.8" ScaleY="0.8" />
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+                <Button x:Name="favoriteButton" Background="#88222222" Click="FavoriteButton_Click" Margin="0,5" Style="{StaticResource ModernIconButtonStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="{Binding ElementName=root, Path=CurrentSong.IsFavorite, Converter={StaticResource FavoriteHeartConverter}}" IsHitTestVisible="{Binding ElementName=actionBar, Path=IsHitTestVisible}" Opacity="{Binding ElementName=actionBar, Path=Opacity}" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

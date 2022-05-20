@@ -246,17 +246,17 @@ namespace AudictiveMusicUWP.Gui.UC
 
             Storyboard storyboard = new Storyboard();
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0.2,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EnableDependentAnimation = true,
-            };
+            //DoubleAnimation da1 = new DoubleAnimation()
+            //{
+            //    To = 0.2,
+            //    Duration = TimeSpan.FromMilliseconds(300),
+            //    EnableDependentAnimation = true,
+            //};
 
-            Storyboard.SetTarget(da1, Background);
-            Storyboard.SetTargetProperty(da1, "Opacity");
+            //Storyboard.SetTarget(da1, Background);
+            //Storyboard.SetTargetProperty(da1, "Opacity");
 
-            storyboard.Children.Add(da1);
+            //storyboard.Children.Add(da1);
 
             //DoubleAnimation da2 = new DoubleAnimation()
             //{
@@ -384,17 +384,17 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             Storyboard storyboard = new Storyboard();
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0.3,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EnableDependentAnimation = true,
-            };
+            //DoubleAnimation da1 = new DoubleAnimation()
+            //{
+            //    To = 0.3,
+            //    Duration = TimeSpan.FromMilliseconds(300),
+            //    EnableDependentAnimation = true,
+            //};
 
-            Storyboard.SetTarget(da1, Background);
-            Storyboard.SetTargetProperty(da1, "Opacity");
+            //Storyboard.SetTarget(da1, Background);
+            //Storyboard.SetTargetProperty(da1, "Opacity");
 
-            storyboard.Children.Add(da1);
+            //storyboard.Children.Add(da1);
 
             //DoubleAnimation da2 = new DoubleAnimation()
             //{

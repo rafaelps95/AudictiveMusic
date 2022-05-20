@@ -1,6 +1,7 @@
 ﻿using AudictiveMusicUWP.Gui.Util;
 using ClassLibrary.Helpers;
 using Microsoft.Graphics.Canvas.Effects;
+using RPSToolkit;
 using System;
 using System.Numerics;
 using Windows.System;

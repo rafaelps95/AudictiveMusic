@@ -87,9 +87,6 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
         {
             switch (page)
             {
-                case LastFmPage.Followers:
-                    frame.Navigate(typeof(FollowersPage), param);
-                    break;
                 case LastFmPage.Following:
                     frame.Navigate(typeof(FollowingPage), param);
                     break;

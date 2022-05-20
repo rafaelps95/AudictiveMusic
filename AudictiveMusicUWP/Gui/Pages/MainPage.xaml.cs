@@ -289,12 +289,12 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         public void SetAcrylic()
         {
-            if (ApplicationSettings.IsPerformanceModeOn == false)
-                acrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
+            if (ApplicationSettings.IsPerformanceModeOn == false && ApplicationInfo.Current.IsMobile == false && ApplicationInfo.Current.IsTabletModeEnabled == false)
+                acrylic.AcrylicEnabled = ApplicationSettings.TransparencyEnabled;
             else
-                acrylic.IsBlurEnabled = false;
+                acrylic.AcrylicEnabled = false;
 
-            footerAcrylic.IsBlurEnabled = ApplicationSettings.TransparencyEnabled;
+            footerAcrylic.AcrylicEnabled = ApplicationSettings.TransparencyEnabled;
 
 
             //acrillic.Visibility = acrillicPageBG.Visibility = titleBarAcrillic.Visibility = transparencyEnabled ? Visibility.Visible : Visibility.Collapsed;
@@ -303,7 +303,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void SetTitleBar()
         {
             coreTitleBar.ExtendViewIntoTitleBar = true;
-            //Window.Current.SetTitleBar(null);
+            Window.Current.SetTitleBar(null);
 
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
             coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
@@ -332,6 +332,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void Current_Resuming(object sender, object e)
         {
             player.InitializePlayer();
+            SetTitleBar();
         }
 
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -444,7 +445,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             };
 
             Storyboard.SetTarget(ca, acrylic);
-            Storyboard.SetTargetProperty(ca, "Tint");
+            Storyboard.SetTargetProperty(ca, "AcrylicTint");
 
             sb.Children.Add(ca);
 
@@ -457,7 +458,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             };
 
             Storyboard.SetTarget(ca1, footerAcrylic);
-            Storyboard.SetTargetProperty(ca1, "Tint");
+            Storyboard.SetTargetProperty(ca1, "AcrylicTint");
 
             sb.Children.Add(ca1);
 
@@ -548,9 +549,11 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 case PageTheme.Dark:
                     this.RequestedTheme = ElementTheme.Dark;
+                    acrylic.RequestedTheme = ElementTheme.Dark;
                     break;
                 case PageTheme.Light:
                     this.RequestedTheme = ElementTheme.Light;
+                    acrylic.RequestedTheme = ElementTheme.Light;
                     break;
             };
 
@@ -1212,51 +1215,31 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             if (mode == NextTooltip.Mode.Previous)
             {
-                if (ApplicationData.Current.LocalSettings.Values.ContainsKey("PreviousSong"))
-                {
-                    prev = ApplicationData.Current.LocalSettings.Values["PreviousSong"].ToString();
-                }
+                prev = ApplicationSettings.PreviousSong;
 
                 if (string.IsNullOrWhiteSpace(prev) || prev == ApplicationSettings.CurrentTrackPath)
                     return;
 
                 song = Ctr_Song.Current.GetSong(new Song() { SongURI = prev });
-                title = song.Name;
-                subtitle = song.Artist;
-                source = new Album() { ID = song.AlbumID }.GetCoverUri();
-                status = ApplicationInfo.Current.Resources.GetString("Previous").ToUpper();
-                //color = ImageHelper.GetColorFromHex(song.HexColor);
             }
             else
             {
-                if (ApplicationData.Current.LocalSettings.Values.ContainsKey("NextSong"))
-                {
-                    next = ApplicationData.Current.LocalSettings.Values["NextSong"].ToString();
-                }
+                next = ApplicationSettings.NextSong;
 
                 if (string.IsNullOrWhiteSpace(next) || next == ApplicationSettings.CurrentTrackPath)
                     return;
 
                 song = Ctr_Song.Current.GetSong(new Song() { SongURI = next });
-                title = song.Name;
-                subtitle = song.Artist;
-                source = new Album() { ID = song.AlbumID }.GetCoverUri();
-                status = ApplicationInfo.Current.Resources.GetString("Next").ToUpper();
-                //color = ImageHelper.GetColorFromHex(song.HexColor);
             }
 
             nextTooltip = new NextTooltip()
             {
-                Status = status,
-                Title = title,
-                Subtitle = subtitle,
-                AccentColor = ImageHelper.GetColorFromHex(song.HexColor),
-                Source = new BitmapImage(source),
                 Margin = new Thickness(0, 0, 0, ApplicationInfo.Current.FooterHeight),
                 VerticalAlignment = VerticalAlignment.Bottom,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 //BackgroundColor = color,
             };
+            nextTooltip.SetSong(song);
 
             customPopupsArea.Visibility = Visibility.Visible;
             customPopupsArea.Children.Add(nextTooltip);

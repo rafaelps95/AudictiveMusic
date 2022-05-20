@@ -11,7 +11,8 @@ namespace ClassLibrary.Control
 {
     public class Ctr_Song
     {
-        public static event RoutedEventHandler FavoritesChanged;
+        public delegate void FavoritesChangedEventHandler(Song updatedSong);
+        public static event FavoritesChangedEventHandler FavoritesChanged;
 
         private static Ctr_Song instance;
 
@@ -68,12 +69,17 @@ namespace ClassLibrary.Control
             return SongDao.GetSongsByArtist(artist);
         }
 
+        public List<Song> GetSongsFromPlaylist(List<string> list)
+        {
+            return SongDao.GetSongsFromPlaylist(list);
+        }
+
         public bool SetFavoriteState(Song song, bool state)
         {
             bool result = SongDao.SetSongFavoriteState(song, state);
 
             if (result)
-                FavoritesChanged?.Invoke(this, new RoutedEventArgs());
+                FavoritesChanged?.Invoke(song);
 
             return result;
         }

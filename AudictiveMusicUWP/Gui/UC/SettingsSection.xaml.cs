@@ -1,4 +1,5 @@
 ﻿using AudictiveMusicUWP.Gui.Util;
+using RPSToolkit;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

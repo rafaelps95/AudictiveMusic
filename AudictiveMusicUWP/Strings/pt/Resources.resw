@@ -1230,4 +1230,16 @@
   <data name="PerformanceSettingsItem.Text" xml:space="preserve">
     <value>Modo desempenho</value>
   </data>
+  <data name="PendingScrobbles.Text" xml:space="preserve">
+    <value>Scrobbles pendentes</value>
+  </data>
+  <data name="PendingScrobblesEmptyList.Text" xml:space="preserve">
+    <value>Eba! Não há nada pendente!</value>
+  </data>
+  <data name="PendingScrobblesSettingsItem.Text" xml:space="preserve">
+    <value>Visualizar scrobbles pendentes</value>
+  </data>
+  <data name="PendingScrobblesSubtitle.Text" xml:space="preserve">
+    <value>Esta lista será enviada automaticamente ao Last.fm assim que seu dispositivo se conectar à internet</value>
+  </data>
 </root>

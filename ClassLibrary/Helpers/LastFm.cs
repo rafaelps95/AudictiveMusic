@@ -1,4 +1,5 @@
 ﻿using BackgroundAudioShared;
+using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Api.Helpers;
@@ -220,6 +221,7 @@ namespace ClassLibrary.Helpers
         {
             ApplicationSettings.LastFmSessionToken = "";
             ApplicationSettings.LastFmSessionUsername = "";
+            Ctr_PendingScrobble.Current.Clear();
 
             this.Disconnected?.Invoke();
         }

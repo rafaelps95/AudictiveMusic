@@ -1,4 +1,5 @@
-﻿using AudictiveMusicUWP.Gui.UC;
+﻿using AudictiveMusicUWP.Gui.Pages.LFM;
+using AudictiveMusicUWP.Gui.UC;
 using AudictiveMusicUWP.Gui.Util;
 using AudictiveMusicUWP.Purchase;
 using BackgroundAudioShared.Messages;
@@ -87,7 +88,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             content.Width = e.NewSize.Width;
 
-            menuScroll.Margin = new Thickness(0, 0, 0, ApplicationInfo.Current.FooterHeight);
+            content.Margin = new Thickness(0, 0, 0, ApplicationInfo.Current.FooterHeight);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -177,6 +178,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             TapToResumeSwitch.IsOn = ApplicationSettings.TapToResumeNotificationEnabled;
 
             SendScrobbleToggleSwitch.IsEnabled = LastFm.Current.IsAuthenticated;
+            PendingScrobblesSettingsItem.Visibility = LastFm.Current.IsAuthenticated ? Visibility.Visible : Visibility.Collapsed;
             SendScrobbleToggleSwitch.IsOn = ApplicationSettings.IsScrobbleEnabled;
 
             LoadTimerSettings();
@@ -739,6 +741,11 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
         private void StorageProgressBar_Loaded(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("PROGRESS BAR LOADED!!");
+        }
+
+        private void PendingScrobblesSettingsItem_ItemClick(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.Navigate(this, typeof(PendingScrobbles));
         }
     }
 }

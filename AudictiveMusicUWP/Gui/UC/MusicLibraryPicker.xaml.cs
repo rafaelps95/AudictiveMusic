@@ -2,6 +2,7 @@
 using ClassLibrary.Control;
 using ClassLibrary.Helpers;
 using Microsoft.Graphics.Canvas.Effects;
+using RPSToolkit;
 using System;
 using System.Collections.Generic;
 using System.Linq;

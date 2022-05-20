@@ -24,10 +24,6 @@ namespace AudictiveMusicUWP.Gui.UC
 {
     public sealed partial class AlbumHeader : UserControl
     {
-        private CompositionEffectBrush _brush;
-        private Compositor _compositor;
-        private SpriteVisual headerSprite;
-
         private Album ALB
         {
             get;
@@ -39,48 +35,11 @@ namespace AudictiveMusicUWP.Gui.UC
             this.Loaded += AlbumHeader_Loaded;
             this.SizeChanged += AlbumHeader_SizeChanged;
             this.InitializeComponent();
-
-            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
         }
 
         private void AlbumHeader_Loaded(object sender, RoutedEventArgs e)
         {
-            headerSprite = _compositor.CreateSpriteVisual();
 
-            BlendEffectMode blendmode = BlendEffectMode.Overlay;
-
-            // Create a chained effect graph using a BlendEffect, blending color and blur
-            var graphicsEffect = new BlendEffect
-            {
-                Mode = blendmode,
-                Background = new ColorSourceEffect()
-                {
-                    Name = "Tint",
-                    Color = Colors.Transparent,
-                },
-
-                Foreground = new GaussianBlurEffect()
-                {
-                    Name = "Blur",
-                    Source = new CompositionEffectSourceParameter("Backdrop"),
-                    BlurAmount = 10.0f,
-                    BorderMode = EffectBorderMode.Hard,
-                }
-            };
-
-            var blurEffectFactory = _compositor.CreateEffectFactory(graphicsEffect,
-                new[] { "Blur.BlurAmount", "Tint.Color" });
-
-            // Create EffectBrush, BackdropBrush and SpriteVisual
-            _brush = blurEffectFactory.CreateBrush();
-
-            var destinationBrush = _compositor.CreateBackdropBrush();
-            _brush.SetSourceParameter("Backdrop", destinationBrush);
-
-            headerSprite.Size = new Vector2((float)blurGlass.ActualWidth, (float)blurGlass.ActualHeight);
-            headerSprite.Brush = _brush;
-
-            ElementCompositionPreview.SetElementChildVisual(blurGlass, headerSprite);
         }
 
         private void AlbumHeader_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -98,11 +57,6 @@ namespace AudictiveMusicUWP.Gui.UC
                 border.Margin = new Thickness(10, -2, 0, 2);
                 border.Height = border.Width = 130;
                 secondRow.Height = thirdRow.Height = new GridLength(65);
-            }
-
-            if (headerSprite != null)
-            {
-                headerSprite.Size = e.NewSize.ToVector2();
             }
         }
 
@@ -125,8 +79,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
             BitmapImage blurbmp = new BitmapImage();
             rootBrush.ImageSource = blurbmp;
-            blurbmp.UriSource = new Uri("ms-appdata:///local/Artists/artist_" + StringHelper.RemoveSpecialChar(ALB.Artist) + ".jpg", UriKind.Absolute);
-
+            //blurbmp.UriSource = new Uri("ms-appdata:///local/Artists/artist_" + StringHelper.RemoveSpecialChar(ALB.Artist) + ".jpg", UriKind.Absolute);
+            blurbmp.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + ALB.ID + ".jpg", UriKind.Absolute);
 
             albumName.Text = ALB.Name.ToUpper();
         }

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AudictiveMusicUWP.Gui.UC"
+    xmlns:toolkit="using:RPSToolkit"
     xmlns:converter="using:AudictiveMusicUWP.Gui.Util" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -35,6 +36,7 @@
                 </Grid.Background>
             </Grid>
 
+            <toolkit:Acrylic AcrylicBackgroundSource="Backdrop" AcrylicTint="{Binding Color}" AcrylicTintOpacity="0.1" AcrylicIntensity="20" AcrylicEnabled="True" AcrylicOpacity="1" IsHitTestVisible="False" Grid.RowSpan="2" Grid.ColumnSpan="2" />
             <Grid x:Name="blurGlass" IsHitTestVisible="False" Grid.RowSpan="2" Grid.ColumnSpan="2" />
             <Rectangle Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Height="40" VerticalAlignment="Top" HorizontalAlignment="Stretch">
                 <Rectangle.Fill>

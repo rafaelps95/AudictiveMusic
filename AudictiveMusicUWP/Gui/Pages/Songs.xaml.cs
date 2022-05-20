@@ -360,5 +360,10 @@ namespace AudictiveMusicUWP.Gui.Pages
             else
                 EnableSelectionMode();
         }
+
+        private void SelectionItemsBar_SelectionModeChanged(object sender, object barMode)
+        {
+
+        }
     }
 }

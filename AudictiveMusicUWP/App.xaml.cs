@@ -133,6 +133,30 @@ namespace AudictiveMusicUWP
 
                 passedWelcomeScreen = ApplicationData.Current.LocalSettings.Values.ContainsKey("AudictiveMusic10RTM");
 
+                var toastTaskRegistered = false;
+                var toastTaskName = "PendingScrobbleTask";
+                await BackgroundExecutionManager.RequestAccessAsync();
+
+                foreach (var task in BackgroundTaskRegistration.AllTasks)
+                {
+                    if (task.Value.Name == toastTaskName)
+                    {
+                        toastTaskRegistered = true;
+                        break;
+                    }
+                }
+
+                if (!toastTaskRegistered)
+                {
+                    var builder = new BackgroundTaskBuilder();
+
+                    builder.Name = toastTaskName;
+                    builder.TaskEntryPoint = "PendingScrobbleBackgroundTask.PendingScrobbleTask";
+                    builder.SetTrigger(new SystemTrigger(SystemTriggerType.InternetAvailable, false));
+
+                    BackgroundTaskRegistration task = builder.Register();
+                }
+
 
                 if (!passedWelcomeScreen)
                 {
@@ -159,32 +183,6 @@ namespace AudictiveMusicUWP
                 else
                 {
                     rootFrame.Navigate(typeof(MainPage), arguments);
-                }
-
-                var toastTaskRegistered = false;
-                var toastTaskName = "NotificationActionBackgroundTask";
-
-
-                await BackgroundExecutionManager.RequestAccessAsync();
-
-                foreach (var task in BackgroundTaskRegistration.AllTasks)
-                {
-                    if (task.Value.Name == toastTaskName)
-                    {
-                        toastTaskRegistered = true;
-                        break;
-                    }
-                }
-
-                if (!toastTaskRegistered)
-                {
-                    var builder = new BackgroundTaskBuilder();
-
-                    builder.Name = toastTaskName;
-                    builder.TaskEntryPoint = "ToastBackgroundTask.NotificationActionBackgroundTask";
-                    builder.SetTrigger(new ToastNotificationActionTrigger());
-
-                    BackgroundTaskRegistration task = builder.Register();
                 }
             }
 

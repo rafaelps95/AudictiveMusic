@@ -225,6 +225,7 @@
                                 <local:SettingsItem x:Name="SendScrobbleSettingsItem" x:Uid="SendScrobbleSettingsItem">
                                     <ToggleSwitch x:Name="SendScrobbleToggleSwitch" />
                                 </local:SettingsItem>
+                                <local:SettingsItem x:Name="PendingScrobblesSettingsItem" x:Uid="PendingScrobblesSettingsItem" IsClickable="True" ItemClick="PendingScrobblesSettingsItem_ItemClick" />
                                 <local:SettingsItemSeparator />
                                 <Grid Margin="25,12,0,12">
                                     <Grid.RowDefinitions>

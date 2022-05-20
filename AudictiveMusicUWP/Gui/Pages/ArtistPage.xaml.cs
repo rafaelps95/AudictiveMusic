@@ -1,5 +1,7 @@
-﻿using AudictiveMusicUWP.Gui.Util;
+﻿using AudictiveMusicUWP.Gui.UC;
+using AudictiveMusicUWP.Gui.Util;
 using BackgroundAudioShared.Messages;
+using ClassLibrary;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
@@ -77,6 +79,9 @@ namespace AudictiveMusicUWP.Gui.Pages
             set;
         }
 
+        private double _selectionBarOffset;
+        private bool _selectionBarOnTop = false;
+
         public ArtistPage()
         {
             this.SizeChanged += ArtistPage_SizeChanged;
@@ -92,55 +97,8 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void ArtistPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             albumsList.Width = e.NewSize.Width;
-
-            //if (e.NewSize.Width >= 700)
-            //{
-            //    bioGrid.Width = 300;
-
-            //    if (artistInfoPanel.Children.Contains(bioGrid) == false)
-            //    {
-            //        if (layoutRoot.Children.Contains(bioGrid))
-            //            layoutRoot.Children.Remove(bioGrid);
-
-            //        if (scrollPanel.Children.Contains(bioGrid))
-            //            scrollPanel.Children.Remove(bioGrid);
-
-            //        artistInfoPanel.Children.Add(bioGrid);
-            //        bioGrid.Margin = new Thickness(20, 20, 20, 0);
-            //        songsList.Padding = new Thickness(0, 0, 0, 60);
-            //        bioGrid.VerticalAlignment = VerticalAlignment.Stretch;
-            //        bioGrid.HorizontalAlignment = HorizontalAlignment.Right;
-            //        Grid.SetRow(bioGrid, 0);
-            //        Grid.SetColumn(bioGrid, 2);
-
-            //    }
-            //}
-            //else
-            //{
-            //    bioGrid.Width = e.NewSize.Width - 30;
-
-            //    if (bioGrid.Visibility == Visibility.Visible)
-            //        songsList.Padding = new Thickness(0, 0, 0, 0);
-            //    else
-            //        songsList.Padding = new Thickness(0, 0, 0, 60);
-
-            //    if (scrollPanel.Children.Contains(bioGrid) == false)
-            //    {
-            //        if (layoutRoot.Children.Contains(bioGrid))
-            //            layoutRoot.Children.Remove(bioGrid);
-
-            //        if (artistInfoPanel.Children.Contains(bioGrid))
-            //            artistInfoPanel.Children.Remove(bioGrid);
-
-            //        scrollPanel.Children.Add(bioGrid);
-            //        bioGrid.VerticalAlignment = VerticalAlignment.Top;
-            //        bioGrid.HorizontalAlignment = HorizontalAlignment.Left;
-
-            //        bioGrid.Margin = new Thickness(12, 12, 12, 72);
-            //        Grid.SetRow(bioGrid, 5);
-            //        Grid.SetColumn(bioGrid, 0);
-            //    }
-            //}
+            selectionItemsBar.Width = e.NewSize.Width;
+            _selectionBarOffset = header.ActualHeight + albumsHeader.ActualHeight + albumsScroll.ActualHeight + 25;
         }
 
         async protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -188,7 +146,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             await Task.Delay(10);
 
-            songsList.ItemsSource = listOfSongs.OrderBy(s => s.Album).ToList();
+            listView.ItemsSource = listOfSongs.OrderBy(s => s.Album).ToList();
 
             //if (listOfSongs.Count > 1)
             //    // BUSCA A STRING PLURAL JÁ QUE HÁ MAIS DE UMA MÚSICA NA LISTA
@@ -397,32 +355,38 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void albumsList_Loaded(object sender, RoutedEventArgs e)
         {
-            var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.albumsList, 0), 0);
-            sv.ViewChanged += Sv_ViewChanged;
+            //var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.albumsList, 0), 0);
+            //sv.ViewChanged += Sv_ViewChanged;
         }
 
         private void Sv_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            AlbumItemHelper.PointerIsInContact = false;
+            //AlbumItemHelper.PointerIsInContact = false;
         }
 
 
 
         private void SongItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            if (e.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Touch)
+            if (listView.SelectionMode == ListViewSelectionMode.None)
             {
-                Song song = (sender as FrameworkElement).DataContext as Song;
-                CreateSongPopup(song, sender, e.GetPosition(sender as FrameworkElement));
+                if (e.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Touch)
+                {
+                    Song song = (sender as FrameworkElement).DataContext as Song;
+                    CreateSongPopup(song, sender, e.GetPosition(sender as FrameworkElement));
+                }
             }
         }
 
         private void SongItem_Holding(object sender, HoldingRoutedEventArgs e)
         {
-            if (e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Touch && e.HoldingState == HoldingState.Started)
+            if (listView.SelectionMode == ListViewSelectionMode.None)
             {
-                Song song = (sender as FrameworkElement).DataContext as Song;
-                CreateSongPopup(song, sender, e.GetPosition(sender as FrameworkElement));
+                if (e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Touch && e.HoldingState == HoldingState.Started)
+                {
+                    Song song = (sender as FrameworkElement).DataContext as Song;
+                    CreateSongPopup(song, sender, e.GetPosition(sender as FrameworkElement));
+                }
             }
         }
 
@@ -438,7 +402,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private async void songsList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (songsList.SelectionMode == ListViewSelectionMode.None)
+            if (listView.SelectionMode == ListViewSelectionMode.None)
             {
                 Song clickedSong = e.ClickedItem as Song;
 
@@ -465,13 +429,23 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void scroll_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
         {
-            if (e.NextView.VerticalOffset > 100)
+            if (e.NextView.VerticalOffset > _selectionBarOffset)
             {
+                if (_selectionBarOnTop)
+                    return;
 
+                _selectionBarOnTop = true;
+                scrollContent.Children.Remove(selectionItemsBar);
+                layoutRoot.Children.Add(selectionItemsBar);
             }
             else
             {
+                if (!_selectionBarOnTop)
+                    return;
 
+                _selectionBarOnTop = false;
+                layoutRoot.Children.Remove(selectionItemsBar);
+                scrollContent.Children.Add(selectionItemsBar);
             }
         }
 
@@ -497,6 +471,122 @@ namespace AudictiveMusicUWP.Gui.Pages
             Album album = (sender as FrameworkElement).DataContext as Album;
 
             CreateAlbumPopup(album, sender, point);
+        }
+
+
+
+
+        private void EnableSelectionMode()
+        {
+            listView.SelectionMode = ListViewSelectionMode.Multiple;
+            listView.SelectionChanged += listView_SelectionChanged;
+            listView.Padding = new Thickness(0, 25, 0, 110);
+            selectionItemsBar.SelectionModeChanged -= SelectionItemsBar_SelectionModeChanged;
+            selectionItemsBar.SelectionMode = SelectedItemsBar.BarMode.Enabled;
+            selectionItemsBar.SelectionModeChanged += SelectionItemsBar_SelectionModeChanged;
+        }
+
+        private void DisableSelectionMode()
+        {
+            listView.SelectedItem = null;
+            listView.SelectionChanged -= listView_SelectionChanged;
+            listView.SelectionMode = ListViewSelectionMode.None;
+            listView.Padding = new Thickness(0, 0, 0, 110);
+            selectionItemsBar.SelectionModeChanged -= SelectionItemsBar_SelectionModeChanged;
+            selectionItemsBar.SelectionMode = SelectedItemsBar.BarMode.Disabled;
+            selectionItemsBar.SelectionModeChanged += SelectionItemsBar_SelectionModeChanged;
+        }
+
+        private void ActivateSelecionMode(Album album)
+        {
+            if (listView.SelectedItems.Contains(album))
+                return;
+
+            ApplicationInfo.Current.VibrateDevice(25);
+            EnableSelectionMode();
+            listView.SelectedItems.Add(album);
+        }
+
+        private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int i = listView.SelectedItems.Count;
+            selectionItemsBar.SelectedItemsCount = i;
+
+            if (i == 0)
+            {
+                DisableSelectionMode();
+            }
+        }
+
+        private void SelectionItemsBar_ClearRequest(object sender, RoutedEventArgs e)
+        {
+            DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_SelectAllRequest(object sender, RoutedEventArgs e)
+        {
+            listView.SelectAll();
+        }
+
+        private void SelectionItemsBar_PlaySelected(object sender, SelectedItemsBar.PlayMode playMode)
+        {
+            List<string> list = new List<string>();
+
+            foreach (Song song in listView.SelectedItems)
+            {
+                list.Add(song.SongURI);
+            }
+
+            if (playMode == SelectedItemsBar.PlayMode.Play)
+                PlayerController.Play(list);
+            else
+                PlayerController.AddToQueue(list, true);
+
+            DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_AddSelected(object sender, SelectedItemsBar.AddMode addMode)
+        {
+            List<string> list = new List<string>();
+
+            foreach (Song song in listView.SelectedItems)
+            {
+                list.Add(song.SongURI);
+            }
+
+            if (addMode == SelectedItemsBar.AddMode.AddToPlaylist)
+                PlaylistHelper.RequestPlaylistPicker(this, list);
+            else
+                PlayerController.AddToQueue(list);
+
+            DisableSelectionMode();
+        }
+
+        private async void SelectionItemsBar_ShareSelected(object sender, RoutedEventArgs e)
+        {
+            List<string> list = new List<string>();
+
+            foreach (Song song in listView.SelectedItems)
+            {
+                list.Add(song.SongURI);
+            }
+
+            await ShareHelper.Instance.Share(list);
+
+            DisableSelectionMode();
+        }
+
+        private void SelectionItemsBar_SelectionModeChanged(object sender, SelectedItemsBar.BarMode barMode)
+        {
+            if (barMode == SelectedItemsBar.BarMode.Disabled)
+                DisableSelectionMode();
+            else
+                EnableSelectionMode();
+        }
+
+        private void SelectionItemsBar_SelectionModeChanged(object sender, object barMode)
+        {
+
         }
     }
 }

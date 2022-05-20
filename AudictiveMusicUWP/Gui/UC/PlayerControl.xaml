@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AudictiveMusicUWP.Gui.UC"
+    xmlns:toolkit="using:RPSToolkit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -344,7 +345,8 @@
             </Grid>
             
 
-            <local:Acrylic x:Name="acrylic" AcrylicMode="App" BlurOpacity="1" IsBlurEnabled="False" Opacity="0" IsHitTestVisible="False" />
+            <!--<local:Acrylic x:Name="acrylic" AcrylicMode="App" BlurOpacity="1" IsBlurEnabled="False" Opacity="0" IsHitTestVisible="False" />-->
+            <toolkit:Acrylic x:Name="acrylic" AcrylicBackgroundSource="Backdrop" AcrylicOpacity="1" AcrylicEnabled="False" Opacity="0" IsHitTestVisible="False" />
 
             <Grid IsHitTestVisible="False">
                 <Grid.Background>
@@ -517,13 +519,20 @@
 
             <Grid Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="1" IsTapEnabled="True" Canvas.ZIndex="5" PointerPressed="dismissArea_PointerPressed" IsHitTestVisible="False" x:Name="dismissArea" />
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button x:Name="optionsButton" Click="optionsButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="">
+            <Grid VerticalAlignment="Top" Height="60" HorizontalAlignment="Right" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <local:NextTooltip x:Name="nextSong" Visibility="Collapsed" ShowAcrylicBackground="False" Click="nextButton_Click" RequestedTheme="Dark" />
 
-                </Button>
-                <Button x:Name="closeButton" Click="closeButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="" />
-            </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="optionsButton" Background="#55222222" Click="optionsButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="">
 
+                    </Button>
+                    <Button x:Name="closeButton" Background="#55222222" Click="closeButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="" />
+                </StackPanel>
+            </Grid>
             <Grid RequestedTheme="Dark" x:Name="PlayerControlsContainer" MaxWidth="500">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -538,8 +547,11 @@
                 <Grid.RenderTransform>
                     <TranslateTransform x:Name="PlayerControlsContainerTranslate" />
                 </Grid.RenderTransform>
-                <StackPanel Orientation="Horizontal" x:Name="albumContainer">
-                    <Border x:Name="albumCover" Width="{Binding ElementName=albumCover, Path=Height}" PointerEntered="albumCover_PointerEntered" PointerReleased="albumCover_PointerReleased" Holding="albumCover_Holding" IsDoubleTapEnabled="True" DoubleTapped="albumCover_DoubleTapped" Tapped="albumCover_Tapped" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" CornerRadius="10">
+
+                <!--<Rectangle Width="1" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Stretch" Grid.RowSpan="6" />-->
+                <StackPanel Orientation="Horizontal" Visibility="Visible" x:Name="albumContainer" Grid.Row="0" VerticalAlignment="Bottom">
+                    <local:AlbumCover x:Name="albumCover" AddRequested="AlbumCover_AddRequested" ArtistRequested="AlbumCover_ArtistRequested" Click="AlbumCover_Click" FavoriteStateToggled="AlbumCover_FavoriteStateToggled" />
+                    <!--<Border x:Name="albumCover" Width="{Binding ElementName=albumCover, Path=Height}" PointerEntered="albumCover_PointerEntered" PointerReleased="albumCover_PointerReleased" Holding="albumCover_Holding" IsDoubleTapEnabled="True" DoubleTapped="albumCover_DoubleTapped" Tapped="albumCover_Tapped" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" CornerRadius="10">
                         <Border.Background>
                             <ImageBrush>
                                 <ImageBrush.ImageSource>
@@ -554,13 +566,15 @@
                                 <ScaleTransform x:Name="loveIndicatorScale" ScaleX="0.8" ScaleY="0.8" />
                             </TextBlock.RenderTransform>
                         </TextBlock>
-                    </Border>
-                    <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-                        <Button x:Name="playlistButton" IsEnabled="False" Click="playlistButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5"/>
-                        <ToggleButton x:Name="repeatToggleButton" IsEnabled="False" IsThreeState="True" IsTextScaleFactorEnabled="False" Click="Repeat_Click" FontFamily="{ThemeResource IconFont}" Content="" Style="{StaticResource ModernIconToggleButtonStyle}" Foreground="White" FontSize="18" Margin="0,5" />
-                        <Button x:Name="shuffleButton" IsEnabled="False" Click="shuffleButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5" />
+                    </Border>-->
+                    <Grid Height="{Binding ElementName=albumCover, Path=CoverSize}" VerticalAlignment="Bottom">
+                        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                            <Button x:Name="playlistButton" IsEnabled="False" Click="playlistButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5"/>
+                            <ToggleButton x:Name="repeatToggleButton" IsEnabled="False" IsThreeState="True" IsTextScaleFactorEnabled="False" Click="Repeat_Click" FontFamily="{ThemeResource IconFont}" Content="" Style="{StaticResource ModernIconToggleButtonStyle}" Foreground="White" FontSize="18" Margin="0,5" />
+                            <Button x:Name="shuffleButton" IsEnabled="False" Click="shuffleButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5" />
 
-                    </StackPanel>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
 
                 <TextBlock x:Name="SongName" IsHitTestVisible="False" FontSize="14" FontWeight="Bold" Text="" TextTrimming="CharacterEllipsis" />
@@ -682,11 +696,9 @@
                         <AdaptiveTrigger MinWindowHeight="0" MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="albumCover.Height" Value="150" />
-                        <Setter Target="albumCover.Width" Value="150" />
+                        <Setter Target="albumCover.CoverSize" Value="150" />
                         <Setter Target="albumContainer.HorizontalAlignment" Value="Left" />
                         <Setter Target="albumContainer.Margin" Value="20,5" />
-                        <Setter Target="albumContainer.(Grid.Row)" Value="1" />
                         <Setter Target="SongName.TextAlignment" Value="Left" />
                         <Setter Target="SongName.(Grid.Row)" Value="2" />
                         <Setter Target="SongName.FontSize" Value="20" />
@@ -699,7 +711,7 @@
                         <Setter Target="musicSlider.Margin" Value="20,0" />
                         <Setter Target="MusicControlButtonsPanel.(Grid.Row)" Value="6" />
                         <Setter Target="MusicControlButtonsPanel.HorizontalAlignment" Value="Center" />
-                        <Setter Target="MusicControlButtonsPanel.Margin" Value="10,0,0,10" />
+                        <Setter Target="MusicControlButtonsPanel.Margin" Value="0,0,0,10" />
                         <Setter Target="MusicPositionTime.(Grid.Row)" Value="6" />
                         <Setter Target="MusicPositionTime.HorizontalAlignment" Value="Left" />
                         <Setter Target="MusicPositionTime.Margin" Value="20,0" />
@@ -716,10 +728,9 @@
                         <AdaptiveTrigger MinWindowHeight="400" MinWindowWidth="250" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="albumCover.Height" Value="150" />
+                        <Setter Target="albumCover.CoverSize" Value="150" />
                         <Setter Target="albumContainer.HorizontalAlignment" Value="Center" />
-                        <Setter Target="albumContainer.Margin" Value="38,5,0,5" />
-                        <Setter Target="albumContainer.(Grid.Row)" Value="1" />
+                        <Setter Target="albumContainer.Margin" Value="50,5,0,5" />
                         <Setter Target="SongName.TextAlignment" Value="Center" />
                         <Setter Target="SongName.(Grid.Row)" Value="2" />
                         <Setter Target="SongName.FontSize" Value="20" />
@@ -732,7 +743,7 @@
                         <Setter Target="musicSlider.Margin" Value="20,0" />
                         <Setter Target="MusicControlButtonsPanel.(Grid.Row)" Value="6" />
                         <Setter Target="MusicControlButtonsPanel.HorizontalAlignment" Value="Center" />
-                        <Setter Target="MusicControlButtonsPanel.Margin" Value="10,0,0,10" />
+                        <Setter Target="MusicControlButtonsPanel.Margin" Value="0,0,0,10" />
                         <Setter Target="MusicPositionTime.(Grid.Row)" Value="6" />
                         <Setter Target="MusicPositionTime.HorizontalAlignment" Value="Left" />
                         <Setter Target="MusicPositionTime.Margin" Value="20,0" />
@@ -748,10 +759,9 @@
                         <AdaptiveTrigger MinWindowHeight="600" MinWindowWidth="300" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="albumCover.Height" Value="200" />
+                        <Setter Target="albumCover.CoverSize" Value="200" />
                         <Setter Target="albumContainer.HorizontalAlignment" Value="Center" />
-                        <Setter Target="albumContainer.Margin" Value="38,5,0,5" />
-                        <Setter Target="albumContainer.(Grid.Row)" Value="1" />
+                        <Setter Target="albumContainer.Margin" Value="50,5,0,5" />
                         <Setter Target="SongName.TextAlignment" Value="Center" />
                         <Setter Target="SongName.(Grid.Row)" Value="2" />
                         <Setter Target="SongName.FontSize" Value="20" />
@@ -764,7 +774,7 @@
                         <Setter Target="musicSlider.Margin" Value="20,0" />
                         <Setter Target="MusicControlButtonsPanel.(Grid.Row)" Value="6" />
                         <Setter Target="MusicControlButtonsPanel.HorizontalAlignment" Value="Center" />
-                        <Setter Target="MusicControlButtonsPanel.Margin" Value="10,0,0,10" />
+                        <Setter Target="MusicControlButtonsPanel.Margin" Value="0,0,0,10" />
                         <Setter Target="MusicPositionTime.(Grid.Row)" Value="6" />
                         <Setter Target="MusicPositionTime.HorizontalAlignment" Value="Left" />
                         <Setter Target="MusicPositionTime.Margin" Value="20,0" />
@@ -780,10 +790,9 @@
                         <AdaptiveTrigger MinWindowHeight="700" MinWindowWidth="500" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="albumCover.Height" Value="225" />
+                        <Setter Target="albumCover.CoverSize" Value="225" />
                         <Setter Target="albumContainer.HorizontalAlignment" Value="Center" />
-                        <Setter Target="albumContainer.Margin" Value="38,5,0,5" />
-                        <Setter Target="albumContainer.(Grid.Row)" Value="1" />
+                        <Setter Target="albumContainer.Margin" Value="50,5,0,5" />
                         <Setter Target="SongName.TextAlignment" Value="Center" />
                         <Setter Target="SongName.(Grid.Row)" Value="2" />
                         <Setter Target="SongName.FontSize" Value="20" />
@@ -796,7 +805,7 @@
                         <Setter Target="musicSlider.Margin" Value="20,0" />
                         <Setter Target="MusicControlButtonsPanel.(Grid.Row)" Value="6" />
                         <Setter Target="MusicControlButtonsPanel.HorizontalAlignment" Value="Center" />
-                        <Setter Target="MusicControlButtonsPanel.Margin" Value="10,0,0,10" />
+                        <Setter Target="MusicControlButtonsPanel.Margin" Value="0,0,0,10" />
                         <Setter Target="MusicPositionTime.(Grid.Row)" Value="6" />
                         <Setter Target="MusicPositionTime.HorizontalAlignment" Value="Left" />
                         <Setter Target="MusicPositionTime.Margin" Value="20,0" />

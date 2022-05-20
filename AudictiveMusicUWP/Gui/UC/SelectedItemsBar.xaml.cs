@@ -1,5 +1,6 @@
 ﻿using ClassLibrary.Helpers;
 using Microsoft.Graphics.Canvas.Effects;
+using RPSToolkit;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -81,7 +82,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             UpdateView();
 
-            ApplyElementShadow(shadowGrid);
+            shadowGrid.ApplyShadow(new Vector3(0, 5, 2));
 
             ApplicationAccentColor aac = App.Current.Resources["ApplicationAccentColor"] as ApplicationAccentColor;
             aac.PropertyChanged += Aac_PropertyChanged;
@@ -92,25 +93,6 @@ namespace AudictiveMusicUWP.Gui.UC
             playButton.IsMainAction = false;
             playButton.IsMainAction = true;
         }
-
-        private void ApplyElementShadow(Panel panel)
-        {
-            _compositor = ElementCompositionPreview.GetElementVisual(panel).Compositor;
-            _sprite = _compositor.CreateSpriteVisual();
-            //_sprite.Brush = _compositor.CreateColorBrush(Colors.Blue);
-            _sprite.Size = new Vector2((float)panel.ActualWidth, (float)panel.ActualHeight);
-
-            var basicShadow = _compositor.CreateDropShadow();
-            basicShadow.BlurRadius = 25f;
-            basicShadow.Offset = new Vector3(0, 5, 2);
-
-            _sprite.Shadow = basicShadow;
-
-            ElementCompositionPreview.SetElementChildVisual(panel, _sprite);
-        }
-
-
-
 
         public BarMode SelectionMode
         {

@@ -226,10 +226,18 @@ namespace BackgroundAudioAgent
 
             Song song = Ctr_Song.Current.GetSong(new Song() { SongURI = s });
 
-            if (LastFm.Current.IsAuthenticated && ApplicationSettings.IsScrobbleEnabled && ApplicationInfo.Current.HasInternetConnection)
+            if (LastFm.Current.IsAuthenticated && ApplicationSettings.IsScrobbleEnabled)
             {
-                Scrobble scrobble = new Scrobble(song.Artist, song.Album, song.Name, DateTimeOffset.Now.ToUniversalTime());
-                var response = await LastFm.Current.Client.Scrobbler.ScrobbleAsync(scrobble);
+                if (ApplicationInfo.Current.HasInternetConnection)
+                {
+                    Scrobble scrobble = new Scrobble(song.Artist, song.Album, song.Name, DateTimeOffset.Now.ToUniversalTime());
+                    var response = await LastFm.Current.Client.Scrobbler.ScrobbleAsync(scrobble);
+                }
+                else
+                {
+                    PendingScrobble pendingScrobble = new PendingScrobble(song, DateTimeOffset.Now.ToUniversalTime());
+                    Ctr_PendingScrobble.Current.Add(pendingScrobble);
+                }
             }
 
             if (ApplicationSettings.IsPlaybackTimerEnabled)
@@ -423,8 +431,8 @@ namespace BackgroundAudioAgent
 
                 if (NowPlaying.Current.Songs.Count == 1)
                 {
-                    ApplicationData.Current.LocalSettings.Values["PreviousSong"] = NowPlaying.Current.Songs[0];
-                    ApplicationData.Current.LocalSettings.Values["NextSong"] = NowPlaying.Current.Songs[0];
+                    ApplicationSettings.PreviousSong = "";
+                    ApplicationSettings.NextSong = "";
                 }
                 else
                 {
@@ -433,14 +441,14 @@ namespace BackgroundAudioAgent
                     else
                         prev = NowPlaying.Current.Songs[NowPlaying.Current.Songs.Count - 1];
 
-                    ApplicationData.Current.LocalSettings.Values["PreviousSong"] = prev;
+                    ApplicationSettings.PreviousSong = prev;
 
                     if (ApplicationSettings.CurrentTrackIndex < NowPlaying.Current.Songs.Count - 1)
                         next = NowPlaying.Current.Songs[ApplicationSettings.CurrentTrackIndex + 1];
                     else
-                        next = NowPlaying.Current.Songs[0];
+                        next = "";
 
-                    ApplicationData.Current.LocalSettings.Values["NextSong"] = next;
+                    ApplicationSettings.NextSong = next;
                 }
 
                 // Se não havia músicas na lista, deve-se iniciar a reprodução
@@ -630,6 +638,11 @@ namespace BackgroundAudioAgent
                             ApplicationSettings.CurrentTrackIndex = editPlaylistMessage.NewIndex;
                         }
 
+                        if (ApplicationSettings.CurrentTrackIndex < NowPlaying.Current.Songs.Count - 1)
+                            ApplicationSettings.NextSong = NowPlaying.Current.Songs[ApplicationSettings.CurrentTrackIndex + 1];
+                        else
+                            ApplicationSettings.NextSong = "";
+
                         string song = NowPlaying.Current.Songs[editPlaylistMessage.TrackIndex];
                         NowPlaying.Current.Songs.RemoveAt(editPlaylistMessage.TrackIndex);
                         NowPlaying.Current.Songs.Insert(editPlaylistMessage.NewIndex, song);
@@ -658,6 +671,33 @@ namespace BackgroundAudioAgent
             if (MessageService.TryParseMessage(e.Data, out appStateMessage))
             {
                 ApplicationSettings.AppState = appStateMessage.State;
+            }
+
+            ClearPlaylistMessage clearPlaylistMessage;
+            if (MessageService.TryParseMessage(e.Data, out clearPlaylistMessage))
+            {
+                int i = ApplicationSettings.CurrentTrackIndex;
+                if (NowPlaying.Current.Songs.Count == 0)
+                    return;
+
+                string currentSong = NowPlaying.Current.Songs[i];
+
+                NowPlaying.Current.Songs.Clear();
+
+                NowPlaying.Current.Songs.Add(currentSong);
+                ApplicationSettings.CurrentTrackIndex = 0;
+
+                NowPlaying.Current.ToastManager(ApplicationSettings.CurrentTrackIndex);
+
+                if (ApplicationSettings.AppState == AppState.Active)
+                {
+                    i = ApplicationSettings.CurrentTrackIndex;
+
+                    if (ApplicationSettings.AppState == AppState.Active)
+                        MessageService.SendMessageToForeground(new PlaylistMessage(NowPlaying.Current.Songs));
+                    MessageService.SendMessageToForeground(new CurrentTrackMessage(NowPlaying.Current.Songs[ApplicationSettings.CurrentTrackIndex], ApplicationSettings.CurrentTrackIndex));
+
+                }
             }
         }
 
@@ -750,7 +790,7 @@ namespace BackgroundAudioAgent
                 if (index < NowPlaying.Current.Songs.Count - 1)
                     next = NowPlaying.Current.Songs[index + 1];
                 else
-                    next = NowPlaying.Current.Songs[0];
+                    next = "";
 
                 ApplicationData.Current.LocalSettings.Values["NextSong"] = next;
             }

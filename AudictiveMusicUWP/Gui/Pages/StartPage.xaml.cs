@@ -69,7 +69,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             SetWebServiceButton(ApplicationInfo.Current.Resources.GetString("SignInLastFm"), WebServiceButton.WebService.LastFm);
         }
 
-        private void Ctr_Song_FavoritesChanged(object sender, RoutedEventArgs e)
+        private void Ctr_Song_FavoritesChanged(Song updatedSong)
         {
             LoadFavorites();
         }
@@ -583,6 +583,11 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void ScrobbleSettingsButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationHelper.Navigate(this, typeof(Settings), "path=scrobble");
+        }
+
+        private void PendingScrobblesButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.Navigate(this, typeof(PendingScrobbles));
         }
     }
 }

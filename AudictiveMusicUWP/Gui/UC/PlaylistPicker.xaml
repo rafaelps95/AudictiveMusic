@@ -144,7 +144,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="playlistName" TextChanged="playlistName_TextChanged" Visibility="Collapsed" Style="{StaticResource TextBoxStyle}" />
+                            <TextBox x:Name="playlistName" TextChanged="playlistName_TextChanged" Visibility="Collapsed" Style="{StaticResource TextBoxStyle}" VerticalAlignment="Stretch" />
                             <local:FluentButton Grid.Column="0" x:Uid="NewPlaylist" x:Name="createButton" Click="createButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Icon="" IconOnly="False" Text="Nova lista" />
                             <local:FluentButton Grid.Column="1" x:Uid="Done" IsEnabled="False" x:Name="doneButton" Click="doneButton_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Icon="" IconOnly="False" IsMainAction="True" MainActionBackground="{Binding AccentColor, Source={StaticResource ApplicationAccentColor}}" MainActionBorder="{Binding AccentColorDark10PercentBrush, Source={StaticResource ApplicationAccentColor}}" Text="Concluir" />
                         </Grid>

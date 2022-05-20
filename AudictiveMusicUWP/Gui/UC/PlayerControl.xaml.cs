@@ -2,6 +2,7 @@
 using AudictiveMusicUWP.Gui.Util;
 using BackgroundAudioShared;
 using BackgroundAudioShared.Messages;
+using ClassLibrary;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
@@ -75,6 +76,20 @@ namespace AudictiveMusicUWP.Gui.UC
             }
         }
 
+        private bool _isManipulating;
+
+        private bool IsManipulating
+        {
+            get
+            {
+                return _isManipulating;
+            }
+            set
+            {
+                _isManipulating = value;
+                albumCover.IsHitTestVisible = !value;
+            }
+        }
         bool wasHolding;
         private CompositionEffectBrush _brush;
         private Compositor _compositor;
@@ -170,6 +185,13 @@ namespace AudictiveMusicUWP.Gui.UC
             ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
             ApplicationSettings.ThemeBackgroundPreferenceChanged += ApplicationSettings_ThemeBackgroundPreferenceChanged;
             PlayerController.FullPlayerRequested += PlayerController_FullPlayerRequested;
+            Ctr_Song.FavoritesChanged += Ctr_Song_FavoritesChanged;
+        }
+
+        private void Ctr_Song_FavoritesChanged(Song updatedSong)
+        {
+            if (updatedSong.SongURI == albumCover.CurrentSong.SongURI)
+                albumCover.CurrentSong = ApplicationSettings.CurrentSong;
         }
 
         private void PlayerController_FullPlayerRequested(object sender, RoutedEventArgs e)
@@ -321,9 +343,9 @@ namespace AudictiveMusicUWP.Gui.UC
                 BackgroundMediaPlayer.MessageReceivedFromBackground -= BackgroundMediaPlayer_MessageReceivedFromBackground;
 
             CurrentArtist = string.Empty;
-            backgroundBitmapImage.UriSource = null;
-            compactAlbumBitmap.UriSource = fullAlbumBitmap.UriSource = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
-
+            //backgroundBitmapImage.UriSource = null;
+            //compactAlbumBitmap.UriSource = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
+            //albumCover.CurrentSong = null;
             Tick.Tick -= Tick_Tick;
             HidePlaylist();
             Tick.Stop();
@@ -378,51 +400,51 @@ namespace AudictiveMusicUWP.Gui.UC
             if (this.Mode == DisplayMode.Compact)
             {
                 fullView.IsHitTestVisible = false;
+                acrylic.Opacity = 0;
 
                 HidePlaylist();
 
                 da = new DoubleAnimation()
                 {
                     To = 0,
-                    Duration = TimeSpan.FromMilliseconds(500),
+                    Duration = TimeSpan.FromMilliseconds(250),
                     EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut } 
                 };
 
                 da1 = new DoubleAnimation()
                 {
                     To = 1,
-                    Duration = TimeSpan.FromMilliseconds(500),
+                    Duration = TimeSpan.FromMilliseconds(250),
                     EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
                 };
 
                 sb.Completed += (s, a) =>
                 {
                     compactView.IsHitTestVisible = true;
-                    acrylic.Opacity = 0;
                     //fullView.Visibility = Visibility.Collapsed;
                 };
             }
             else
             {
                 compactView.IsHitTestVisible = false;
+                fullView.IsHitTestVisible = true;
+
                 da = new DoubleAnimation()
                 {
                     To = 1,
-                    Duration = TimeSpan.FromMilliseconds(500),
+                    Duration = TimeSpan.FromMilliseconds(250),
                     EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
                 };
 
                 da1 = new DoubleAnimation()
                 {
                     To = 0,
-                    Duration = TimeSpan.FromMilliseconds(500),
+                    Duration = TimeSpan.FromMilliseconds(250),
                     EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
                 };
 
                 sb.Completed += (s, a) =>
                 {
-                    fullView.IsHitTestVisible = true;
-
                     (this.Resources["fadeInBlur"] as Storyboard).Begin();
                 };
 
@@ -493,26 +515,6 @@ namespace AudictiveMusicUWP.Gui.UC
                 playlist.HorizontalAlignment = HorizontalAlignment.Right;
             }
 
-
-
-            /// THEMES
-
-            if (ApplicationSettings.NowPlayingTheme == ClassLibrary.Themes.Theme.Blur)
-            {
-
-
-
-
-
-
-            }
-
-
-
-
-
-
-
             if (sprite != null)
             {
                 try
@@ -533,12 +535,12 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.None)
             {
-                previousButton.IsEnabled = nextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = false;
+                previousButton.IsEnabled = nextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = nextSong.IsEnabled = false;
                 PlayPauseButton.Content = "\uF5B0";
             }
             else
             {
-                previousButton.IsEnabled = nextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = true;
+                previousButton.IsEnabled = nextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = nextSong.IsEnabled = true;
 
                 if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.Playing)
                 {
@@ -560,8 +562,15 @@ namespace AudictiveMusicUWP.Gui.UC
                 {
                     PlaylistHasBeenUpdated = true;
                     Debug.WriteLine("PLAYLISTMESSAGE...\nOK");
-                    await Task.Run(() => LoadPlaylist(playlistMessage.Playlist));
-                    UpdateFlipCovers();
+
+                    await LoadPlaylist(playlistMessage.Playlist);
+                    if (playlistMessage.Playlist.Count < 2)
+                        nextSong.Visibility = Visibility.Collapsed;
+                    else
+                    {
+                        nextSong.Visibility = Visibility.Visible;
+                    }
+                    UpdateNextSong();
                 });
             }
 
@@ -612,18 +621,49 @@ namespace AudictiveMusicUWP.Gui.UC
             }
         }
 
+        private void UpdateNextSong()
+        {
+            if (ApplicationSettings.NextSong == "")
+            {
+                nextSong.Visibility = Visibility.Collapsed;
+            }
+            else if (IsPlaying)
+            {
+                nextSong.Visibility = Visibility.Visible;
+            }
+
+            bool updateSong = true;
+
+            if (nextSong.Song == null)
+                updateSong = true;
+            else
+            {
+                if (nextSong.Song.SongURI == ApplicationSettings.NextSong)
+                    updateSong = false;
+                else
+                    updateSong = true;
+            }
+
+            if (updateSong)
+            { 
+                Song next = Ctr_Song.Current.GetSong(new Song() { SongURI = ApplicationSettings.NextSong });
+                nextSong.SetSong(next);
+            }
+        }
+
         public void DisablePlayer()
         {
             Tick.Tick -= Tick_Tick;
             Tick.Stop();
 
             CurrentArtist = string.Empty;
-            UpdateBackground(null);
+            //UpdateBackground(null);
             SongName.Text = string.Empty;
             ArtistName.Text = string.Empty;
             //AlbumName.Text = string.Empty;
 
-            compactAlbumBitmap.UriSource = fullAlbumBitmap.UriSource = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
+            //compactAlbumBitmap.UriSource = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
+            //albumCover.CurrentSong = null;
 
             HidePlaylist();
 
@@ -645,17 +685,20 @@ namespace AudictiveMusicUWP.Gui.UC
                 playlist.SetLoadingState(true);
             });
 
-            Song aux;
+            //Song aux;
 
-            foreach (string path in list)
-            {
-                aux = Ctr_Song.Current.GetSong(new Song() { SongURI = path });
-                if (aux != null)
-                {
-                    aux.IsPlaying = aux.SongURI == ApplicationSettings.CurrentTrackPath;
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => playlist.Add(aux));
-                }
-            }
+            List<Song> songs = Ctr_Song.Current.GetSongsFromPlaylist(list);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => playlist.AddRange(songs));
+
+            //foreach (string path in list)
+            //{
+            //    aux = Ctr_Song.Current.GetSong(new Song() { SongURI = path });
+            //    if (aux != null)
+            //    {
+            //        aux.IsPlaying = aux.SongURI == ApplicationSettings.CurrentTrackPath;
+            //        await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => playlist.Add(aux));
+            //    }
+            //}
 
             IsPlaylistLoaded = true;
 
@@ -692,7 +735,9 @@ namespace AudictiveMusicUWP.Gui.UC
                     //await Task.Delay(50);
                     ArtistName.Text = ApplicationSettings.CurrentSong.Artist;
                     //AlbumName.Text = ApplicationSettings.CurrentSong.Album;
-                    compactAlbumBitmap.UriSource = fullAlbumBitmap.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + ApplicationSettings.CurrentSong.AlbumID + ".jpg", UriKind.Absolute);
+                    compactAlbumBitmap.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + ApplicationSettings.CurrentSong.AlbumID + ".jpg", UriKind.Absolute);
+                    albumCover.CurrentSong = ApplicationSettings.CurrentSong;
+                    albumCover.FallbackUri = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
 
                     if (ApplicationSettings.ThemeBackgroundPreference == 0)
                     {
@@ -722,6 +767,9 @@ namespace AudictiveMusicUWP.Gui.UC
                     ToolTip toolTip = new ToolTip();
                     toolTip.Content = ApplicationSettings.CurrentSong.Name + " " + ApplicationInfo.Current.Resources.GetString("By") + ApplicationSettings.CurrentSong.Artist;
                     ToolTipService.SetToolTip(compactBarExpandButton, toolTip);
+
+
+                    UpdateNextSong();
                 }
                 else
                 {
@@ -796,51 +844,6 @@ namespace AudictiveMusicUWP.Gui.UC
             }
         }
 
-
-        public void UpdateFlipCovers()
-        {
-            #region update previous and next cover
-
-
-            //string previousPath = string.Empty;
-            //if (ApplicationData.Current.LocalSettings.Values.ContainsKey("PreviousSong"))
-            //    previousPath = ApplicationData.Current.LocalSettings.Values["PreviousSong"].ToString();
-
-            //string nextPath = string.Empty;
-            //if (ApplicationData.Current.LocalSettings.Values.ContainsKey("NextSong"))
-            //    nextPath = ApplicationData.Current.LocalSettings.Values["NextSong"].ToString();
-
-            //if (string.IsNullOrWhiteSpace(previousPath) == false)
-            //{
-            //    PreviousSong = Collection.GetSong(new Song() { SongURI = previousPath });
-
-            //    if (PreviousSong != null)
-            //    {
-            //        previousAlbumBitmap.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + PreviousSong.AlbumID + ".jpg", UriKind.Absolute);
-            //    }
-            //    else
-            //    {
-            //        previousAlbumBitmap.UriSource = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
-            //    }
-            //}
-
-            //if (string.IsNullOrWhiteSpace(nextPath) == false)
-            //{
-            //    NextSong = Collection.GetSong(new Song() { SongURI = nextPath });
-
-            //    if (NextSong != null)
-            //    {
-            //        nextAlbumBitmap.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + NextSong.AlbumID + ".jpg", UriKind.Absolute);
-            //    }
-            //    else
-            //    {
-            //        nextAlbumBitmap.UriSource = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
-            //    }
-            //}
-
-            #endregion
-        }
-
         private void UpdateBackground(Song song)
         {
             Storyboard sb = new Storyboard();
@@ -873,6 +876,8 @@ namespace AudictiveMusicUWP.Gui.UC
                 if (song != null)
                 {
                     await Task.Delay(50);
+
+                    backgroundBitmapImage.UriSource = null;
 
                     if (ApplicationSettings.ThemeBackgroundPreference == 0)
                         backgroundBitmapImage.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + ApplicationSettings.CurrentSong.AlbumID + ".jpg");
@@ -966,8 +971,8 @@ namespace AudictiveMusicUWP.Gui.UC
             acrylic.Visibility = Visibility.Visible;
             materialBG.Visibility = Visibility.Collapsed;
 
-            acrylic.BlurIntensity = ApplicationSettings.NowPlayingBlurAmount;
-            acrylic.IsBlurEnabled = true;
+            acrylic.AcrylicIntensity = ApplicationSettings.NowPlayingBlurAmount;
+            acrylic.AcrylicEnabled = true;
         }
 
         private async void SetModernStyle()
@@ -1003,7 +1008,7 @@ namespace AudictiveMusicUWP.Gui.UC
             fxBrush.SetSourceParameter("source", surfaceBrush);
 
             sprite = _compositor.CreateSpriteVisual();
-            sprite.Size = new Vector2(10000);
+            sprite.Size = new Vector2((float)modernBG.ActualWidth, (float)modernBG.ActualHeight);
             sprite.Brush = fxBrush;
 
             ElementCompositionPreview.SetElementChildVisual(modernBG, sprite);
@@ -1453,6 +1458,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void player_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
+            this.IsManipulating = false;
             if (touch3D.IsTouch3DOpened)
                 return;
 
@@ -1472,6 +1478,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void player_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
+            this.IsManipulating = true;
+
             if (e.IsInertial || touch3D.IsTouch3DOpened)
             {
                 e.Complete();
@@ -1491,7 +1499,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void currentAlbumBitmap_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            compactAlbumBitmap.UriSource = fullAlbumBitmap.UriSource = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
+            compactAlbumBitmap.UriSource = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
         }
 
         private async void backgroundBitmapImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
@@ -1523,67 +1531,67 @@ namespace AudictiveMusicUWP.Gui.UC
                 Ctr_Song.Current.SetFavoriteState(ApplicationSettings.CurrentSong, true);
             }
 
-            if (ApplicationSettings.CurrentSong.IsFavorite)
-                loveIndicator.Text = "";
-            else
-                loveIndicator.Text = "";
+            //if (ApplicationSettings.CurrentSong.IsFavorite)
+            //    loveIndicator.Text = "";
+            //else
+            //    loveIndicator.Text = "";
 
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                From = 0.8,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(340),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            //Storyboard sb = new Storyboard();
+            //DoubleAnimation da = new DoubleAnimation()
+            //{
+            //    From = 0.8,
+            //    To = 1,
+            //    Duration = TimeSpan.FromMilliseconds(340),
+            //    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+            //};
 
-            Storyboard.SetTarget(da, loveIndicatorScale);
-            Storyboard.SetTargetProperty(da, "ScaleX");
+            //Storyboard.SetTarget(da, loveIndicatorScale);
+            //Storyboard.SetTargetProperty(da, "ScaleX");
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                From = 0.8,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(340),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            //DoubleAnimation da1 = new DoubleAnimation()
+            //{
+            //    From = 0.8,
+            //    To = 1,
+            //    Duration = TimeSpan.FromMilliseconds(340),
+            //    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+            //};
 
-            Storyboard.SetTarget(da1, loveIndicatorScale);
-            Storyboard.SetTargetProperty(da1, "ScaleY");
+            //Storyboard.SetTarget(da1, loveIndicatorScale);
+            //Storyboard.SetTargetProperty(da1, "ScaleY");
 
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                From = 0,
-                To = 0.8,
-                Duration = TimeSpan.FromMilliseconds(220),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            //DoubleAnimation da2 = new DoubleAnimation()
+            //{
+            //    From = 0,
+            //    To = 0.8,
+            //    Duration = TimeSpan.FromMilliseconds(220),
+            //    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+            //};
 
-            Storyboard.SetTarget(da2, loveIndicator);
-            Storyboard.SetTargetProperty(da2, "Opacity");
+            //Storyboard.SetTarget(da2, loveIndicator);
+            //Storyboard.SetTargetProperty(da2, "Opacity");
 
-            sb.Children.Add(da);
-            sb.Children.Add(da1);
-            sb.Children.Add(da2);
+            //sb.Children.Add(da);
+            //sb.Children.Add(da1);
+            //sb.Children.Add(da2);
 
-            sb.Completed += (s, a) =>
-            {
-                Storyboard ssb = new Storyboard();
-                DoubleAnimation sda = new DoubleAnimation()
-                {
-                    To = 0,
-                    Duration = TimeSpan.FromMilliseconds(200),
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-                };
+            //sb.Completed += (s, a) =>
+            //{
+            //    Storyboard ssb = new Storyboard();
+            //    DoubleAnimation sda = new DoubleAnimation()
+            //    {
+            //        To = 0,
+            //        Duration = TimeSpan.FromMilliseconds(200),
+            //        EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+            //    };
 
-                Storyboard.SetTarget(sda, loveIndicator);
-                Storyboard.SetTargetProperty(sda, "Opacity");
+            //    Storyboard.SetTarget(sda, loveIndicator);
+            //    Storyboard.SetTargetProperty(sda, "Opacity");
 
-                ssb.Children.Add(sda);
-                ssb.Begin();
-            };
+            //    ssb.Children.Add(sda);
+            //    ssb.Begin();
+            //};
 
-            sb.Begin();
+            //sb.Begin();
         }
 
         private void previousButton_Holding(object sender, HoldingRoutedEventArgs e)
@@ -1655,7 +1663,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 NavigationHelper.Navigate(this, typeof(ThemeSelector));
             };
 
-                mf.Items.Add(mfi);
+            mf.Items.Add(mfi);
 
             MenuFlyoutItem mfi2 = new MenuFlyoutItem()
             {
@@ -1669,16 +1677,29 @@ namespace AudictiveMusicUWP.Gui.UC
 
             mf.Items.Add(mfi2);
 
+            MenuFlyoutItem mfi3 = new MenuFlyoutItem()
+            {
+                Text = ApplicationInfo.Current.Resources.GetString("ScrobbleSettings"),
+            };
+
+            mfi3.Click += (s, a) =>
+            {
+                NavigationHelper.Navigate(this, typeof(Settings), "path=scrobble");
+            };
+
+            mf.Items.Add(mfi3);
+
+
             mf.Items.Add(new MenuFlyoutSeparator());
 
-            MenuFlyoutItem mfi3 = new MenuFlyoutItem()
+            MenuFlyoutItem mfi4 = new MenuFlyoutItem()
             {
                 Text = ApplicationInfo.Current.Resources.GetString("GoToArtistString"),
             };
 
-            mfi3.Click += lastFmArtistProfile_Click;
+            mfi4.Click += lastFmArtistProfile_Click;
 
-            mf.Items.Add(mfi3);
+            mf.Items.Add(mfi4);
 
             mf.ShowAt((FrameworkElement)sender);
         }
@@ -1911,6 +1932,54 @@ namespace AudictiveMusicUWP.Gui.UC
         private void CompactBarExpandButton_Click(object sender, RoutedEventArgs e)
         {
             this.Mode = DisplayMode.Full;
+        }
+
+        private void AlbumCover_ArtistRequested(object sender, RoutedEventArgs e)
+        {
+            Song song = Ctr_Song.Current.GetSong(new Song() { SongURI = CurrentTrackPath });
+
+            ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
+
+            Artist artist = new Artist()
+            {
+                Name = song.Artist,
+            };
+
+            NavigationHelper.Navigate(this, typeof(ArtistPage), artist);
+        }
+
+        private void AlbumCover_AddRequested(object sender, RoutedEventArgs e)
+        {
+            List<string> list = new List<string>();
+            list.Add(ApplicationSettings.CurrentTrackPath);
+            PlaylistHelper.RequestPlaylistPicker(this, list);
+        }
+
+        private void AlbumCover_Click(object sender, RoutedEventArgs e)
+        {
+            Song song = Ctr_Song.Current.GetSong(new Song() { SongURI = CurrentTrackPath });
+            Album album = new Album()
+            {
+                Name = song.Album,
+                Artist = song.Artist,
+                ID = song.AlbumID,
+                Year = Convert.ToInt32(song.Year),
+                Genre = song.Genre,
+                HexColor = song.HexColor
+            };
+            ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
+
+            NavigationHelper.Navigate(this, typeof(AlbumPage), album);
+        }
+
+        private void AlbumCover_FavoriteStateToggled(object sender, RoutedEventArgs e)
+        {
+            LikeDislikeSong();
+        }
+
+        private void NextSong_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

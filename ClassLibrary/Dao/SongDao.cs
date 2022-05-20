@@ -411,6 +411,51 @@ new SqliteConnection("Filename=database.db");
 
         }
 
+        internal static List<Song> GetSongsFromPlaylist(List<string> list)
+        {
+            List<Song> songs = new List<Song>();
+
+            SqliteConnection db =
+        new SqliteConnection("Filename=database.db");
+
+            try
+            {
+                db.Open();
+
+                foreach (string str in list)
+                {
+                    Song song = new Song();
+                    song.SongURI = str;
+
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = db;
+
+                    command.CommandText = "SELECT Title, Artist FROM songs WHERE URI = @URI ";
+                    command.Parameters.AddWithValue("@URI", str);
+
+                    SqliteDataReader query = command.ExecuteReader();
+
+                    while (query.Read())
+                    {
+                        song.Name = query.GetString(0);
+                        song.Artist = query.GetString(1);
+                        songs.Add(song);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERRO!!! " + ex.Message);
+            }
+            finally
+            {
+                db.Close();
+            }
+
+            return songs;
+        }
+
         internal static List<string> GetAllSongsPaths()
         {
             List<string> list = new List<string>();

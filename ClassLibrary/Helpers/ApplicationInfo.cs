@@ -16,6 +16,7 @@ using Windows.UI;
 using BackgroundAudioShared;
 using Windows.ApplicationModel.Store;
 using System.Collections.Generic;
+using Windows.Networking.Connectivity;
 
 namespace ClassLibrary.Helpers
 {

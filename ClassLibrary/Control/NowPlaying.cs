@@ -90,7 +90,7 @@ namespace ClassLibrary.Control
                     if (currentTrackIndex < NowPlaying.Current.Songs.Count - 1)
                         next = NowPlaying.Current.Songs[currentTrackIndex + 1];
                     else
-                        next = NowPlaying.Current.Songs[0];
+                        next = "";
 
                     ApplicationSettings.PreviousSong = prev;
                     ApplicationSettings.NextSong = next;
@@ -136,9 +136,6 @@ namespace ClassLibrary.Control
                         //toastXML += "<image placement=\"hero\" src=\"" + artistImagePath + "\" />";
                         toastXML += "</binding>";
                         toastXML += "</visual>";
-                        toastXML += "<actions>";
-                        toastXML += "<action content=\"Pular essa música\" arguments=\"removeNextSong\" activationType=\"background\" />";
-                        toastXML += "</actions>";
                         toastXML += "</toast>";
 
                         XmlDocument toastXmlDoc = new XmlDocument();

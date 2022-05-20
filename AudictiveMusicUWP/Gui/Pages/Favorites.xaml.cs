@@ -63,7 +63,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             Ctr_Song.FavoritesChanged += Ctr_Song_FavoritesChanged;
         }
 
-        private void Ctr_Song_FavoritesChanged(object sender, RoutedEventArgs e)
+        private void Ctr_Song_FavoritesChanged(Song updatedSong)
         {
             LoadFavorites();
         }

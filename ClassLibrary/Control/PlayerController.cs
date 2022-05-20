@@ -7,9 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
-using static ClassLibrary.Helpers.Enumerators;
 
-namespace AudictiveMusicUWP
+namespace ClassLibrary.Control
 {
     public static class PlayerController
     {

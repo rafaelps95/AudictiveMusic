@@ -1,6 +1,7 @@
 ﻿using AudictiveMusicUWP.Gui.Pages;
 using AudictiveMusicUWP.Gui.Pages.LFM;
 using BackgroundAudioShared.Messages;
+using ClassLibrary;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;

@@ -9,26 +9,6 @@
     x:Name="root">
 
     <Page.Resources>
-        
-
-
-        <Storyboard x:Key="ShowTouchFlyoutAnimation">
-            <DoubleAnimation To="1" Duration="0:0:0.3" EnableDependentAnimation="False" Storyboard.TargetName="touchFlyout" Storyboard.TargetProperty="Opacity">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
-
-        <Storyboard x:Key="HideTouchFlyoutAnimation">
-            <DoubleAnimation To="0" Duration="0:0:0.3" EnableDependentAnimation="False" Storyboard.TargetName="touchFlyout" Storyboard.TargetProperty="Opacity">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
-
-
         <Storyboard x:Key="OpenPageTransition">
             <DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetName="layoutRootScale" Storyboard.TargetProperty="ScaleX" EnableDependentAnimation="False">
                 <DoubleAnimation.EasingFunction>
@@ -107,8 +87,8 @@
                 </Grid.Background>
             </Grid>
             <!--<local:ArtistHeader x:Name="header" Holding="artistHeader_Holding" RightTapped="artistHeader_RightTapped" Height="200" Canvas.ZIndex="3" VerticalAlignment="Top" HorizontalAlignment="Stretch" />-->
-            <ScrollViewer x:Name="scroll" ViewChanged="scroll_ViewChanged" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" ZoomMode="Disabled">
-                <Grid x:Name="scrollContent">
+            <ScrollViewer x:Name="scroll" ViewChanging="scroll_ViewChanging" ViewChanged="scroll_ViewChanged" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" ZoomMode="Disabled">
+                <Grid x:Name="scrollContent" SizeChanged="ArtistPage_SizeChanged">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -124,7 +104,7 @@
                     <local:MediaPageHeader x:Name="header" Canvas.ZIndex="3" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
 
                     <TextBlock Grid.Row="2" x:Name="albumsHeader" x:Uid="Albums" Margin="12,12,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" Text="Álbuns" />
-                    <ScrollViewer ViewChanged="Sv_ViewChanged" Grid.Row="3" HorizontalScrollMode="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left">
+                    <ScrollViewer x:Name="albumsScroll" Grid.Row="3" HorizontalScrollMode="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left">
                         <GridView Loaded="albumsList_Loaded" x:Name="albumsList" Padding="10,0,20,20" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollMode="Disabled"
                           IsItemClickEnabled="True" SelectionMode="None" ItemClick="albumsList_ItemClick">
                             <GridView.ItemContainerTransitions>
@@ -169,7 +149,10 @@
                         </GridView>
                     </ScrollViewer>
                     <TextBlock Grid.Row="4" x:Name="songsHeader" x:Uid="Songs" Margin="12,12,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" Text="Músicas" />
-                    <ListView IsItemClickEnabled="True" ItemClick="songsList_ItemClick" Grid.Row="5" Padding="0,0,0,110" x:Name="songsList" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+
+                    <local:SelectedItemsBar Canvas.ZIndex="2" Grid.Row="4" Grid.RowSpan="2" SelectionModeChanged="SelectionItemsBar_SelectionModeChanged" PlaySelected="SelectionItemsBar_PlaySelected" AddSelected="SelectionItemsBar_AddSelected" ClearRequest="SelectionItemsBar_ClearRequest" SelectAllRequest="SelectionItemsBar_SelectAllRequest" ShareSelected="SelectionItemsBar_ShareSelected" x:Name="selectionItemsBar" Visibility="Visible" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+
+                    <ListView IsItemClickEnabled="True" ItemClick="songsList_ItemClick" Grid.Row="5" Padding="0,0,0,110" x:Name="listView" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                         <ListView.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition FromHorizontalOffset="-100" FromVerticalOffset="0" IsStaggeringEnabled="True" />
