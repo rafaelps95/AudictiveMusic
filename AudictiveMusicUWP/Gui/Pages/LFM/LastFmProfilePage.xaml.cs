@@ -81,6 +81,9 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
                 
                 NavigateToPage(LastFmPage.Scrobbles, user);
             }
+
+            if (this.IsAuthenticatedUserPage)
+                ApplicationSettings.LastFmSessionUserImageUri = user.Avatar.Large.AbsoluteUri;
         }
 
         private void NavigateToPage(LastFmPage page, object param)

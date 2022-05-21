@@ -23,7 +23,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="checkBox" Visibility="Collapsed" Content="{Binding SelectedItemsCountText, ElementName=root}" />
-                <!--<TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />-->
+                <!--<TextBlock Text="&#xECCC;" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />-->
                 <!--<local:FluentButton Click="ClearButton_Click" IsEnabled="False" x:Name="clearButton" Icon="&#xE8E6;" IconOnly="True" />-->
             </StackPanel>
             <Grid x:Name="buttonsArea" Visibility="Collapsed" SizeChanged="ButtonsArea_SizeChanged" Margin="0" HorizontalAlignment="Stretch" Grid.Column="1">

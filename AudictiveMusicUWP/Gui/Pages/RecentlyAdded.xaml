@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="AudictiveMusicUWP.Gui.Pages.LFM.TestPage"
+    x:Class="AudictiveMusicUWP.Gui.Pages.RecentlyAdded"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AudictiveMusicUWP.Gui.UC"
@@ -9,9 +9,9 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <converter:DateTimePassedConverter x:Key="DateTimePassedConverter" />
+        <converter:DateTimePassedLocalTimeConverter x:Key="DateTimePassedConverter" />
         <converter:IsNowPlayingConverter x:Key="IsNowPlayingConverter" />
-
+        
         <Storyboard x:Key="OpenPageTransition">
             <DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetName="layoutRootScale" Storyboard.TargetProperty="ScaleX" EnableDependentAnimation="False">
                 <DoubleAnimation.EasingFunction>
@@ -68,14 +68,13 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="pageTitle" Margin="12,0" Text="Pending scrobbles" FontWeight="Bold" FontSize="25" TextTrimming="CharacterEllipsis" />
-                <!--<local:FluentButton Icon="&#xE898;" x:Name="sendButton" Text="Send" IsMainAction="True" Click="SendButton_Click" Grid.Column="1" />
-                <Button x:Name="testButton" Grid.Column="2" Content="Página teste" Click="TestButton_Click" />-->
+                <TextBlock x:Name="pageTitle" x:Uid="RecentlyAdded" Margin="12,0" FontWeight="Bold" FontSize="25" TextTrimming="CharacterEllipsis" />
+                <Button Grid.Row="0" Grid.Column="2" Content="&#xE8B1;" x:Name="shuffleButton" Click="shuffleButton_Click" VerticalAlignment="Center" Style="{StaticResource ModernIconButtonStyle}" />
             </Grid>
+
+            <local:SelectedItemsBar Canvas.ZIndex="2" Grid.Row="1" Grid.ColumnSpan="2" SelectionModeChanged="SelectionItemsBar_SelectionModeChanged" PlaySelected="SelectionItemsBar_PlaySelected" AddSelected="SelectionItemsBar_AddSelected" ClearRequest="SelectionItemsBar_ClearRequest" SelectAllRequest="SelectionItemsBar_SelectAllRequest" ShareSelected="SelectionItemsBar_ShareSelected" x:Name="selectionItemsBar" Visibility="Visible" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
 
             <!--<StackPanel x:Name="navigationButtons" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <ToggleButton Style="{StaticResource NavigationHeaderToggleButtonStyle}" Content="Neste dispositivo" Checked="ThisDeviceButton_Checked" x:Name="thisDeviceButton" Click="ThisDeviceButton_Click" />
@@ -83,7 +82,8 @@
             </StackPanel>-->
             <local:ModernProgressBar x:Name="progress" Grid.Row="1" Height="2" VerticalAlignment="Top" IsActive="True" />
 
-            <ListView Grid.Row="1" Grid.RowSpan="2" IsItemClickEnabled="False" Padding="0,0,0,115" x:Name="listView" SelectionMode="None" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
+
+            <ListView Grid.Row="1" Grid.RowSpan="2" IsItemClickEnabled="True" ItemClick="listView_ItemClick" Padding="0,0,0,115" x:Name="listView" SelectionChanged="listView_SelectionChanged" SelectionMode="None" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
                 <ListView.ItemContainerTransitions>
                     <TransitionCollection>
                         <RepositionThemeTransition />
@@ -93,7 +93,7 @@
                 </ListView.ItemContainerTransitions>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid HorizontalAlignment="Stretch" Margin="0,5" Background="Transparent" IsHoldingEnabled="True" IsRightTapEnabled="True">
+                        <Grid HorizontalAlignment="Stretch" Margin="0,5" Background="Transparent" IsHoldingEnabled="True" IsRightTapEnabled="True" RightTapped="SongItem_RightTapped" Holding="SongItem_Holding">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -101,15 +101,18 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Grid.Row="0" Text="{Binding Track}" FontSize="14" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
+                            <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Grid.Row="0" Text="{Binding Name}" FontSize="14" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                             <StackPanel Margin="0,5,0,5" Orientation="Horizontal" Grid.Row="1">
                                 <TextBlock Text="{Binding Artist}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
-                                <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
+                                <TextBlock Text="&#xECCC;" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
                                 <TextBlock Text="{Binding Album}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
 
                             </StackPanel>
-                            <TextBlock Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Center" Opacity="0.8" Text="{Binding TimePlayed, Converter={StaticResource DateTimePassedConverter}}" FontSize="10" TextWrapping="Wrap" />
+                            <TextBlock Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Center" Opacity="0.8" FontFamily="{ThemeResource IconFont}" Text="" Margin="0,0,4,0" FontSize="12" HorizontalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Opacity="0.8" Text="{Binding DateAdded, Converter={StaticResource DateTimePassedConverter}}" FontSize="10" TextWrapping="Wrap" />
+
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

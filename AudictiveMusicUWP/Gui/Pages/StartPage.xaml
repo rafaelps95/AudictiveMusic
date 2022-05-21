@@ -83,13 +83,14 @@
                     <SolidColorBrush Opacity="0.5" Color="{ThemeResource SystemChromeLowColor}" />
                 </Grid.Background>-->
                 <!--<TextBlock x:Name="pageTitle" VerticalAlignment="Center" Margin="12,0" x:Uid="LetsStart" Text="Let's start!" FontWeight="Bold" FontSize="25" TextTrimming="CharacterEllipsis" />-->
-                <Grid x:Name="headerRightButtons" Padding="20,0,20,0" SizeChanged="HeaderRightButtons_SizeChanged" HorizontalAlignment="Right">
+                <Grid x:Name="headerRightButtons" Padding="10,0,10,0" SizeChanged="HeaderRightButtons_SizeChanged" HorizontalAlignment="Right">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <local:WebServiceButton Grid.Column="0" Service="LastFm" SizeChanged="HeaderRightButtons_SizeChanged" x:Name="lastFmButton" VerticalAlignment="Stretch" FontSize="20" Tapped="lastFmButton_Tapped"/>
                     <!--<Button Grid.Column="1" Width="55" x:Name="settingsButton" VerticalAlignment="Stretch" FontFamily="{ThemeResource IconFont}" FontSize="20" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="settingsButton_Click" Content="" Style="{StaticResource ModernIconButtonStyle}" />-->
+                    <Button x:Name="settingsButton" Content="" Style="{StaticResource ModernIconButtonStyle}" Grid.Column="1" Click="settingsButton_Click" />
                 </Grid>
             </Grid>
 
@@ -128,6 +129,7 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Button Tag="" x:Uid="Shuffle" Content="Aleatório" x:Name="shuffleButton" Click="shuffleButton_Click" FontSize="22" Grid.Column="0" Style="{StaticResource CircleButtonStyleWithLabel}" Margin="16,7,16,7">
                                     <Button.Background>
@@ -147,8 +149,8 @@
                                             <LinearGradientBrush.RelativeTransform>
                                                 <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="-45"/>
                                             </LinearGradientBrush.RelativeTransform>
-                                            <GradientStop Color="#FF417FFF"/>
-                                            <GradientStop Color="#FF52F5DC" Offset="1"/>
+                                            <GradientStop Color="#FF2F67DA"/>
+                                            <GradientStop Color="#FF41D6BF" Offset="1"/>
                                         </LinearGradientBrush>
                                     </Button.Background>
                                 </Button>
@@ -177,8 +179,20 @@
                                     </Button.Background>
                                 </Button>
 
+                                <Button Tag="&#xE81C;" x:Uid="Recent" x:Name="recentsButton" Click="RecentsButton_Click" FontSize="22" Grid.Column="4" Style="{StaticResource CircleButtonStyleWithLabel}" Margin="16,7,16,7">
+                                    <Button.Background>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <LinearGradientBrush.RelativeTransform>
+                                                <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="-45"/>
+                                            </LinearGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#FF24B92E"/>
+                                            <GradientStop Color="#FF09580E" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Button.Background>
+                                </Button>
 
-                                <Button Tag="" x:Uid="SettingsMenu" Content="Configurações" x:Name="settingsButton" Click="settingsButton_Click" FontSize="22" Grid.Column="4" Style="{StaticResource CircleButtonStyleWithLabel}" Margin="16,7,16,7">
+
+                                <Button Tag="" x:Uid="SettingsMenu" Visibility="Collapsed" Content="Configurações" Click="settingsButton_Click" FontSize="22" Grid.Column="5" Style="{StaticResource CircleButtonStyleWithLabel}" Margin="16,7,16,7">
                                     <Button.Background>
                                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                             <LinearGradientBrush.RelativeTransform>

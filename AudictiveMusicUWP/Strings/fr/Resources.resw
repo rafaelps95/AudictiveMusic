@@ -687,7 +687,7 @@
   <data name="PlayNext" xml:space="preserve">
     <value>Lire ensuite</value>
   </data>
-  <data name="RecentlyAdded" xml:space="preserve">
+  <data name="RecentlyAdded.Text" xml:space="preserve">
     <value>Récemment ajouté</value>
   </data>
   <data name="RecentPlays" xml:space="preserve">

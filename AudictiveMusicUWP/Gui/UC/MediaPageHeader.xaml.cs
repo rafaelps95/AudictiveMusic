@@ -396,7 +396,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             try
             {
-                playCount.Text = formatter.FormatInt(LastART.Stats.Listeners) + " " + ApplicationInfo.Current.Resources.GetString("Listeners").ToUpper(); // + "  " + formatter.FormatInt(LastART.Stats.Plays) + " " + ApplicationInfo.Current.Resources.GetString("Scrobbles").ToUpper();
+                playCount.Text = formatter.FormatInt(LastART.Stats.Listeners) + " " + ApplicationInfo.Current.Resources.GetString("Listeners").ToUpper(); // + " &#xECCC; " + formatter.FormatInt(LastART.Stats.Plays) + " " + ApplicationInfo.Current.Resources.GetString("Scrobbles").ToUpper();
             }
             catch
             {

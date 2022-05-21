@@ -589,5 +589,10 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             NavigationHelper.Navigate(this, typeof(PendingScrobbles));
         }
+
+        private void RecentsButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationHelper.Navigate(this, typeof(RecentlyAdded));
+        }
     }
 }

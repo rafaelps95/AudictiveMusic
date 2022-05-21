@@ -325,7 +325,9 @@
         </Grid.RowDefinitions>
 
         <Grid x:Name="fullView" IsHitTestVisible="False" Opacity="0" Loaded="fullView_Loaded" Grid.RowSpan="2" Background="#FF000000">
-
+            <Grid.RenderTransform>
+                <CompositeTransform TranslateY="80" x:Name="fullViewTransform" />
+            </Grid.RenderTransform>
             <Grid x:Name="background" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity="0" RenderTransformOrigin="0.5,0.5">
                 <Grid.Background>
                     <ImageBrush Opacity="1" Stretch="UniformToFill">
@@ -359,7 +361,7 @@
             </Grid>
 
             <Grid x:Name="modernBG" IsHitTestVisible="False" Opacity="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-            <Grid x:Name="materialBG" Visibility="Visible" HorizontalAlignment="Center" IsHitTestVisible="False" Opacity="1">
+            <Grid x:Name="materialBG" Visibility="Collapsed" HorizontalAlignment="Center" IsHitTestVisible="False" Opacity="1">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -515,7 +517,8 @@
                 </Viewbox>
             </Grid>
 
-            <Grid x:Name="playlistRightBorder" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" />
+            <Grid x:Name="playerManipulationGrid" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" />
+            <Grid x:Name="playlistRightBorder" Margin="0,100,0,0" Background="Transparent" Width="40" PointerPressed="PlaylistRightBorder_PointerPressed" PointerEntered="PlaylistRightBorder_PointerEntered" PointerCanceled="PlaylistRightBorder_PointerCanceled" PointerCaptureLost="PlaylistRightBorder_PointerCaptureLost" PointerExited="PlaylistRightBorder_PointerExited" HorizontalAlignment="Right" VerticalAlignment="Stretch" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" />
 
             <Grid Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="1" IsTapEnabled="True" Canvas.ZIndex="5" PointerPressed="dismissArea_PointerPressed" IsHitTestVisible="False" x:Name="dismissArea" />
 
@@ -550,7 +553,7 @@
 
                 <!--<Rectangle Width="1" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Stretch" Grid.RowSpan="6" />-->
                 <StackPanel Orientation="Horizontal" Visibility="Visible" x:Name="albumContainer" Grid.Row="0" VerticalAlignment="Bottom">
-                    <local:AlbumCover x:Name="albumCover" AddRequested="AlbumCover_AddRequested" ArtistRequested="AlbumCover_ArtistRequested" Click="AlbumCover_Click" FavoriteStateToggled="AlbumCover_FavoriteStateToggled" />
+                    <local:AlbumCover x:Name="albumCover" AddRequested="AlbumCover_AddRequested" ArtistRequested="AlbumCover_ArtistRequested" Click="AlbumCover_Click" FavoriteStateToggled="AlbumCover_FavoriteStateToggled" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" />
                     <!--<Border x:Name="albumCover" Width="{Binding ElementName=albumCover, Path=Height}" PointerEntered="albumCover_PointerEntered" PointerReleased="albumCover_PointerReleased" Holding="albumCover_Holding" IsDoubleTapEnabled="True" DoubleTapped="albumCover_DoubleTapped" Tapped="albumCover_Tapped" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" CornerRadius="10">
                         <Border.Background>
                             <ImageBrush>
@@ -605,11 +608,15 @@
 
             </Grid>
 
-            <local:PlaylistControl x:Name="playlist" MaxWidth="500" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Canvas.ZIndex="6">
+            <local:PlaylistControl x:Name="playlist" IsHitTestVisible="False" MaxWidth="500" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Canvas.ZIndex="6">
                 <local:PlaylistControl.RenderTransform>
                     <TranslateTransform x:Name="playlistTranslate" />
                 </local:PlaylistControl.RenderTransform>
             </local:PlaylistControl>
+
+            <Grid x:Name="playlistRightBorderOverlay" Background="#7F000000" Canvas.ZIndex="6" Opacity="0" Width="40" IsHitTestVisible="False" HorizontalAlignment="Right" VerticalAlignment="Stretch">
+                <TextBlock Text="&#xE016;" FontFamily="{ThemeResource IconFont}" Foreground="White" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Grid>
 
             <local:Touch3D x:Name="touch3D" IsHitTestVisible="False" Canvas.ZIndex="15" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
 

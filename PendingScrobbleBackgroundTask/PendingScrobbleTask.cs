@@ -23,8 +23,7 @@ namespace PendingScrobbleBackgroundTask
 
             if (list.Count > 0)
             {
-                if (LastFm.Current.IsAuthenticated)
-                    await Ctr_PendingScrobble.Current.SendScrobbles(list);
+                await Ctr_PendingScrobble.Current.SendScrobbles(list);
             }
 
             _deferral.Complete();

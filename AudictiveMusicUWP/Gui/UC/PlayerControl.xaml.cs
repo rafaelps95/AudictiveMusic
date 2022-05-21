@@ -42,6 +42,13 @@ namespace AudictiveMusicUWP.Gui.UC
         public event PlayerTooltipEventHandler TooltipRequested;
         public event RoutedEventHandler TooltipDismissed;
 
+        //True for horizontal translation and False for vertical translation. Null for no manipulation
+        private bool? _isManipulatingX = null;
+        private double _playlistActualWidth
+        {
+            get { return playlist.ActualWidth; }
+        }
+
         private bool IsPlaying
         {
             get
@@ -397,6 +404,8 @@ namespace AudictiveMusicUWP.Gui.UC
             Storyboard sb = new Storyboard();
             DoubleAnimation da;
             DoubleAnimation da1;
+            DoubleAnimation da2;
+
             if (this.Mode == DisplayMode.Compact)
             {
                 fullView.IsHitTestVisible = false;
@@ -407,14 +416,24 @@ namespace AudictiveMusicUWP.Gui.UC
                 da = new DoubleAnimation()
                 {
                     To = 0,
-                    Duration = TimeSpan.FromMilliseconds(250),
+                    Duration = TimeSpan.FromMilliseconds(150),
+                    EnableDependentAnimation = true,
                     EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut } 
                 };
 
                 da1 = new DoubleAnimation()
                 {
                     To = 1,
-                    Duration = TimeSpan.FromMilliseconds(250),
+                    Duration = TimeSpan.FromMilliseconds(150),
+                    EnableDependentAnimation = true,
+                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+                };
+
+                da2 = new DoubleAnimation()
+                {
+                    To = 80,
+                    Duration = TimeSpan.FromMilliseconds(150),
+                    EnableDependentAnimation = true,
                     EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
                 };
 
@@ -432,14 +451,24 @@ namespace AudictiveMusicUWP.Gui.UC
                 da = new DoubleAnimation()
                 {
                     To = 1,
-                    Duration = TimeSpan.FromMilliseconds(250),
+                    Duration = TimeSpan.FromMilliseconds(150),
+                    EnableDependentAnimation = true,
                     EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
                 };
 
                 da1 = new DoubleAnimation()
                 {
                     To = 0,
-                    Duration = TimeSpan.FromMilliseconds(250),
+                    Duration = TimeSpan.FromMilliseconds(150),
+                    EnableDependentAnimation = true,
+                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+                };
+
+                da2 = new DoubleAnimation()
+                {
+                    To = 0,
+                    Duration = TimeSpan.FromMilliseconds(150),
+                    EnableDependentAnimation = true,
                     EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
                 };
 
@@ -472,6 +501,11 @@ namespace AudictiveMusicUWP.Gui.UC
             Storyboard.SetTargetProperty(da1, "Opacity");
 
             sb.Children.Add(da1);
+
+            Storyboard.SetTarget(da2, fullViewTransform);
+            Storyboard.SetTargetProperty(da2, "TranslateY");
+
+            sb.Children.Add(da2);
 
             sb.Begin();
         }
@@ -1268,6 +1302,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void ShowPlaylist()
         {
+            playlist.Opacity = 1;
+            playlistRightBorderOverlay.Opacity = 0;
             #region open playlist animation
             Storyboard sb = new Storyboard();
 
@@ -1298,6 +1334,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
             sb.Completed += (s, a) =>
             {
+                playlist.IsHitTestVisible = true;
+
                 if (IsPlaylistLoaded)
                     playlist.ScrollToSelectedIndex();
             };
@@ -1333,6 +1371,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
         public void HidePlaylist()
         {
+            playlist.IsHitTestVisible = false;
+
             dismissArea.IsHitTestVisible = false;
             IsPlaylistOpened = false;
 
@@ -1462,15 +1502,20 @@ namespace AudictiveMusicUWP.Gui.UC
             if (touch3D.IsTouch3DOpened)
                 return;
 
-            if (e.Cumulative.Translation.Y >= 200)
+            _isManipulatingX = null;
+            if (fullViewTransform.TranslateY >= 60)
             {
                 this.Mode = DisplayMode.Compact;
             }
-            else if (e.Cumulative.Translation.X < -100)
+            else
+            {
+                this.Mode = DisplayMode.Full;
+            }
+            if (playlistTranslate.X < _playlistActualWidth - 100)
             {
                 ShowPlaylist();
             }
-            else if (e.Cumulative.Translation.X >= -100)
+            else
             {
                 HidePlaylist();
             }
@@ -1485,10 +1530,52 @@ namespace AudictiveMusicUWP.Gui.UC
                 e.Complete();
             }
 
-            if (e.Cumulative.Translation.X > playlist.ActualWidth * -1)
+            double opacityRatio = e.Delta.Translation.Y / 200 * -1;
+
+            if (_isManipulatingX == null)
             {
-                playlistTranslate.X += e.Delta.Translation.X;
-                //PlayerControlsContainerTranslate.X += e.Delta.Translation.X;
+                if (e.Cumulative.Translation.X < -20)
+                    _isManipulatingX = true;
+                else if (e.Cumulative.Translation.Y > 20)
+                    _isManipulatingX = false;
+            }
+
+            if (_isManipulatingX == true)
+            {
+                playlist.Opacity = 1;
+                //if (e.Cumulative.Translation.X < -20)
+                //{
+                    if (playlistTranslate.X >= 0 && playlistTranslate.X <= playlist.ActualWidth)
+                    {
+                        if (playlistTranslate.X + e.Delta.Translation.X >= 0 &&
+                            playlistTranslate.X + e.Delta.Translation.X <= playlist.ActualWidth)
+                        {
+                            playlistTranslate.X += e.Delta.Translation.X;
+                        }
+                        //PlayerControlsContainerTranslate.X += e.Delta.Translation.X;
+                    }
+                //}
+            }
+            else if (_isManipulatingX == false)
+            {
+                //if (e.Cumulative.Translation.Y > 50)
+                //{
+                    if (fullViewTransform.TranslateY >= 0 && fullViewTransform.TranslateY <= 80)
+                    {
+                        if (fullViewTransform.TranslateY + e.Delta.Translation.Y >= 0 &&
+                            fullViewTransform.TranslateY + e.Delta.Translation.Y <= 80)
+                        {
+                            fullViewTransform.TranslateY += e.Delta.Translation.Y;
+                        }
+
+                        if (fullView.Opacity >= 0.6 && fullView.Opacity <= 1.0)
+                        {
+                            if (fullView.Opacity + opacityRatio >= 0.6 &&
+                            fullView.Opacity + opacityRatio <= 1.0)
+                                fullView.Opacity += opacityRatio;
+                        }
+                    }
+                //}
             }
         }
 
@@ -1980,6 +2067,105 @@ namespace AudictiveMusicUWP.Gui.UC
         private void NextSong_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void PlaylistRightBorder_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse && !_isManipulating && this.IsPlaylistOpened == false)
+                ShowPlaylistHint();
+        }
+
+        private void PlaylistRightBorder_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse && !_isManipulating && this.IsPlaylistOpened == false)
+                HidePlaylistHint();
+        }
+
+        private void PlaylistRightBorder_PointerCanceled(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse && !_isManipulating && this.IsPlaylistOpened == false)
+                HidePlaylistHint();
+        }
+
+        private void PlaylistRightBorder_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse && !_isManipulating && this.IsPlaylistOpened == false)
+                HidePlaylistHint();
+        }
+
+        private void ShowPlaylistHint()
+        {
+            playlist.Opacity = 0.5;
+            Storyboard sb = new Storyboard();
+
+            DoubleAnimation da = new DoubleAnimation()
+            {
+                To = playlist.ActualWidth - 110,
+                Duration = TimeSpan.FromMilliseconds(150),
+                EnableDependentAnimation = true,
+                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+            };
+
+            Storyboard.SetTarget(da, playlistTranslate);
+            Storyboard.SetTargetProperty(da, "X");
+            sb.Children.Add(da);
+
+            DoubleAnimation da1 = new DoubleAnimation()
+            {
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(150),
+                EnableDependentAnimation = true,
+                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+            };
+
+            Storyboard.SetTarget(da1, playlistRightBorderOverlay);
+            Storyboard.SetTargetProperty(da1, "Opacity");
+            sb.Children.Add(da1);
+
+            sb.Begin();
+        }
+
+        private void HidePlaylistHint()
+        {
+            Storyboard sb = new Storyboard();
+
+            DoubleAnimation da = new DoubleAnimation()
+            {
+                To = playlist.ActualWidth,
+                Duration = TimeSpan.FromMilliseconds(150),
+                EnableDependentAnimation = true,
+                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+            };
+
+            Storyboard.SetTarget(da, playlistTranslate);
+            Storyboard.SetTargetProperty(da, "X");
+            sb.Children.Add(da);
+
+            DoubleAnimation da1 = new DoubleAnimation()
+            {
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(150),
+                EnableDependentAnimation = true,
+                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+            };
+
+            Storyboard.SetTarget(da1, playlistRightBorderOverlay);
+            Storyboard.SetTargetProperty(da1, "Opacity");
+            sb.Children.Add(da1);
+
+
+            sb.Completed += (s, a) =>
+            {
+                playlist.Opacity = 1;
+            };
+
+            sb.Begin();
+        }
+
+        private void PlaylistRightBorder_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse && this.IsPlaylistOpened == false)
+                ShowPlaylist();
         }
     }
 }

@@ -47,6 +47,49 @@ namespace AudictiveMusicUWP.Gui.Util
         }
     }
 
+    public class DateTimePassedLocalTimeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            string str = "";
+
+            if (value != null)
+            {
+                DateTimeOffset dateTime = DateTime.SpecifyKind((DateTime)value,
+                                      DateTimeKind.Unspecified);
+
+                TimeSpan ts = DateTimeOffset.Now.ToUniversalTime().Subtract(dateTime);
+
+                if (ts.Days >= 1)
+                {
+                    str = $"{ts.Days.ToString()}d";
+                }
+                else if (ts.Hours >= 1 && ts.Hours <= 24)
+                {
+                    str = $"{ts.Hours.ToString()}h";
+                }
+                else if (ts.Minutes >= 1 && ts.Minutes <= 60)
+                {
+                    str = $"{ts.Minutes.ToString()}m";
+                }
+                else if (ts.Minutes < 1)
+                {
+                    str = $"{ts.Seconds.ToString()}s";
+                }
+
+            }
+
+
+            return str;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
     public class IsNowPlayingConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)

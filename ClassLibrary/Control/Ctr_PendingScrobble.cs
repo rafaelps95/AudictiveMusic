@@ -47,11 +47,16 @@ namespace ClassLibrary.Control
                 PendingScrobble ps = pendingScrobbles[i];
                 try
                 {
-                    Scrobble scrobble = new Scrobble(ps.Song.Artist, ps.Song.Album, ps.Song.Name, ps.Time);
-                    var response = await LastFm.Current.Client.Scrobbler.ScrobbleAsync(scrobble);
+                    if (LastFm.Current.IsAuthenticated && ApplicationInfo.Current.HasInternetConnection)
+                    {
+                        Scrobble scrobble = new Scrobble(ps.Song.Artist, ps.Song.Album, ps.Song.Name, ps.Time);
+                        var response = await LastFm.Current.Client.Scrobbler.ScrobbleAsync(scrobble);
 
-                    Remove(ps);
-                    result[i] = true;
+                        Remove(ps);
+                        result[i] = true;
+                    }
+                    else
+                        result[i] = false;
                 }
                 catch
                 {

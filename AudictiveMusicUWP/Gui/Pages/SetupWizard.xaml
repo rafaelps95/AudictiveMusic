@@ -209,9 +209,9 @@
             <local:FluentButton x:Name="previousButton" Visibility="Collapsed" Icon="" IconOnly="True" Click="previousButton_Click" VerticalAlignment="Stretch" Width="55" HorizontalAlignment="Left" />
             <StackPanel Name="selectionIndicators" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <!-- BOLINHAS INDICANDO PÁGINA ATUAL -->
-                <TextBlock Text="" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="1" FontSize="12" IsTextScaleFactorEnabled="False" />
-                <TextBlock Text="" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
-                <TextBlock Text="" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
+                <TextBlock Text="&#xECCC;" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="1" FontSize="12" IsTextScaleFactorEnabled="False" />
+                <TextBlock Text="&#xECCC;" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
+                <TextBlock Text="&#xECCC;" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />
 
                 <!-- CERTINHO!!! INDICADOR DE CONCLUSÃO -->
                 <TextBlock Text="" FontFamily="{ThemeResource IconFont}" Margin="2" Opacity="0.6" FontSize="12" IsTextScaleFactorEnabled="False" />

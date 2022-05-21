@@ -156,10 +156,5 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
             List<PendingScrobble> list = Ctr_PendingScrobble.Current.GetPendingScrobbles();
             await Ctr_PendingScrobble.Current.SendScrobbles(this.PendingList.ToList());
         }
-
-        private void TestButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationHelper.Navigate(this, typeof(TestPage));
-        }
     }
 }

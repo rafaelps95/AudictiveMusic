@@ -222,6 +222,7 @@ namespace ClassLibrary.Helpers
             ApplicationSettings.LastFmSessionToken = "";
             ApplicationSettings.LastFmSessionUsername = "";
             Ctr_PendingScrobble.Current.Clear();
+            lfmClient = null;
 
             this.Disconnected?.Invoke();
         }

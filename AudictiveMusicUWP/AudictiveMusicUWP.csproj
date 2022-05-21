@@ -120,11 +120,11 @@
     <Compile Include="Gui\Pages\LFM\TagPage.xaml.cs">
       <DependentUpon>TagPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\LFM\TestPage.xaml.cs">
-      <DependentUpon>TestPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Gui\Pages\LFM\TopMediaPage.xaml.cs">
       <DependentUpon>TopMediaPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Pages\RecentlyAdded.xaml.cs">
+      <DependentUpon>RecentlyAdded.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\UC\Acrylic.xaml.cs">
       <DependentUpon>Acrylic.xaml</DependentUpon>
@@ -455,11 +455,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\LFM\TestPage.xaml">
+    <Page Include="Gui\Pages\LFM\TopMediaPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\LFM\TopMediaPage.xaml">
+    <Page Include="Gui\Pages\RecentlyAdded.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -95,7 +95,7 @@
                                     <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Grid.Column="1" Grid.Row="0" Text="{Binding Name}" FontSize="14" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
                                     <StackPanel Margin="0,5,0,5" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
                                         <TextBlock Text="{Binding Artist}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
-                                        <TextBlock Text="" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
+                                        <TextBlock Text="&#xECCC;" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
                                         <TextBlock Text="{Binding Album}" FontSize="10" FontWeight="Medium" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
 
                                     </StackPanel>
