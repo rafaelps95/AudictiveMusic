@@ -8,7 +8,7 @@ namespace ClassLibrary.Helpers
 {
     public static class ShuffleHelper
     {
-        public static async Task Shuffle<T>(this List<T> list)
+        public static void Shuffle<T>(this List<T> list)
         {
             Random rng = new Random();
             int n = list.Count;

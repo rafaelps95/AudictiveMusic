@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Composition;
 using Windows.UI.Popups;
@@ -296,7 +297,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 LoadGlobalTopArtists();
         }
 
-        private async void LoadFavorites()
+        private void LoadFavorites()
         {
             favorites.Clear();
 
@@ -313,7 +314,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             noFavoritesGrid.Visibility = Visibility.Collapsed;
             favoritesScroll.Visibility = Visibility.Visible;
 
-            await songs.Shuffle();
+            songs.Shuffle();
 
             var smallList = songs.Take(5).ToList();
 
@@ -362,37 +363,24 @@ namespace AudictiveMusicUWP.Gui.Pages
             Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
             sb.Begin();
         }
-        private void OpenPage(bool reload)
+        private async void OpenPage(bool reload)
         {
-            try
-            {
-                Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
-
-                if (reload)
-                {
-                    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-                }
-
-                sb.Begin();
-            }
-            catch
-            {
-
-            }
-        }
-
-        private void pageTransition_Completed(object sender, object e)
-        {
+            await Task.Delay(200);
             LoadCards();
 
             if (LastFm.Current.IsAuthenticated && ApplicationInfo.Current.HasInternetConnection)
                 LoadUserInfo();
         }
 
+        private void pageTransition_Completed(object sender, object e)
+        {
+
+        }
+
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.PlayEverything));
-            PlayerController.OpenPlayer(this);
+            PlayerController.ShuffleCollection();
+            PlayerController.OpenPlayer();
         }
 
         private void collectionButton_Click(object sender, RoutedEventArgs e)
@@ -480,7 +468,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             List<string> list = new List<string>();
             list.Add(clickedSong.SongURI);
 
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+            PlayerController.Play(clickedSong);
         }
 
         private void FavoriteItem_MenuTriggered(object sender, Point point)

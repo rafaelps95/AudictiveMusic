@@ -355,7 +355,7 @@ namespace AudictiveMusicUWP.Gui.UC
             else
             {
                 if (_isOpen && _isTouchInteraction)
-                    await Task.Delay(4000);
+                    await Task.Delay(1500);
 
                 if (_isOpen && _isTouchInteraction)
                 {

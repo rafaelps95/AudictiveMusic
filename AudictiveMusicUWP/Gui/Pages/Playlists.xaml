@@ -104,20 +104,9 @@
         </Storyboard>
     </Page.Resources>
 
-    <Page.Transitions>
-        <TransitionCollection>
-            <NavigationThemeTransition>
-                <SuppressNavigationTransitionInfo />
-            </NavigationThemeTransition>
-        </TransitionCollection>
-    </Page.Transitions>
-
     <Grid>
         <ProgressRing x:Name="progress" IsActive="true" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Width="50" Height="50" />
-        <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5" Opacity="0">
-            <Grid.RenderTransform>
-                <ScaleTransform ScaleX="0.9" ScaleY="0.9" x:Name="layoutRootScale" />
-            </Grid.RenderTransform>
+        <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -147,7 +136,8 @@
                 </Button>
 
 
-                <ListView SelectionMode="None" IsItemClickEnabled="True" ItemClick="playlistsList_ItemClick" x:Name="playlistsList" Grid.Row="2">
+                <ListView SelectionMode="None" Transitions="{x:Null}"
+          ItemContainerTransitions="{x:Null}" IsItemClickEnabled="True" ItemClick="playlistsList_ItemClick" x:Name="playlistsList" Grid.Row="2">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Stretch" Margin="0,5" Background="Transparent" IsRightTapEnabled="True" RightTapped="PlaylistItem_RightTapped" IsHoldingEnabled="True" Holding="PlaylistItem_Holding">

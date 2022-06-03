@@ -7,62 +7,28 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <Storyboard x:Key="OpenPageTransition">
-            <DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetName="layoutRootScale" Storyboard.TargetProperty="ScaleX" EnableDependentAnimation="False">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-
-            <DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetName="layoutRootScale" Storyboard.TargetProperty="ScaleY" EnableDependentAnimation="False">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-
-            <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetName="layoutRoot" Storyboard.TargetProperty="Opacity" EnableDependentAnimation="False">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
     </Page.Resources>
     
-    <Page.Transitions>
-        <TransitionCollection>
-            <NavigationThemeTransition>
-                <SuppressNavigationTransitionInfo />
-            </NavigationThemeTransition>
-        </TransitionCollection>
-    </Page.Transitions>
 
     <Grid>
         <ProgressRing x:Name="progress" IsActive="true" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Width="50" Height="50" />
-        <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5" Opacity="0">
-            <Grid.RenderTransform>
-                <ScaleTransform ScaleX="0.9" ScaleY="0.9" x:Name="layoutRootScale" />
-            </Grid.RenderTransform>
+        <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <Grid Grid.Row="0" x:Name="pageTitleGrid" Margin="0,5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+
                 <TextBlock x:Name="pageTitle" VerticalAlignment="Center" Margin="12,0" FontWeight="Bold" FontSize="25" TextTrimming="CharacterEllipsis" />
-                <StackPanel x:Name="actionButtons" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button x:Name="removeButton" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" IsEnabled="False" Click="removeButton_Click" Content="" />
-                    <Button x:Name="renameButton" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="renameButton_Click" Content="" />
-                    <Button x:Name="saveButton" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="saveButton_Click" Content="" />
-                    <Button x:Name="moreButton" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="moreButton_Click" Content="" />
-                </StackPanel>
+
             </Grid>
 
-            <ListView Grid.Row="1" Padding="0,0,0,110" x:Name="SongsList" SelectionChanged="SongsList_SelectionChanged" CanReorderItems="True" AllowDrop="True" CanDragItems="True" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
+            <ListView Grid.Row="1" Grid.ColumnSpan="2" Padding="0,0,0,110" x:Name="SongsList" SelectionChanged="SongsList_SelectionChanged" CanReorderItems="True" AllowDrop="True" CanDragItems="True" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
                 <ListView.ItemContainerTransitions>
                     <TransitionCollection>
                         <RepositionThemeTransition />
@@ -89,6 +55,12 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <StackPanel x:Name="actionButtons" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="removeButton" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" IsEnabled="False" Click="removeButton_Click" Content="" />
+                <Button x:Name="renameButton" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="renameButton_Click" Content="" />
+                <Button x:Name="saveButton" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="saveButton_Click" Content="" />
+                <Button x:Name="moreButton" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Click="moreButton_Click" Content="" />
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>

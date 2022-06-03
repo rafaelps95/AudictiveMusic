@@ -85,8 +85,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             base.OnNavigatedFrom(e);
 
             progress.IsActive = true;
-            Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
-            sb.Begin();
+
             Collection.SongsChanged -= Collection_SongsChanged;
         }
 
@@ -172,14 +171,14 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void OpenPage(bool reload)
         {
             progress.IsActive = false;
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
+            //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
+            //if (reload)
+            //{
+            //    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
+            //}
 
-            sb.Begin();
+            //sb.Begin();
         }
 
         private void SongItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -205,31 +204,13 @@ namespace AudictiveMusicUWP.Gui.Pages
             PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
         }
 
-        private void shuffleButton_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> songs = Ctr_Song.Current.GetAllSongsPaths();
-
-            Random rng = new Random();
-            int n = songs.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                string value = songs[k];
-                songs[k] = songs[n];
-                songs[n] = value;
-            }
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(songs));
-        }
-
-        private async void listView_ItemClick(object sender, ItemClickEventArgs e)
+        private void listView_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (listView.SelectionMode == ListViewSelectionMode.None)
             {
                 Song clickedSong = e.ClickedItem as Song;
 
-                await listOfSongs.Shuffle();
+                listOfSongs.Shuffle();
                 List<string> list = new List<string>();
                 list.Add(clickedSong.SongURI);
 
@@ -239,7 +220,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                         list.Add(s.SongURI);
                 }
 
-                MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+                PlayerController.Play(list);
             }
         }
 

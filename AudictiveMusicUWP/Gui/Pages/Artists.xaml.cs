@@ -120,8 +120,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             base.OnNavigatedFrom(e);
 
             progress.IsActive = true;
-            Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
-            sb.Begin();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -130,14 +128,14 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             NavMode = e.NavigationMode;
 
-            if (ApplicationInfo.Current.IsMobile == false)
-            {
-                listView.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = true });
-            }
-            else
-            {
-                listView.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = false });
-            }
+            //if (ApplicationInfo.Current.IsMobile == false)
+            //{
+            //    listView.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = true });
+            //}
+            //else
+            //{
+            //    listView.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = false });
+            //}
 
             if (((CollectionViewSource)Resources["ListOfArtists"]).Source == null || CollectionHasBeenUpdated)
             {
@@ -204,14 +202,14 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void OpenPage(bool reload)
         {
             progress.IsActive = false;
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
+            //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
+            //if (reload)
+            //{
+            //    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
+            //}
 
-            sb.Begin();
+            //sb.Begin();
         }
 
         private async void DownloadImages(Artist artist)
@@ -274,11 +272,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             });
         }
 
-        private void shuffleButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.PlayEverything));
-        }
-
 
         private void Artist_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -333,15 +326,8 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             CircleImage cimg = (CircleImage)sender;
             Artist art = cimg.DataContext as Artist;
-            List<string> songs = new List<string>();
-            var temp = Ctr_Song.Current.GetSongsByArtist(art);
 
-            foreach (Song song in temp)
-            {
-                songs.Add(song.SongURI);
-            }
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(songs));
+            PlayerController.Play(art);
         }
 
         private void listView_DragItemsStarting(object sender, DragItemsStartingEventArgs e)

@@ -2913,10 +2913,10 @@
                                             <VisualState.Setters>
                                                 <Setter Target="Root.Background" Value="{ThemeResource ScrollBarBackgroundPointerOver}" />
                                                 <Setter Target="Root.BorderBrush" Value="{ThemeResource ScrollBarBorderBrushPointerOver}" />
-                                                <Setter Target="HorizontalTrackRect.Stroke" Value="{ThemeResource ScrollBarTrackStrokePointerOver}" />
-                                                <Setter Target="VerticalTrackRect.Stroke" Value="{ThemeResource ScrollBarTrackStrokePointerOver}" />
-                                                <Setter Target="HorizontalTrackRect.Fill" Value="{ThemeResource ScrollBarTrackFillPointerOver}" />
-                                                <Setter Target="VerticalTrackRect.Fill" Value="{ThemeResource ScrollBarTrackFillPointerOver}" />
+                                                <Setter Target="HorizontalTrackRect.BorderBrush" Value="{ThemeResource ScrollBarTrackStrokePointerOver}" />
+                                                <Setter Target="VerticalTrackRect.BorderBrush" Value="{ThemeResource ScrollBarTrackStrokePointerOver}" />
+                                                <Setter Target="HorizontalTrackRect.Background" Value="{ThemeResource ScrollBarTrackFillPointerOver}" />
+                                                <Setter Target="VerticalTrackRect.Background" Value="{ThemeResource ScrollBarTrackFillPointerOver}" />
                                             </VisualState.Setters>
                                             <Storyboard>
                                                 <ColorAnimation Duration="{ThemeResource ScrollBarExpandDuration}"
@@ -2993,10 +2993,10 @@
                                                 <Setter Target="Root.Background" Value="{ThemeResource ScrollBarBackgroundDisabled}" />
                                                 <Setter Target="Root.BorderBrush" Value="{ThemeResource ScrollBarBorderBrushDisabled}" />
                                                 <Setter Target="Root.Opacity" Value="0.5" />
-                                                <Setter Target="HorizontalTrackRect.Stroke" Value="{ThemeResource ScrollBarTrackStrokeDisabled}" />
-                                                <Setter Target="VerticalTrackRect.Stroke" Value="{ThemeResource ScrollBarTrackStrokeDisabled}" />
-                                                <Setter Target="HorizontalTrackRect.Fill" Value="{ThemeResource ScrollBarTrackFillDisabled}" />
-                                                <Setter Target="VerticalTrackRect.Fill" Value="{ThemeResource ScrollBarTrackFillDisabled}" />
+                                                <Setter Target="HorizontalTrackRect.BorderBrush" Value="{ThemeResource ScrollBarTrackStrokeDisabled}" />
+                                                <Setter Target="VerticalTrackRect.BorderBrush" Value="{ThemeResource ScrollBarTrackStrokeDisabled}" />
+                                                <Setter Target="HorizontalTrackRect.Background" Value="{ThemeResource ScrollBarTrackFillDisabled}" />
+                                                <Setter Target="VerticalTrackRect.Background" Value="{ThemeResource ScrollBarTrackFillDisabled}" />
                                                 <Setter Target="HorizontalPanningThumb.Background" Value="{ThemeResource ScrollBarPanningThumbBackgroundDisabled}" />
                                                 <Setter Target="VerticalPanningThumb.Background" Value="{ThemeResource ScrollBarPanningThumbBackgroundDisabled}" />
                                             </VisualState.Setters>

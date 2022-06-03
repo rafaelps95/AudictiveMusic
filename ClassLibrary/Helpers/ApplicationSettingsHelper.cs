@@ -5,6 +5,7 @@ using ClassLibrary.Entities;
 using ClassLibrary.Themes;
 using System;
 using System.Diagnostics;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -38,6 +39,16 @@ namespace ClassLibrary.Helpers
         public static event RoutedEventHandler TransparencyEffectToggled;
         public static event RoutedEventHandler PerformanceModeToggled;
 
+
+        public static void LoadServiceSettings()
+        {
+            var resources = ResourceLoader.GetForCurrentView("Keys");
+            LastFmAPIKey = resources.GetString("LastFmKey");
+            LastFmSecret = resources.GetString("LastFmSecret");
+            SpotifyApiId = resources.GetString("SpotifyId");
+            SpotifyApiSecret = resources.GetString("SpotifySecret");
+        }
+
         public static AppState AppState
         {
             get
@@ -46,11 +57,36 @@ namespace ClassLibrary.Helpers
                 if (value == null)
                     return AppState.Unknown;
                 else
-                    return (AppState)Enum.Parse(typeof(AppState), value.ToString());
+                {
+                    try
+                    {
+                        return (AppState)Enum.Parse(typeof(AppState), value.ToString());
+                    }
+                    catch
+                    {
+                        return AppState.Active;
+                    }
+                }
             }
             set
             {
                 SaveSettingsValue("AppState", value.ToString());
+            }
+        }
+
+        public static BackgroundTaskState BackgroundTaskState
+        {
+            get
+            {
+                object value = ReadSettingsValue("BackgroundTaskState");
+                if (value == null)
+                    return BackgroundTaskState.Unknown;
+                else
+                    return (BackgroundTaskState)Enum.Parse(typeof(BackgroundTaskState), value.ToString());
+            }
+            set
+            {
+                SaveSettingsValue("BackgroundTaskState", value.ToString());
             }
         }
 
@@ -102,21 +138,21 @@ namespace ClassLibrary.Helpers
             }
         }
 
-        public static bool IsBackgroundAudioTaskSuspended
-        {
-            get
-            {
-                object setting = ReadSettingsValue("BackgroundAudioTaskSuspended");
-                if (setting == null)
-                    return false;
-                else
-                    return (bool)setting;
-            }
-            set
-            {
-                SaveSettingsValue("BackgroundAudioTaskSuspended", value);
-            }
-        }
+        //public static bool IsBackgroundAudioTaskSuspended
+        //{
+        //    get
+        //    {
+        //        object setting = ReadSettingsValue("BackgroundAudioTaskSuspended");
+        //        if (setting == null)
+        //            return false;
+        //        else
+        //            return (bool)setting;
+        //    }
+        //    set
+        //    {
+        //        SaveSettingsValue("BackgroundAudioTaskSuspended", value);
+        //    }
+        //}
 
 
         public static Song CurrentSong

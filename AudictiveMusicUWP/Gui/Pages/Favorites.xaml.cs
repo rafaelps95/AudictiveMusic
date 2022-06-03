@@ -76,9 +76,6 @@ namespace AudictiveMusicUWP.Gui.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-
-            Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
-            sb.Begin();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -105,14 +102,14 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void OpenPage(bool reload)
         {
             progress.IsActive = false;
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
+            //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
+            //if (reload)
+            //{
+            //    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
+            //}
 
-            sb.Begin();
+            //sb.Begin();
         }
 
 
@@ -143,23 +140,14 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             List<Song> songs = Ctr_Song.Current.GetFavoriteSongs();
 
+            songs.Shuffle();
+
             List<string> list = new List<string>();
 
             foreach (Song s in songs)
                 list.Add(s.SongURI);
 
-            Random rng = new Random();
-            int n = songs.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                string value = list[k];
-                list[k] = list[n];
-                list[n] = value;
-            }
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+            PlayerController.Play(list);
         }
 
         private void listView_ItemClick(object sender, ItemClickEventArgs e)
@@ -168,7 +156,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Song clickedSong = e.ClickedItem as Song;
 
-                MessageService.SendMessageToBackground(new SetPlaylistMessage(new List<string>() { clickedSong.SongURI }));
+                PlayerController.Play(clickedSong);
             }
         }
 

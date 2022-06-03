@@ -163,14 +163,14 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void OpenPage(bool reload)
         {
             progress.IsActive = false;
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
+            //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
+            //if (reload)
+            //{
+            //    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
+            //}
 
-            sb.Begin();
+            //sb.Begin();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -180,8 +180,8 @@ namespace AudictiveMusicUWP.Gui.Pages
             scroll.ChangeView(0, 0, 1, true);
             pageBackground.Opacity = 0;
             artistBackgroundBitmap.UriSource = null;
-            layoutRootScale.ScaleX = layoutRootScale.ScaleY = 0.9;
-            layoutRoot.Opacity = 0;
+            //layoutRootScale.ScaleX = layoutRootScale.ScaleY = 0.9;
+            //layoutRoot.Opacity = 0;
 
             header.ClearContext();
         }
@@ -282,18 +282,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             PopupHelper.GetInstance(sender).ShowPopupMenu(album, true, point);
         }
 
-        private void playAlbumButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            Album alb = btn.DataContext as Album;
-
-            List<Song> songs = Ctr_Song.Current.GetSongsByAlbum(alb);
-            List<string> list = new List<string>();
-            foreach (Song s in songs)
-                list.Add(s.SongURI);
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
-        }
-
         private void artistBackgroundBitmap_ImageOpened(object sender, RoutedEventArgs e)
         {
             Storyboard sb = new Storyboard();
@@ -315,14 +303,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void playArtist_Click(object sender, RoutedEventArgs e)
         {
-            List<string> list = new List<string>();
-
-            var songs = Ctr_Song.Current.GetSongsByArtist(Artist);
-
-            foreach (Song song in songs)
-                list.Add(song.SongURI);
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+            PlayerController.Play(this.Artist);
         }
 
         private void AddToPlaylist_Click(object sender, RoutedEventArgs e)
@@ -332,14 +313,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void AddToNowPlaying_Click(object sender, RoutedEventArgs e)
         {
-            var songs = Ctr_Song.Current.GetSongsByArtist(Artist);
-
-            List<string> list = new List<string>();
-
-            foreach (Song song in songs)
-                list.Add(song.SongURI);
-
-            MessageService.SendMessageToBackground(new AddSongsToPlaylist(list, false));
+            PlayerController.AddToQueue(this.Artist);
         }
 
         private async void shareArtist_Click(object sender, RoutedEventArgs e)
@@ -400,7 +374,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             PopupHelper.GetInstance(sender).ShowPopupMenu(Artist, true, new Point(0, 0));
         }
 
-        private async void songsList_ItemClick(object sender, ItemClickEventArgs e)
+        private void songsList_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (listView.SelectionMode == ListViewSelectionMode.None)
             {
@@ -408,7 +382,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
                 List<string> list = new List<string>();
 
-                await listOfSongs.Shuffle();
+                listOfSongs.Shuffle();
                 list.Add(clickedSong.SongURI);
 
                 foreach (Song s in listOfSongs)
@@ -417,15 +391,10 @@ namespace AudictiveMusicUWP.Gui.Pages
                         list.Add(s.SongURI);
                 }
 
-                MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+                PlayerController.Play(list);
             }
         }
 
-
-        private void exitPageTransition_Completed(object sender, object e)
-        {
-
-        }
 
         private void scroll_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
         {

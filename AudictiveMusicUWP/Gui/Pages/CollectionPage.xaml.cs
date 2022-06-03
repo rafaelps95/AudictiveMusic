@@ -1,4 +1,5 @@
-﻿using AudictiveMusicUWP.Gui.Util;
+﻿using System;
+using AudictiveMusicUWP.Gui.Util;
 using BackgroundAudioShared.Messages;
 using ClassLibrary;
 using ClassLibrary.Control;
@@ -55,8 +56,6 @@ namespace AudictiveMusicUWP.Gui.Pages
                 return;
 
             progress.IsActive = true;
-            Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
-            sb.Begin();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -114,14 +113,14 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void OpenPage(bool reload)
         {
             progress.IsActive = false;
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
+            //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
+            //if (reload)
+            //{
+            //    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
+            //}
 
-            sb.Begin();
+            //sb.Begin();
         }
 
         private void CollectionPage_Loaded(object sender, RoutedEventArgs e)
@@ -131,22 +130,27 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void artistsButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(typeof(Artists));
+            Navigate(typeof(Artists));
+        }
+
+        private void Navigate(Type destination)
+        {
+            frame.Navigate(destination, null, new DrillInNavigationTransitionInfo());
         }
 
         private void albumsButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(typeof(Albums));
+            Navigate(typeof(Albums));
         }
 
         private void songsButton_Click(object sender, RoutedEventArgs e)
         {
-            frame.Navigate(typeof(Songs));
+            Navigate(typeof(Songs));
         }
 
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.PlayEverything));
+            PlayerController.ShuffleCollection();
         }
 
         private void frame_Navigated(object sender, NavigationEventArgs e)

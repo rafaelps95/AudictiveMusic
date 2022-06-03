@@ -51,7 +51,6 @@ namespace AudictiveMusicUWP
         {
             ApplicationSettings.AppState = BackgroundAudioShared.AppState.Active;
 
-            //MessageService.SendMessageToBackground(new AppStateMessage(BackgroundAudioShared.AppState.Active));
             //ApplicationData.Current.LocalSettings.Values["AppState"] = BackgroundAudioShared.AppState.Active.ToString();
         }
 
@@ -62,7 +61,6 @@ namespace AudictiveMusicUWP
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            ApplicationSettings.IsBackgroundAudioTaskSuspended = false;
             BuildInfo.RetrieveApiInfo();
             //LoadLastFmSettings();
             LoadServiceSettings();
@@ -116,7 +114,6 @@ namespace AudictiveMusicUWP
             Frame rootFrame = await SetMainFrame();
 
             ApplicationSettings.AppState = BackgroundAudioShared.AppState.Active;
-            //MessageService.SendMessageToBackground(new AppStateMessage(BackgroundAudioShared.AppState.Active));
             //ApplicationData.Current.LocalSettings.Values["AppState"] = BackgroundAudioShared.AppState.Active.ToString();
 
             
@@ -337,7 +334,6 @@ namespace AudictiveMusicUWP
             ApplicationSettings.AppState = BackgroundAudioShared.AppState.Suspended;
 
             //ApplicationData.Current.LocalSettings.Values["AppState"] = BackgroundAudioShared.AppState.Suspended.ToString();
-            //MessageService.SendMessageToBackground(new AppStateMessage(BackgroundAudioShared.AppState.Suspended));
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }

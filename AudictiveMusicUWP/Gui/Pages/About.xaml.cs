@@ -74,7 +74,6 @@ namespace AudictiveMusicUWP.Gui.Pages
 
                 base.OnNavigatedTo(e);
                 //await Task.Delay(400);
-                OpenPage(NavMode == NavigationMode.Back);
             }
             catch
             {
@@ -82,25 +81,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
         }
 
-        private void OpenPage(bool reload)
-        {
-            try
-            {
-                progress.IsActive = false;
-                Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
-
-                if (reload)
-                {
-                    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-                }
-
-                sb.Begin();
-            }
-            catch
-            {
-
-            }
-        }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             this.SizeChanged -= About_SizeChanged;

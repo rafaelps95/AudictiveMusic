@@ -30,7 +30,6 @@ namespace BackgroundAudioAgent
     {
         private BackgroundTaskDeferral deferral;
         private SystemMediaTransportControls smtc;
-        private IBackgroundTaskInstance instance;
         private ManualResetEvent backgroundTaskStarted = new ManualResetEvent(false);
         private bool IsLoadingPlaylist;
 
@@ -40,7 +39,6 @@ namespace BackgroundAudioAgent
         /// <param name="taskInstance"></param>
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            instance = taskInstance;
             IsLoadingPlaylist = false;
             smtc = BackgroundMediaPlayer.Current.SystemMediaTransportControls;
             smtc.ButtonPressed += smtc_ButtonPressed;
@@ -60,31 +58,45 @@ namespace BackgroundAudioAgent
             BackgroundMediaPlayer.Current.MediaEnded += Current_MediaEnded;
             BackgroundMediaPlayer.MessageReceivedFromForeground += BackgroundMediaPlayer_MessageReceivedFromForeground;
 
-            if (ApplicationData.Current.LocalSettings.Values.ContainsKey("Volume"))
-            {
-                double v = (double)ApplicationData.Current.LocalSettings.Values["Volume"];
-
-                if (v < 0)
-                    v = 0;
-                else if (v > 100)
-                    v = 100;
-
-                BackgroundMediaPlayer.Current.Volume = v;
-            }
-            else
-            {
-                ApplicationData.Current.LocalSettings.Values["Volume"] = BackgroundMediaPlayer.Current.Volume = 1;
-            }
-
             deferral = taskInstance.GetDeferral();
             backgroundTaskStarted.Set();
 
-            instance.Canceled += Instance_Canceled;
-            instance.Task.Completed += Task_Completed;
+            taskInstance.Task.Completed += Task_Completed;
+            taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled);
 
-            ApplicationSettings.IsBackgroundAudioTaskSuspended = false;
+            ApplicationSettings.BackgroundTaskState = BackgroundTaskState.Running;
+            // Send information to foreground that background task has been started if app is active
+            if (ApplicationSettings.AppState != AppState.Suspended)
+                MessageService.SendMessageToForeground(new BackgroundAudioTaskStartedMessage());
 
             //NotifyUser();
+        }
+
+        private void OnCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        {
+            try
+            {
+                backgroundTaskStarted.Reset();
+
+                ApplicationSettings.BackgroundTaskState = BackgroundTaskState.Canceled;
+                BackgroundMediaPlayer.MessageReceivedFromForeground -= BackgroundMediaPlayer_MessageReceivedFromForeground;
+                BackgroundMediaPlayer.Current.CurrentStateChanged -= Current_CurrentStateChanged;
+                BackgroundMediaPlayer.Current.MediaEnded -= Current_MediaEnded;
+                smtc.ButtonPressed -= smtc_ButtonPressed;
+                smtc.PropertyChanged -= smtc_PropertyChanged;
+                smtc.DisplayUpdater.ClearAll();
+                smtc.IsEnabled = false;
+
+                SavePlaybackState();
+
+                BackgroundMediaPlayer.Shutdown();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+
+            deferral.Complete();
         }
 
         private void Task_Completed(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
@@ -93,47 +105,19 @@ namespace BackgroundAudioAgent
             deferral.Complete();
         }
 
-        private void Instance_Canceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
-        {
-            //if (reason == BackgroundTaskCancellationReason.SystemPolicy)
-            //    return;
-
-            SavePlaybackState();
-
-            //if (reason == BackgroundTaskCancellationReason.IdleTask || reason == BackgroundTaskCancellationReason.ExecutionTimeExceeded || reason == BackgroundTaskCancellationReason.SystemPolicy)
-            //{
-
-
-            //}
-            ApplicationSettings.IsBackgroundAudioTaskSuspended = true;
-            BackgroundMediaPlayer.Shutdown();
-
-            deferral.Complete();
-        }
-
         private void SavePlaybackState()
         {
             ToastNotificationManager.History.Remove("next");
-            //BadgeUpdateManager.CreateBadgeUpdaterForApplication("App").Clear();
 
-            ApplicationSettings.PlaybackLastPosition = BackgroundMediaPlayer.Current.PlaybackSession.Position.TotalMilliseconds;
+            if (BackgroundMediaPlayer.Current.PlaybackSession.Position.TotalMilliseconds == BackgroundMediaPlayer.Current.PlaybackSession.NaturalDuration.TotalMilliseconds)
+                ApplicationSettings.PlaybackLastPosition = 0;
+            else
+                ApplicationSettings.PlaybackLastPosition = BackgroundMediaPlayer.Current.PlaybackSession.Position.TotalMilliseconds;
 
             Dao_NowPlaying.SavePlaylist();
 
             if (NowPlaying.Current.Songs.Count > 0)
                 NotifyUser();
-
-            BackgroundMediaPlayer.Current.CurrentStateChanged -= Current_CurrentStateChanged;
-            BackgroundMediaPlayer.Current.MediaEnded -= Current_MediaEnded;
-            BackgroundMediaPlayer.MessageReceivedFromForeground -= BackgroundMediaPlayer_MessageReceivedFromForeground;
-
-            smtc.DisplayUpdater.ClearAll();
-            smtc.IsEnabled = false;
-            smtc.ButtonPressed -= smtc_ButtonPressed;
-            smtc.PropertyChanged -= smtc_PropertyChanged;
-
-            // immediately set not running
-            backgroundTaskStarted.Reset();
         }
 
         private void NotifyUser()
@@ -341,7 +325,7 @@ namespace BackgroundAudioAgent
             {
                 var songs = Ctr_Song.Current.GetAllSongsPaths();
 
-                await songs.Shuffle();
+                songs.Shuffle();
                 if (songs.Count > 0)
                     SetPlaylist(songs);
             }
@@ -400,7 +384,7 @@ namespace BackgroundAudioAgent
             }
         }
 
-        private async void BackgroundMediaPlayer_MessageReceivedFromForeground(object sender, MediaPlayerDataReceivedEventArgs e)
+        private void BackgroundMediaPlayer_MessageReceivedFromForeground(object sender, MediaPlayerDataReceivedEventArgs e)
         {
             AddSongsToPlaylist addSongsToPlaylist;
             if (MessageService.TryParseMessage(e.Data, out addSongsToPlaylist))
@@ -454,7 +438,7 @@ namespace BackgroundAudioAgent
                 // Se não havia músicas na lista, deve-se iniciar a reprodução
                 if (playlistCount == 0)
                 {
-                    bool result = backgroundTaskStarted.WaitOne(1000);
+                    bool result = backgroundTaskStarted.WaitOne(5000);
                     if (!result)
                         throw new Exception("Background Task didnt initialize in time");
 
@@ -522,7 +506,7 @@ namespace BackgroundAudioAgent
                         NowPlaying.Current.Songs.Clear();
 
                         //ShuffleToggleButton.IsChecked = true;
-                        await ShuffleList.Shuffle();
+                        ShuffleList.Shuffle();
 
                         NowPlaying.Current.Songs.Add(playingSong);
 

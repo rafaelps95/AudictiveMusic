@@ -482,11 +482,7 @@ namespace AudictiveMusicUWP.Gui.UC
             Button btn = (Button)sender;
             Album alb = btn.DataContext as Album;
 
-            List<Song> songs = Ctr_Song.Current.GetSongsByAlbum(alb);
-            List<string> list = new List<string>();
-            foreach (Song s in songs)
-                list.Add(s.SongURI);
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+            PlayerController.Play(alb);
         }
 
         private void SongItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -653,13 +649,8 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             CircleImage cimg = (CircleImage)sender;
             Artist art = cimg.DataContext as Artist;
-            List<string> songs = new List<string>();
-            var temp = Ctr_Song.Current.GetSongsByArtist(art);
 
-            foreach (Song song in temp)
-                songs.Add(song.SongURI);
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(songs));
+            PlayerController.Play(art);
         }
 
         private void AlbumItem_MenuTriggered(object sender, Point point)
@@ -856,16 +847,7 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             Song clickedSong = e.ClickedItem as Song;
 
-            List<string> list = new List<string>();
-            list.Add(clickedSong.SongURI);
-
-            //foreach (Song s in listOfSongs)
-            //{
-            //    if (s.SongURI != clickedSong.SongURI)
-            //        list.Add(s.SongURI);
-            //}
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+            PlayerController.Play(clickedSong);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AudictiveMusicUWP.Gui.Util;
 using BackgroundAudioShared.Messages;
+using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
 using Microsoft.Graphics.Canvas.Effects;
@@ -129,7 +130,7 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 MusicPlaylist.SelectionChanged -= Playlist_SelectionChanged;
                 tempDragNewIndex = e.NewStartingIndex;
-                MessageService.SendMessageToBackground(new EditPlaylistMessage(Mode.DragAndDrop, tempDragOldIndex, tempDragNewIndex));
+                PlayerController.MoveItem(tempDragOldIndex, tempDragNewIndex);
                 tempDragItem = null;
             }
 
@@ -255,38 +256,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             UpdatePreviousAndNext();
 
-            MessageService.SendMessageToBackground(new EditPlaylistMessage(Mode.Remove, index));
-        }
-
-        private void MoveSongDownButton_Click(object sender, RoutedEventArgs e)
-        {
-            PlaylistList.CollectionChanged -= PlaylistList_CollectionChanged;
-            int index = MusicPlaylist.SelectedIndex;
-            var item = MusicPlaylist.SelectedItem;
-            PlaylistList.Remove(item as Song);
-            PlaylistList.Insert(index + 1, item as Song);
-            MusicPlaylist.SelectedIndex = index + 1;
-            PlaylistList.CollectionChanged += PlaylistList_CollectionChanged;
-
-            UpdatePreviousAndNext();
-
-            MessageService.SendMessageToBackground(new EditPlaylistMessage(Mode.MoveDown, index));
-        }
-
-        private void MoveSongUpButton_Click(object sender, RoutedEventArgs e)
-        {
-            PlaylistList.CollectionChanged -= PlaylistList_CollectionChanged;
-
-            int index = MusicPlaylist.SelectedIndex;
-            var item = MusicPlaylist.SelectedItem;
-            PlaylistList.Remove(item as Song);
-            PlaylistList.Insert(index - 1, item as Song);
-            MusicPlaylist.SelectedIndex = index - 1;
-            PlaylistList.CollectionChanged += PlaylistList_CollectionChanged;
-
-            UpdatePreviousAndNext();
-
-            MessageService.SendMessageToBackground(new EditPlaylistMessage(Mode.MoveUp, index));
+            PlayerController.RemoveIndex(index);
         }
 
         private void Playlist_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -297,7 +267,7 @@ namespace AudictiveMusicUWP.Gui.UC
             if (reordering)
                 return;
 
-            MessageService.SendMessageToBackground(new JumpToIndexMessage(MusicPlaylist.SelectedIndex));
+            PlayerController.SkipToIndex(MusicPlaylist.SelectedIndex);
         }
 
         private void SavePlaylist_Click(object sender, RoutedEventArgs e)
@@ -348,7 +318,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             UpdatePreviousAndNext();
 
-            MessageService.SendMessageToBackground(new EditPlaylistMessage(Mode.Remove, index));
+            PlayerController.RemoveIndex(index);
 
             HideDropAreaOverlayColor();
         }
@@ -421,7 +391,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageService.SendMessageToBackground(new ClearPlaylistMessage());
+            PlayerController.ClearPlaylist();
         }
     }
 }

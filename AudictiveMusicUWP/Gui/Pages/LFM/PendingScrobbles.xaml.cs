@@ -76,9 +76,6 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-
-            Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
-            sb.Begin();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -93,14 +90,14 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
         private void OpenPage(bool reload)
         {
             progress.IsActive = false;
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
+            //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
+            //if (reload)
+            //{
+            //    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
+            //}
 
-            sb.Begin();
+            //sb.Begin();
         }
 
 

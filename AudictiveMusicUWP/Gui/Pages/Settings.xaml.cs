@@ -80,6 +80,15 @@ namespace AudictiveMusicUWP.Gui.Pages
             this.SizeChanged += Settings_SizeChanged;
             this.NavigationCacheMode = NavigationCacheMode.Disabled;
             this.InitializeComponent();
+            PlayerController.CurrentStateChanged += PlayerController_CurrentStateChanged;
+        }
+
+        private async void PlayerController_CurrentStateChanged(MediaPlaybackState state)
+        {
+            await Dispatcher.RunIdleAsync((s) =>
+            {
+                LoadTimerSettings();
+            });
         }
 
         private void Settings_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -125,10 +134,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             TapToResumeSwitch.Toggled -= TapToResumeSwitch_Toggled;
             TransparencyToggleSwitch.Toggled -= TransparencyToggleSwitch_Toggled;
             PerformanceToggleSwitch.Toggled -= PerformanceToggleSwitch_Toggled;
-
-
-            Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
-            sb.Begin();
         }
 
         private void LoadSettings()
@@ -195,14 +200,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             TapToResumeSwitch.Toggled += TapToResumeSwitch_Toggled;
             SendScrobbleToggleSwitch.Toggled += SendScrobble_Toggled;
             TimerBox.TextChanged += TimerBox_TextChanged;
-            try
-            {
-                BackgroundMediaPlayer.MessageReceivedFromBackground += BackgroundMediaPlayer_MessageReceivedFromBackground;
-            }
-            catch
-            {
-
-            }
 
             try
             {
@@ -264,22 +261,9 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
         }
 
-        private async void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
-        {
-            CurrentStateChangedMessage currentStateChangedMessage;
-            if (MessageService.TryParseMessage(e.Data, out currentStateChangedMessage))
-            {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    LoadTimerSettings();
-                });
-            }
-        }
-
-
         private void LoadTimerSettings()
         {
-            if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Closed)
+            if (PlayerController.Current.CurrentState == MediaPlaybackState.None)
                 return;
 
             TimerCancelButton.IsEnabled = true;
@@ -330,21 +314,21 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void OpenPage(bool reload)
         {
-            try
-            {
-                Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
+            //try
+            //{
+            //    Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
-                if (reload)
-                {
-                    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-                }
+            //    if (reload)
+            //    {
+            //        layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
+            //    }
 
-                sb.Begin();
-            }
-            catch
-            {
+            //    sb.Begin();
+            //}
+            //catch
+            //{
 
-            }
+            //}
         }
 
         #region EVENTS

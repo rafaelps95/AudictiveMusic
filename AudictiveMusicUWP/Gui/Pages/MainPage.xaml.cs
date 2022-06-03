@@ -98,7 +98,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             this.Loaded += MainPage_Loaded;
             this.InitializeComponent();
 
-            Application.Current.Suspending += Current_Suspending;
             playlistPicker = null;
             searchUI = null;
 
@@ -121,7 +120,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             //Window.Current.CoreWindow.CharacterReceived += CoreWindow_CharacterReceived;
             InAppNotificationHelper.NotificationReceived += InAppNotificationHelper_NotificationReceived;
             InAppNotificationHelper.NotificationDismissed += InAppNotificationHelper_NotificationDismissed;
-
+            PlayerController.Current.SetDispatcher(this.Dispatcher);
         }
 
         private void ApplicationSettings_PerformanceModeToggled(object sender, RoutedEventArgs e)
@@ -329,11 +328,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             titleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Visible;
         }
 
-        private void Current_Resuming(object sender, object e)
-        {
-            player.InitializePlayer();
-            SetTitleBar();
-        }
 
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -469,7 +463,6 @@ namespace AudictiveMusicUWP.Gui.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            Application.Current.Resuming -= Current_Resuming;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -477,7 +470,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             base.OnNavigatedTo(e);
 
             SetAppTheme(ApplicationSettings.AppTheme);
-
             Collection.LoadCollectionChanges();
 
             Application.Current.Suspending += Current_Suspending;
@@ -503,14 +495,14 @@ namespace AudictiveMusicUWP.Gui.Pages
 
                         isResumingPlayback = true;
                         PlayPauseOrResume();
-                        PlayerController.OpenPlayer(this);
+                        PlayerController.OpenPlayer(true);
                     }
                     else if (NavigationHelper.GetParameter(arguments, "action") == "playEverything")
                     {
                         if (this.IsAppOpened == false)
                             player.InitializePlayer();
-                        MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.PlayEverything));
-                        PlayerController.OpenPlayer(this);
+                        PlayerController.ShuffleCollection();
+                        PlayerController.OpenPlayer(true);
                     }
                     else if (NavigationHelper.GetParameter(arguments, "action") == "navigate")
                     {
@@ -536,9 +528,11 @@ namespace AudictiveMusicUWP.Gui.Pages
                 if (BackgroundMediaPlayer.Current != null)
                 {
                     if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState != MediaPlaybackState.None || isResumingPlayback)
-                        PlayerController.OpenPlayer(this);
+                        PlayerController.OpenPlayer(true);
                 }
             }
+
+            PlayerController.Current.StartBackgroundAudioTask();
 
             IsAppOpened = true;
         }
@@ -585,7 +579,22 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
+            var deferral = e.SuspendingOperation.GetDeferral();
+
+            PlayerController.Current.RemoveDispatcher();
             player.ClearPlayerState(true);
+            if (ApplicationSettings.BackgroundTaskState == BackgroundAudioShared.BackgroundTaskState.Running)
+                PlayerController.Current.RemoveMediaPlayerEventHandlers();
+
+            deferral.Complete();
+        }
+
+        private void Current_Resuming(object sender, object e)
+        {
+            PlayerController.Current.SetDispatcher(this.Dispatcher);
+            PlayerController.Current.AddMediaPlayerEventHandlers();
+            player.InitializePlayer();
+            SetTitleBar();
         }
 
         private void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
@@ -652,28 +661,19 @@ namespace AudictiveMusicUWP.Gui.Pages
             PlayPauseOrResume();
         }
 
-        private async void PlayPauseOrResume()
+        private void PlayPauseOrResume()
         {
-            if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState != MediaPlaybackState.Playing
-    && BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState != MediaPlaybackState.Paused)
-            {
-                MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.Resume));
-
-                return;
-            }
-
-            MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.PlayPause));
-
+            PlayerController.PlayPause();
         }
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-            MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.SkipToPrevious));
+            PlayerController.Previous();
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.SkipToNext));
+            PlayerController.Next();
         }
 
         private void BottomBarTapToResumeMessageGrid_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1026,7 +1026,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
             }
 
-            MainFrame.Navigate(targetPage, parameter);
+            MainFrame.Navigate(targetPage, parameter, new DrillInNavigationTransitionInfo());
         }
 
         private void nowPlaying_Drop(object sender, DragEventArgs e)

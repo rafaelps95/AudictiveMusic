@@ -106,11 +106,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AppState.cs" />
+    <Compile Include="BackgroundTaskState.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="Messages\ActionMessage.cs" />
     <Compile Include="Messages\AddSongsToPlaylist.cs" />
     <Compile Include="Messages\AppStateMessage.cs" />
+    <Compile Include="Messages\BackgroundAudioTaskStartedMessage.cs" />
     <Compile Include="Messages\ClearPlaylistMessage.cs" />
     <Compile Include="Messages\CurrentIndexMessage.cs" />
     <Compile Include="Messages\CurrentStateChangedMessage.cs" />

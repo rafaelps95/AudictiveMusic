@@ -77,7 +77,7 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 Song song = this.DataContext as Song;
 
-                MessageService.SendMessageToBackground(new SetPlaylistMessage(new List<string>() { song.SongURI }));
+                PlayerController.Play(song);
             }
             else if (this.ContextMode == Enumerators.MediaItemType.Album)
             {

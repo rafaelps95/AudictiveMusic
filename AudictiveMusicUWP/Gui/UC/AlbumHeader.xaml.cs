@@ -24,7 +24,7 @@ namespace AudictiveMusicUWP.Gui.UC
 {
     public sealed partial class AlbumHeader : UserControl
     {
-        private Album ALB
+        private Album Album
         {
             get;
             set;
@@ -70,19 +70,19 @@ namespace AudictiveMusicUWP.Gui.UC
 
         public void SetContext(Album album)
         {
-            this.DataContext = ALB = album;
+            this.DataContext = Album = album;
 
             BitmapImage bmp = new BitmapImage();
             borderBrush.ImageSource = bmp;
-            bmp.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + ALB.ID + ".jpg", UriKind.Absolute);
+            bmp.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + Album.ID + ".jpg", UriKind.Absolute);
 
 
             BitmapImage blurbmp = new BitmapImage();
             rootBrush.ImageSource = blurbmp;
             //blurbmp.UriSource = new Uri("ms-appdata:///local/Artists/artist_" + StringHelper.RemoveSpecialChar(ALB.Artist) + ".jpg", UriKind.Absolute);
-            blurbmp.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + ALB.ID + ".jpg", UriKind.Absolute);
+            blurbmp.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + Album.ID + ".jpg", UriKind.Absolute);
 
-            albumName.Text = ALB.Name.ToUpper();
+            albumName.Text = Album.Name.ToUpper();
         }
 
         public void UpdateNumberOfItems(int nSongs)
@@ -140,26 +140,19 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void moreButton_Click(object sender, RoutedEventArgs e)
         {
-            PopupHelper.GetInstance(sender).ShowPopupMenu(ALB, true, new Point(0, 0));
+            PopupHelper.GetInstance(sender).ShowPopupMenu(Album, true, new Point(0, 0));
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
-            List<string> list = new List<string>();
-
-            var songs = Ctr_Song.Current.GetSongsByAlbum(ALB);
-
-            foreach (Song song in songs)
-                list.Add(song.SongURI);
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+            PlayerController.Play(this.Album);
         }
 
         private void artistName_Click(object sender, RoutedEventArgs e)
         {
             Artist art = new Artist()
             {
-                Name = ALB.Artist
+                Name = Album.Artist
             };
 
             NavigationHelper.Navigate(this, typeof(ArtistPage), art);
@@ -169,7 +162,7 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             List<string> list = new List<string>();
 
-            var songs = Ctr_Song.Current.GetSongsByAlbum(ALB);
+            var songs = Ctr_Song.Current.GetSongsByAlbum(Album);
 
             foreach (Song song in songs)
                 list.Add(song.SongURI);

@@ -49,6 +49,8 @@ namespace AudictiveMusicUWP.Gui.UC
             get { return playlist.ActualWidth; }
         }
 
+        private bool _eventsSet = false;
+
         private bool IsPlaying
         {
             get
@@ -97,7 +99,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 albumCover.IsHitTestVisible = !value;
             }
         }
-        bool wasHolding;
+        bool forcePreviousSkip;
         private CompositionEffectBrush _brush;
         private Compositor _compositor;
         private SpriteVisual sprite;
@@ -166,8 +168,9 @@ namespace AudictiveMusicUWP.Gui.UC
             set;
         }
 
-        
 
+
+        bool _suppressAnimation;
         bool singleTap;
         public PlayerControl()
         {
@@ -177,7 +180,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             touch3D.ActionRequested += touch3D_ActionRequested;
             touch3D.VisibilityChanged += Touch3D_VisibilityChanged;
-            wasHolding = false;
+            forcePreviousSkip = false;
             IsPlaylistLoaded = false;
             IsPlaylistOpened = false;
             PlaylistHasBeenUpdated = true;
@@ -195,14 +198,76 @@ namespace AudictiveMusicUWP.Gui.UC
             Ctr_Song.FavoritesChanged += Ctr_Song_FavoritesChanged;
         }
 
+        private async void PlayerController_BackgroundActionRequested(BackgroundAudioShared.Messages.Action action)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                if (action == BackgroundAudioShared.Messages.Action.ClearPlayback)
+                {
+                    DisablePlayer();
+                }
+            });
+        }
+
+        private async void PlayerController_CurrentStateChanged(MediaPlaybackState state)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+            {
+                Debug.WriteLine("CURRENT STATE: " + state.ToString());
+
+                UpdateButtons();
+
+                if (state == MediaPlaybackState.None)
+                {
+                    DisablePlayer();
+                }
+                else if (state == MediaPlaybackState.Playing)
+                {
+                    Tick.Start();
+                }
+                else
+                {
+                    Tick.Stop();
+                }
+            });
+        }
+
+        private async void PlayerController_IndexReceived(int index)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                playlist.CurrentTrackIndex = index;
+                UpdatePlayerInfo();
+            });
+        }
+
+        private async void PlayerController_PlaylistReceived(List<string> playlist)
+        {
+            await Dispatcher.RunIdleAsync(async (s) =>
+            {
+                PlaylistHasBeenUpdated = true;
+                Debug.WriteLine("PLAYLISTMESSAGE...\nOK");
+
+                await LoadPlaylist(playlist);
+                if (playlist.Count < 2)
+                    nextSong.Visibility = Visibility.Collapsed;
+                else
+                {
+                    nextSong.Visibility = Visibility.Visible;
+                }
+                UpdateNextSong();
+            });
+        }
+
         private void Ctr_Song_FavoritesChanged(Song updatedSong)
         {
             if (updatedSong.SongURI == albumCover.CurrentSong.SongURI)
                 albumCover.CurrentSong = ApplicationSettings.CurrentSong;
         }
 
-        private void PlayerController_FullPlayerRequested(object sender, RoutedEventArgs e)
+        private void PlayerController_FullPlayerRequested(bool suppressAnimation)
         {
+            _suppressAnimation = suppressAnimation;
             Mode = DisplayMode.Full;
         }
 
@@ -274,12 +339,16 @@ namespace AudictiveMusicUWP.Gui.UC
         public void InitializePlayer()
         {
             ApplicationSettings.AppState = AppState.Active;
-            //MessageService.SendMessageToBackground(new AppStateMessage(AppState.Active));
-            //ApplicationData.Current.LocalSettings.Values["AppState"] = AppState.Active.ToString();
-            BackgroundMediaPlayer.MessageReceivedFromBackground -= BackgroundMediaPlayer_MessageReceivedFromBackground;
-            BackgroundMediaPlayer.MessageReceivedFromBackground += BackgroundMediaPlayer_MessageReceivedFromBackground;
 
-            BackgroundMediaPlayer.Current.Volume = 100;
+            if (_eventsSet == false)
+            {
+                PlayerController.PlaylistReceived += PlayerController_PlaylistReceived;
+                PlayerController.IndexReceived += PlayerController_IndexReceived;
+                PlayerController.CurrentStateChanged += PlayerController_CurrentStateChanged;
+                PlayerController.BackgroundActionRequested += PlayerController_BackgroundActionRequested;
+                _eventsSet = true;
+            }
+            //ApplicationData.Current.LocalSettings.Values["AppState"] = AppState.Active.ToString();
 
             UpdateSliderInfo();
             Tick.Interval = TimeSpan.FromMilliseconds(250);
@@ -296,17 +365,12 @@ namespace AudictiveMusicUWP.Gui.UC
 
             try
             {
-                if (BackgroundMediaPlayer.Current != null)
-                {
-                    if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState != MediaPlaybackState.None)
-                    {
-                        MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.AskPlaylist));
+                if (ApplicationSettings.BackgroundTaskState == BackgroundTaskState.Running)
+                    PlayerController.RequestPlaylist();
 
-                        if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.Playing)
-                        {
-                            Tick.Start();
-                        }
-                    }
+                if (PlayerController.Current.CurrentState == MediaPlaybackState.Playing)
+                {
+                    Tick.Start();
                 }
             }
             catch
@@ -347,7 +411,13 @@ namespace AudictiveMusicUWP.Gui.UC
         public void ClearPlayerState(bool removeHandlers)
         {
             if (removeHandlers)
-                BackgroundMediaPlayer.MessageReceivedFromBackground -= BackgroundMediaPlayer_MessageReceivedFromBackground;
+            {
+                PlayerController.PlaylistReceived -= PlayerController_PlaylistReceived;
+                PlayerController.IndexReceived -= PlayerController_IndexReceived;
+                PlayerController.CurrentStateChanged -= PlayerController_CurrentStateChanged;
+                PlayerController.BackgroundActionRequested -= PlayerController_BackgroundActionRequested;
+                _eventsSet = false;
+            }
 
             CurrentArtist = string.Empty;
             //backgroundBitmapImage.UriSource = null;
@@ -400,6 +470,19 @@ namespace AudictiveMusicUWP.Gui.UC
         private void UpdateView()
         {
             ViewChanged?.Invoke(this.Mode);
+
+            if (_suppressAnimation)
+            {
+                _suppressAnimation = false;
+                compactView.IsHitTestVisible = false;
+                fullView.IsHitTestVisible = true;
+                fullView.Opacity = 1;
+                compactView.Opacity = 0;
+                fullViewTransform.TranslateY = 0;
+                (this.Resources["fadeInBlur"] as Storyboard).Begin();
+
+                return;
+            }
 
             Storyboard sb = new Storyboard();
             DoubleAnimation da;
@@ -584,74 +667,6 @@ namespace AudictiveMusicUWP.Gui.UC
                 {
                     PlayPauseButton.Content = "\uF5B0";
                 }
-            }
-        }
-
-        private async void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
-        {
-            PlaylistMessage playlistMessage;
-            if (MessageService.TryParseMessage(e.Data, out playlistMessage))
-            {
-                await Dispatcher.RunIdleAsync(async (s) =>
-                {
-                    PlaylistHasBeenUpdated = true;
-                    Debug.WriteLine("PLAYLISTMESSAGE...\nOK");
-
-                    await LoadPlaylist(playlistMessage.Playlist);
-                    if (playlistMessage.Playlist.Count < 2)
-                        nextSong.Visibility = Visibility.Collapsed;
-                    else
-                    {
-                        nextSong.Visibility = Visibility.Visible;
-                    }
-                    UpdateNextSong();
-                });
-            }
-
-            CurrentTrackMessage currentTrackMessage;
-            if (MessageService.TryParseMessage(e.Data, out currentTrackMessage))
-            {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    playlist.CurrentTrackIndex = currentTrackMessage.Index;
-                    UpdatePlayerInfo();
-                });
-            }
-
-            CurrentStateChangedMessage currentStateChangedMessage;
-            if (MessageService.TryParseMessage(e.Data, out currentStateChangedMessage))
-            {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    Debug.WriteLine("CURRENT STATE: " + currentStateChangedMessage.State.ToString());
-
-                    UpdateButtons();
-
-                    if (currentStateChangedMessage.State == MediaPlaybackState.None)
-                    {
-                        DisablePlayer();
-                    }
-                    else if (currentStateChangedMessage.State == MediaPlaybackState.Playing)
-                    {
-                        Tick.Start();
-                    }
-                    else
-                    {
-                        Tick.Stop();
-                    }
-                });
-            }
-
-            ActionMessage actionMessage;
-            if (MessageService.TryParseMessage(e.Data, out actionMessage))
-            {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    if (actionMessage.Action == BackgroundAudioShared.Messages.Action.ClearPlayback)
-                    {
-                        DisablePlayer();
-                    }
-                });
             }
         }
 
@@ -1140,12 +1155,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void previousButton_Click(object sender, RoutedEventArgs e)
         {
-            if (wasHolding)
-                MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.SkipToPrevious, "skip"));
-            else
-                MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.SkipToPrevious));
-
-            wasHolding = false;
+            PlayerController.Previous(forcePreviousSkip);
+            forcePreviousSkip = false;
         }
 
         private void previousButton_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -1179,57 +1190,21 @@ namespace AudictiveMusicUWP.Gui.UC
             PlayPauseOrResume();
         }
 
-        private async void PlayPauseOrResume()
+        private void PlayPauseOrResume()
         {
             //if (BackgroundMediaPlayer.Current == null)
-            if (ApplicationSettings.IsBackgroundAudioTaskSuspended == true)
-                await ResetBackgroundTask();
+
+            if (ApplicationSettings.BackgroundTaskState != BackgroundTaskState.Running)
+                PlayerController.Current.ResetAfterLostBackground();
             else
                 InitializePlayer();
 
-            if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState != MediaPlaybackState.Playing
-    && BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState != MediaPlaybackState.Paused)
-            {
-                MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.Resume));
-                
-
-                return;
-            }
-
-            MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.PlayPause));
-
-        }
-
-        private async Task<bool> ResetBackgroundTask()
-        {
-            const int RPC_S_SERVER_UNAVAILABLE = -2147023174; // 0x800706BA  
-
-            bool result = false;
-            BackgroundMediaPlayer.Shutdown();
-            try
-            {
-                InitializePlayer();
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                if (ex.HResult == RPC_S_SERVER_UNAVAILABLE)
-                {
-                    throw new Exception("Failed to get a MediaPlayer instance.");
-                }
-                else
-                {
-                    throw;
-                }
-                result = false;
-            }
-
-            return result;
+            PlayerController.PlayPause();
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.SkipToNext));
+            PlayerController.Next();
         }
 
         private void TickBar_PointerReleased(object sender, PointerRoutedEventArgs e)
@@ -1361,7 +1336,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageService.SendMessageToBackground(new ActionMessage(BackgroundAudioShared.Messages.Action.Shuffle));
+            PlayerController.ShuffleCurrentPlaylist();
         }
 
         private void dismissArea_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -1692,12 +1667,12 @@ namespace AudictiveMusicUWP.Gui.UC
             }
             else if (e.HoldingState == Windows.UI.Input.HoldingState.Completed)
             {
-                wasHolding = true;
+                forcePreviousSkip = true;
             }
             else
             {
                 TooltipDismissed?.Invoke(this, new RoutedEventArgs());
-                wasHolding = false;
+                forcePreviousSkip = false;
             }
         }
 

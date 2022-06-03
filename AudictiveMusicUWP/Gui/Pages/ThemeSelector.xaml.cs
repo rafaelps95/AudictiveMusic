@@ -51,7 +51,6 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             LoadThemes();
             LoadThemeSettings(ApplicationSettings.NowPlayingTheme);
-            OpenPage(NavMode == NavigationMode.Back);
         }
 
         private void LoadThemes()
@@ -62,26 +61,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             };
 
             themesList.ItemsSource = themes;
-        }
-
-        private void OpenPage(bool reload)
-        {
-            try
-            {
-                progress.IsActive = false;
-                Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
-
-                if (reload)
-                {
-                    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-                }
-
-                sb.Begin();
-            }
-            catch
-            {
-
-            }
         }
 
         private void LoadThemeSettings(Theme theme)

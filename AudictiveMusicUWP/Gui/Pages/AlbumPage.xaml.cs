@@ -93,41 +93,8 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             header.UpdateNumberOfItems(listOfSongs.Count);
 
-            OpenPage(NavMode == NavigationMode.Back);
-        }
-
-        private void OpenPage(bool reload)
-        {
             progress.IsActive = false;
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
-
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
-
-            sb.Begin();
         }
-
-        //private void SetOverlayColor()
-        //{
-        //    overlayBrush.Color = Album.Color;
-
-        //    Storyboard sb = new Storyboard();
-
-        //    DoubleAnimation da = new DoubleAnimation()
-        //    {
-        //        To = 0.4,
-        //        Duration = TimeSpan.FromMilliseconds(400),
-        //    };
-
-        //    Storyboard.SetTarget(da, overlay);
-        //    Storyboard.SetTargetProperty(da, "Opacity");
-
-        //    sb.Children.Add(da);
-
-        //    sb.Begin();
-        //}
 
         private void artistName_Click(object sender, RoutedEventArgs e)
         {
@@ -141,14 +108,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void playAlbum_Click(object sender, RoutedEventArgs e)
         {
-            List<string> list = new List<string>();
-
-            var songs = Ctr_Song.Current.GetSongsByAlbum(Album);
-
-            foreach (Song song in songs)
-                list.Add(song.SongURI);
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+            PlayerController.Play(this.Album);
         }
 
         private void AddToPlaylist_Click(object sender, RoutedEventArgs e)
@@ -158,14 +118,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void AddToNowPlaying_Click(object sender, RoutedEventArgs e)
         {
-            var songs = Ctr_Song.Current.GetSongsByAlbum(Album);
-
-            List<string> list = new List<string>();
-
-            foreach (Song song in songs)
-                list.Add(song.SongURI);
-
-            MessageService.SendMessageToBackground(new AddSongsToPlaylist(list, false));
+            PlayerController.AddToQueue(this.Album);
         }
 
         private void SongItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -202,7 +155,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             PopupHelper.GetInstance(sender).ShowPopupMenu(Album, true, new Point(0, 0));
         }
 
-        private async void SongsList_ItemClick(object sender, ItemClickEventArgs e)
+        private void SongsList_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (listView.SelectionMode == ListViewSelectionMode.None)
             {
@@ -210,7 +163,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
                 List<string> list = new List<string>();
 
-                await listOfSongs.Shuffle();
+                listOfSongs.Shuffle();
                 list.Add(clickedSong.SongURI);
 
                 foreach (Song s in listOfSongs)
@@ -219,7 +172,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                         list.Add(s.SongURI);
                 }
 
-                MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+                PlayerController.Play(list);
             }
         }
 

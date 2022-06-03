@@ -91,33 +91,33 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
             switch (page)
             {
                 case LastFmPage.Following:
-                    frame.Navigate(typeof(FollowingPage), param);
+                    frame.Navigate(typeof(FollowingPage), param, new DrillInNavigationTransitionInfo());
                     break;
                 case LastFmPage.Scrobbles:
-                    frame.Navigate(typeof(RecentScrobblesPage), param);
+                    frame.Navigate(typeof(RecentScrobblesPage), param, new DrillInNavigationTransitionInfo());
                     break;
                 case LastFmPage.TopMedia:
-                    frame.Navigate(typeof(TopMediaPage), param);
+                    frame.Navigate(typeof(TopMediaPage), param, new DrillInNavigationTransitionInfo());
                     break;
                 case LastFmPage.Similar:
-                    frame.Navigate(typeof(LastFmListPage), param);
+                    frame.Navigate(typeof(LastFmListPage), param, new DrillInNavigationTransitionInfo());
                     break;
                 case LastFmPage.Recommended:
-                    frame.Navigate(typeof(LastFmListPage), param);
+                    frame.Navigate(typeof(LastFmListPage), param, new DrillInNavigationTransitionInfo());
                     break;
             };
         }
 
         private void OpenPage(bool reload)
         {
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
+            //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
+            //if (reload)
+            //{
+            //    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
+            //}
 
-            sb.Begin();
+            //sb.Begin();
         }
 
 

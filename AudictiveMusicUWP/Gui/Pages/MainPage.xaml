@@ -8,13 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Transitions>
-        <TransitionCollection>
-            <NavigationThemeTransition>
-                <SuppressNavigationTransitionInfo />
-            </NavigationThemeTransition>
-        </TransitionCollection>
-    </Page.Transitions>
+
 
     <Grid>
         <Grid.RowDefinitions>
@@ -61,7 +55,13 @@
 
         <!--<Grid x:Name="acrillicPageBG" Grid.ColumnSpan="2" Visibility="Collapsed" Canvas.ZIndex="1" Opacity="0.2" Grid.Row="0" Grid.RowSpan="2" />-->
         <Border x:Name="frameBorder" CornerRadius="10,0,0,0" BorderBrush="#66999999" BorderThickness="1,1,0,0" Background="{ThemeResource DefaultPageBackgroundBrush}" Grid.Column="1" Grid.Row="1" Canvas.ZIndex="2" Grid.RowSpan="2">
-            <Frame x:Name="MainFrame" Navigated="MainFrame_Navigated" />
+            <Frame x:Name="MainFrame" Navigated="MainFrame_Navigated">
+                <Frame.ContentTransitions>
+                    <TransitionCollection>
+                        <NavigationThemeTransition />
+                    </TransitionCollection>
+                </Frame.ContentTransitions>
+            </Frame>
         </Border>
         <Grid Grid.Column="1" RequestedTheme="{Binding ElementName=navBar, Path=RequestedTheme}" Height="{Binding ElementName=footerBlur, Path=Height}" Grid.Row="1" VerticalAlignment="Bottom" Canvas.ZIndex="-99">
             <Grid.Background>

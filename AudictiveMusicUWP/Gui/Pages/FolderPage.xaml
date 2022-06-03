@@ -8,53 +8,11 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <Storyboard x:Key="OpenPageTransition">
-            <DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetName="layoutRootScale" Storyboard.TargetProperty="ScaleX" EnableDependentAnimation="False">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-
-            <DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetName="layoutRootScale" Storyboard.TargetProperty="ScaleY" EnableDependentAnimation="False">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-
-            <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetName="layoutRoot" Storyboard.TargetProperty="Opacity" EnableDependentAnimation="False">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
-
-        <Storyboard x:Key="ExitPageTransition">
-            <DoubleAnimation Duration="0:0:0.2" To="0.9" Storyboard.TargetName="layoutRootScale" Storyboard.TargetProperty="ScaleX" EnableDependentAnimation="False">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-
-            <DoubleAnimation Duration="0:0:0.2" To="0.9" Storyboard.TargetName="layoutRootScale" Storyboard.TargetProperty="ScaleY" EnableDependentAnimation="False">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-
-            <DoubleAnimation Duration="0:0:0.1" To="0" Storyboard.TargetName="layoutRoot" Storyboard.TargetProperty="Opacity" EnableDependentAnimation="False">
-                <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseOut" />
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
     </Page.Resources>
 
     <Grid>
         <ProgressRing x:Name="progress" IsActive="true" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Width="50" Height="50" />
-        <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5" Opacity="0">
-            <Grid.RenderTransform>
-                <ScaleTransform ScaleX="0.9" ScaleY="0.9" x:Name="layoutRootScale" />
-            </Grid.RenderTransform>
+        <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -76,9 +34,9 @@
             <ListView Grid.Row="1" Grid.RowSpan="2" IsItemClickEnabled="True" ContainerContentChanging="listView_ContainerContentChanging" ItemClick="listView_ItemClick" Padding="0,0,0,115" x:Name="listView" SelectionMode="None" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
                 <ListView.ItemContainerTransitions>
                     <TransitionCollection>
-                        <RepositionThemeTransition />
+                        <!--<RepositionThemeTransition />
                         <AddDeleteThemeTransition />
-                        <EntranceThemeTransition FromVerticalOffset="50" />
+                        <EntranceThemeTransition FromVerticalOffset="50" />-->
                     </TransitionCollection>
                 </ListView.ItemContainerTransitions>
                 <ListView.ItemTemplate>

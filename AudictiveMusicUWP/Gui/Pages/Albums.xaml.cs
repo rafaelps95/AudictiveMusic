@@ -140,8 +140,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             base.OnNavigatedFrom(e);
 
             progress.IsActive = true;
-            Storyboard sb = this.Resources["ExitPageTransition"] as Storyboard;
-            sb.Begin();
 
             Collection.SongsChanged -= Collection_SongsChanged;
         }
@@ -152,26 +150,18 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             NavMode = e.NavigationMode;
 
-            if (ApplicationInfo.Current.IsMobile == false)
-            {
-                listView.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = true });
-            }
-            else
-            {
-                listView.ItemContainerTransitions.Add(new EntranceThemeTransition() { FromVerticalOffset = 250, IsStaggeringEnabled = false });
-            }
-
             if (((CollectionViewSource)Resources["ListOfAlbums"]).Source == null || CollectionHasBeenUpdated)
             {
                 CollectionHasBeenUpdated = false;
-                OpenPage(NavMode == NavigationMode.Back);
+
                 await Task.Run(() => LoadAlbums());
             }
             else
             {
-                OpenPage(NavMode == NavigationMode.Back);
+
             }
 
+            progress.IsActive = false;
             Collection.SongsChanged += Collection_SongsChanged;
         }
 
@@ -234,18 +224,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             });
         }
 
-        private void OpenPage(bool reload)
-        {
-            progress.IsActive = false;
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
-
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
-
-            sb.Begin();
-        }
         private void listView_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (listView.SelectionMode == ListViewSelectionMode.None)
@@ -313,29 +291,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             Button btn = (Button)sender;
             Album alb = btn.DataContext as Album;
 
-            List<Song> songs = Ctr_Song.Current.GetSongsByAlbum(alb);
-            List<string> list = new List<string>();
-            foreach (Song s in songs)
-                list.Add(s.SongURI);
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
-        }
-
-        private void shuffleButton_Click(object sender, RoutedEventArgs e)
-        {
-            List<string> songs = Ctr_Song.Current.GetAllSongsPaths();
-
-            Random rng = new Random();
-            int n = songs.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                string value = songs[k];
-                songs[k] = songs[n];
-                songs[n] = value;
-            }
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(songs));
+            PlayerController.Play(alb);
         }
 
         private void listView_Loaded(object sender, RoutedEventArgs e)

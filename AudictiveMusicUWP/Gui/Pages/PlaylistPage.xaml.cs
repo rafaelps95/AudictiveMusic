@@ -79,7 +79,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 Grid.SetRow(actionButtons, 2);
                 Grid.SetColumnSpan(pageTitleGrid, 2);
-                actionButtons.MinHeight = 48;
                 actionButtons.Margin = new Thickness(0, 0, 0, ApplicationInfo.Current.FooterHeight);
             }
             else
@@ -121,14 +120,14 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void OpenPage(bool reload)
         {
             progress.IsActive = false;
-            Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
+            //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
-            if (reload)
-            {
-                layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
-            }
+            //if (reload)
+            //{
+            //    layoutRootScale.ScaleX = layoutRootScale.ScaleY = 1.1;
+            //}
 
-            sb.Begin();
+            //sb.Begin();
         }
 
         private void ListOfSongs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

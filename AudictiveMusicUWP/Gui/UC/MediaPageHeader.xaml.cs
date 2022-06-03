@@ -38,7 +38,7 @@ namespace AudictiveMusicUWP.Gui.UC
         private Compositor _compositor;
         private SpriteVisual headerSprite;
 
-        private Artist ART
+        private Artist Artist
         {
             get;
             set;
@@ -68,9 +68,9 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void LastFm_DownloadCompleted(Artist artist)
         {
-            if (artist.Name == ART.Name)
+            if (artist.Name == Artist.Name)
             {
-                SetContext(ART);
+                SetContext(Artist);
             }
         }
 
@@ -228,8 +228,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
         public async void SetContext(Artist artist)
         {
-            this.DataContext = webServiceButton.DataContext = ART = artist;
-            this.ART.IsUpdatingImage = false;
+            this.DataContext = webServiceButton.DataContext = Artist = artist;
+            this.Artist.IsUpdatingImage = false;
 
             if (ApplicationInfo.Current.HasInternetConnection)
             {
@@ -291,7 +291,7 @@ namespace AudictiveMusicUWP.Gui.UC
             //blurbmp.UriSource = new Uri("ms-appdata:///local/Artists/artist_" + StringHelper.RemoveSpecialChar(ART.Name) + ".jpg", UriKind.Absolute);
 
 
-            title.Text = ART.Name.ToUpper();
+            title.Text = Artist.Name.ToUpper();
             subtitleSeparator.Visibility = subtitle2.Visibility = Visibility.Visible;
         }
 
@@ -452,21 +452,14 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
-            List<string> list = new List<string>();
-
-            var songs = Ctr_Song.Current.GetSongsByArtist(ART);
-
-            foreach (Song song in songs)
-                list.Add(song.SongURI);
-
-            MessageService.SendMessageToBackground(new SetPlaylistMessage(list));
+            PlayerController.Play(this.Artist);
         }
 
         private void addButton_Click(object sender, RoutedEventArgs e)
         {
             List<string> list = new List<string>();
 
-            var songs = Ctr_Song.Current.GetSongsByArtist(ART);
+            var songs = Ctr_Song.Current.GetSongsByArtist(Artist);
 
             foreach (Song song in songs)
                 list.Add(song.SongURI);
@@ -476,7 +469,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void moreButton_Click(object sender, RoutedEventArgs e)
         {
-            PopupHelper.GetInstance(sender).ShowPopupMenu(ART, true, new Point(0, 0));
+            PopupHelper.GetInstance(sender).ShowPopupMenu(Artist, true, new Point(0, 0));
         }
 
         private async void ellipseBitmap_ImageOpened(object sender, RoutedEventArgs e)
@@ -584,10 +577,10 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 if (ApplicationInfo.Current.HasInternetConnection)
                 {
-                    this.ART.IsUpdatingImage = true;
+                    this.Artist.IsUpdatingImage = true;
                     ellipse.RemoveSource();
                     rootBrush.ImageSource = null;
-                    await Spotify.DownloadArtistImage(ART);
+                    await Spotify.DownloadArtistImage(Artist);
                 }
             };
 
@@ -608,7 +601,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private async void lastFmButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = await LastFm.Current.Client.Artist.GetInfoAsync(this.ART.Name, ApplicationInfo.Current.Language, true);
+            var result = await LastFm.Current.Client.Artist.GetInfoAsync(this.Artist.Name, ApplicationInfo.Current.Language, true);
             if (result.Success)
             {
                 LastArtist artist = result.Content;
@@ -640,7 +633,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 }
                 else
                 {
-                    var result = await LastFm.Current.Client.Artist.GetInfoAsync(this.ART.Name, ApplicationInfo.Current.Language, true);
+                    var result = await LastFm.Current.Client.Artist.GetInfoAsync(this.Artist.Name, ApplicationInfo.Current.Language, true);
                     if (result.Success)
                     {
                         LastArtist artist = result.Content;
