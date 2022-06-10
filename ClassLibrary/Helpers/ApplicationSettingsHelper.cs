@@ -444,7 +444,7 @@ namespace ClassLibrary.Helpers
             {
                 object value = ReadSettingsValue("ThemeColorPreference");
                 if (value == null)
-                    return 0;
+                    return 3;
                 else
                     return (int)value;
             }
@@ -462,18 +462,42 @@ namespace ClassLibrary.Helpers
             {
                 object value = ReadSettingsValue("CurrentThemeColor");
                 if (value == null)
-                    return ImageHelper.GetColorFromHex("#FFDC572E");
+                    return ApplicationInfo.Current.CurrentAppThemeColor(AppTheme == PageTheme.Dark);
                 else
                     return ImageHelper.GetColorFromHex(value.ToString());
             }
             set
             {
-                //if (CurrentThemeColor != value)
-                //{
-                    SaveSettingsValue("CurrentThemeColor", ImageHelper.GetHexFromColor(value));
+                if (value.IsDarkColor())
+                    CurrentForegroundColor = Colors.White;
+                else
+                    CurrentForegroundColor = Colors.Black;
 
-                    CurrentThemeColorChanged?.Invoke();
-                //}
+
+                SaveSettingsValue("CurrentThemeColor", ImageHelper.GetHexFromColor(value));
+
+                CurrentThemeColorChanged?.Invoke();
+            }
+        }
+
+        public static Color CurrentForegroundColor
+        {
+            get
+            {
+                object value = ReadSettingsValue("CurrentForegroundColor");
+                if (value == null)
+                {
+                    if (CurrentThemeColor.IsDarkColor())
+                        return Colors.White;
+                    else
+                        return Colors.Black;
+                }
+                else
+                    return ImageHelper.GetColorFromHex(value.ToString());
+            }
+            set
+            {
+                SaveSettingsValue("CurrentForegroundColor", ImageHelper.GetHexFromColor(value));
             }
         }
 

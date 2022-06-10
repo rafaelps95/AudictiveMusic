@@ -73,6 +73,13 @@ namespace AudictiveMusicUWP.Gui.Pages
                 NavMode = e.NavigationMode;
 
                 base.OnNavigatedTo(e);
+
+                var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
+                if (anim != null)
+                {
+                    anim.TryStart(destinationElement);
+                }
+
                 //await Task.Delay(400);
             }
             catch

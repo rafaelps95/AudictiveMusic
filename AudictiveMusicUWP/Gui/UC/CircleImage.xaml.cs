@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AudictiveMusicUWP.Gui.Util;
+using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -52,7 +53,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
         public delegate void RoutedEventArgs(object sender, EventArgs e);
 
-        public event RoutedEventArgs ImageFailed;
+        public event RoutedEventHandler ImageFailed;
+        public event RoutedEventHandler ImageOpened;
         public event RoutedEventArgs ActionClick;
 
 
@@ -209,7 +211,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            ImageFailed?.Invoke(this, EventArgs.Empty);
+            ImageFailed?.Invoke(this, e);
 
             if (FallbackSource != null)
             {
@@ -219,8 +221,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void image_ImageOpened(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            Storyboard sb = this.Resources["imageOpenedAnimation"] as Storyboard;
-            sb.Begin();
+            Animation.RunAnimation(this.Resources["imageOpenedAnimation"]);
+            ImageOpened?.Invoke(this, e);
         }
 
 

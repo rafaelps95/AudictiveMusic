@@ -342,19 +342,10 @@ namespace AudictiveMusicUWP.Gui.UC
             /*e.DragUIOverride.IsCaptionVisible = */e.DragUIOverride.IsGlyphVisible = false;
             e.DragUIOverride.Caption = ApplicationInfo.Current.Resources.GetString("Remove/Content");
 
-            Storyboard sb = new Storyboard();
-            DoubleAnimation ca = new DoubleAnimation()
-            {
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(1, 200, dropAreaOverlay, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(ca, dropAreaOverlay);
-            Storyboard.SetTargetProperty(ca, "Opacity");
-
-            sb.Children.Add(ca);
-            sb.Begin();
+            animation.Begin();
         }
 
         private void MusicPlaylist_Drop(object sender, DragEventArgs e)
@@ -374,19 +365,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void HideDropAreaOverlayColor()
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation ca = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 200, dropAreaOverlay, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(ca, dropAreaOverlay);
-            Storyboard.SetTargetProperty(ca, "Opacity");
-
-            sb.Children.Add(ca);
-            sb.Begin();
+            animation.Begin();
         }
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)

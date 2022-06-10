@@ -69,7 +69,7 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
             List<LastTrack> list;
             List<LastArtist> artList;
 
-            var result = await LastFm.Current.Client.User.GetRecentScrobbles(user.Name, dateTime, 1, 20);
+            var result = await LastFm.Current.Client.User.GetRecentScrobbles(user.Name, dateTime, null, false, 1, 20);
             if (result.Success)
             {
                 list = result.Content.ToList();

@@ -406,21 +406,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void AnimateBackgroundToColor(Color color)
         {
-            Storyboard sb = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddColorAnimation(Colors.Transparent, color, 200, rootBrush, "Color", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            ColorAnimation ca = new ColorAnimation()
-            {
-                From = Colors.Transparent,
-                To = color,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(ca, rootBrush);
-            Storyboard.SetTargetProperty(ca, "Color");
-
-            sb.Children.Add(ca);
-            sb.Begin();
+            animation.Begin();
         }
 
         public void UpdateNumberOfItems(int nSongs, int nAlbums)
@@ -472,45 +461,20 @@ namespace AudictiveMusicUWP.Gui.UC
             PopupHelper.GetInstance(sender).ShowPopupMenu(Artist, true, new Point(0, 0));
         }
 
-        private async void ellipseBitmap_ImageOpened(object sender, RoutedEventArgs e)
+        private void ellipseBitmap_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                From = 0,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 1, 200, ellipse, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut), false);
 
-            Storyboard.SetTarget(da, ellipse);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            sb.Children.Add(da);
-
-            sb.Begin();
-
-            //MessageDialog md = new MessageDialog("Carregou imagem");
-            //await md.ShowAsync();
+            animation.Begin();
         }
 
         private void Blurbmp_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                From = 0,
-                To = 0.4,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 0.4, 300, background, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(da, background);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private void artistImage_Tapped(object sender, TappedRoutedEventArgs e)

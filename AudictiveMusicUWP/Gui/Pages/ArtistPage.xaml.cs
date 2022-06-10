@@ -1,10 +1,13 @@
-﻿using AudictiveMusicUWP.Gui.UC;
+﻿using AudictiveMusicUWP.Gui.Pages.LFM;
+using AudictiveMusicUWP.Gui.UC;
 using AudictiveMusicUWP.Gui.Util;
 using BackgroundAudioShared.Messages;
 using ClassLibrary;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
+using IF.Lastfm.Core.Api.Helpers;
+using IF.Lastfm.Core.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +23,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // O modelo de item de Página em Branco está documentado em https://go.microsoft.com/fwlink/?LinkId=234238
@@ -35,6 +39,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         private int RepeatButtonCycleCounter;
         private bool ClickEventIsTouch;
         private Thickness TouchFlyoutMargin;
+        private string _bio;
 
         public double AlbumItemLength
         {
@@ -85,13 +90,19 @@ namespace AudictiveMusicUWP.Gui.Pages
         public ArtistPage()
         {
             this.SizeChanged += ArtistPage_SizeChanged;
+            this.Loaded += ArtistPage_Loaded;
             this.InitializeComponent();
 
             res = new ResourceLoader();
             RepeatButtonCycleCounter = 0;
             ClickEventIsTouch = false;
             TouchFlyoutMargin = new Thickness();
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            //this.NavigationCacheMode = NavigationCacheMode.Enabled;
+        }
+
+        private void ArtistPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateView(scroll.ActualWidth);
         }
 
         private void ArtistPage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -99,6 +110,32 @@ namespace AudictiveMusicUWP.Gui.Pages
             albumsList.Width = e.NewSize.Width;
             selectionItemsBar.Width = e.NewSize.Width;
             _selectionBarOffset = header.ActualHeight + albumsHeader.ActualHeight + albumsScroll.ActualHeight + 25;
+
+            UpdateView(e.NewSize.Width);
+        }
+
+        private void UpdateView(double width)
+        {
+            header.Width = width;
+
+            if (width < 500)
+            {
+                circleImage.Height = circleImage.Width = 75;
+                artistName.FontSize = 18;
+                headerBorder.Margin = new Thickness(10);
+            }
+            else if (width >= 500 && width < 600)
+            {
+                circleImage.Height = circleImage.Width = 100;
+                artistName.FontSize = 24;
+                headerBorder.Margin = new Thickness(15);
+            }
+            else
+            {
+                circleImage.Height = circleImage.Width = 150;
+                artistName.FontSize = 28;
+                headerBorder.Margin = new Thickness(20);
+            }
         }
 
         async protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -107,9 +144,67 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             NavMode = e.NavigationMode;
             Artist = e.Parameter as Artist;
-            header.SetContext(Artist);
+            //header.SetContext(Artist);
+            artistName.Text = Artist.Name;
+            UpdateView(scroll.ActualWidth);
+            BitmapImage bmp = new BitmapImage();
+            headerBackground.ImageSource = bmp;
+            bmp.ImageOpened += HeaderBackground_ImageOpened;
+            circleImage.Source = bmp;
+            bmp.UriSource = Artist.ImageUri;
+
+            //var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("OpenArtistConnectedAnimation");
+            //if (anim != null)
+            //{
+            //    anim.TryStart(circleImage);
+            //}
 
             await LoadMusic();
+
+            string lang = ApplicationInfo.Current.Language;
+            var result = await LastFm.Current.Client.Artist.GetInfoAsync(Artist.Name, ApplicationInfo.Current.Language, true);
+            if (result.Success)
+            {
+                LastArtist artist = result.Content;
+                _bio = artist.Bio.Content;
+                bio.Text = _bio;
+            }
+
+            //StorageFile imgFile = null;
+
+            //try
+            //{
+            //    imgFile = await StorageFile.GetFileFromApplicationUriAsync(Artist.ImageUri);
+            //}
+            //catch
+            //{
+
+            //}
+
+            //try
+            //{
+            //    if (imgFile != null)
+            //    {
+            //        using (var stream = await imgFile.OpenAsync(FileAccessMode.Read))
+            //        {
+            //            //color = await ImageHelper.GetDominantColor(stream);
+            //            BitmapImage b = new BitmapImage();
+            //            headerBackground.ImageSource = b;
+            //            b.ImageOpened += HeaderBackground_ImageOpened;
+            //            b.SetSource(stream);
+            //        }
+
+            //        circleImage.SetSource(Artist.ImageUri);
+            //    }
+            //    else
+            //    {
+            //        await Spotify.DownloadArtistImage(Artist);
+            //    }
+            //}
+            //catch
+            //{
+
+            //}
         }
 
         private async Task LoadMusic()
@@ -155,14 +250,29 @@ namespace AudictiveMusicUWP.Gui.Pages
             //    // BUSCA A STRING SINGULAR JÁ QUE HÁ APENAS UMA MÚSICA NA LISTA
             //    countOfSongs.Text = listOfSongs.Count + " " + ApplicationInfo.Current.Resources.GetString("SongSingular").ToLower();
 
-            header.UpdateNumberOfItems(listOfSongs.Count, listOfAlbums.Count);
+            //header.UpdateNumberOfItems(listOfSongs.Count, listOfAlbums.Count);
 
             //LoadBio();
+
+            if (listOfAlbums.Count > 1)
+                // BUSCA A STRING PLURAL JÁ QUE HÁ MAIS DE UM ÁLBUM NA LISTA
+                subtitle1.Text = listOfAlbums.Count + " " + ApplicationInfo.Current.Resources.GetString("AlbumPlural").ToLower();
+            else
+                // BUSCA A STRING SINGULAR JÁ QUE HÁ APENAS UM ÁLBUM NA LISTA
+                subtitle1.Text = listOfAlbums.Count + " " + ApplicationInfo.Current.Resources.GetString("AlbumSingular").ToLower();
+
+            if (listOfSongs.Count > 1)
+                // BUSCA A STRING PLURAL JÁ QUE HÁ MAIS DE UMA MÚSICA NA LISTA
+                subtitle2.Text = listOfSongs.Count + " " + ApplicationInfo.Current.Resources.GetString("SongPlural").ToLower();
+            else
+                // BUSCA A STRING SINGULAR JÁ QUE HÁ APENAS UMA MÚSICA NA LISTA
+                subtitle2.Text = listOfSongs.Count + " " + ApplicationInfo.Current.Resources.GetString("SongSingular").ToLower();
+
+            subtitleSeparator.Visibility = subtitle2.Visibility = Visibility.Visible;
         }
 
         private void OpenPage(bool reload)
         {
-            progress.IsActive = false;
             //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
             //if (reload)
@@ -183,7 +293,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             //layoutRootScale.ScaleX = layoutRootScale.ScaleY = 0.9;
             //layoutRoot.Opacity = 0;
 
-            header.ClearContext();
+            //header.ClearContext();
         }
 
         private async void LoadBio()
@@ -219,21 +329,9 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void AlbumCover_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 1,
-                BeginTime = TimeSpan.FromMilliseconds(200),
-                Duration = TimeSpan.FromMilliseconds(1200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTargetProperty(da, "Opacity");
-            Storyboard.SetTarget(da, sender as Image);
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(1, 1200, sender as Image, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut), false, 200);
+            animation.Begin();
         }
 
         private void albumItemOverlay_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -284,21 +382,9 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void artistBackgroundBitmap_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 0.4,
-                BeginTime = TimeSpan.FromMilliseconds(200),
-                Duration = TimeSpan.FromMilliseconds(1200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTargetProperty(da, "Opacity");
-            Storyboard.SetTarget(da, pageBackground);
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0.4, 1200, pageBackground, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut), false, 200);
+            animation.Begin();
         }
 
         private void playArtist_Click(object sender, RoutedEventArgs e)
@@ -556,6 +642,85 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void SelectionItemsBar_SelectionModeChanged(object sender, object barMode)
         {
 
+        }
+
+        private void HeaderBackground_ImageOpened(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationSettings.TransparencyEnabled == false)
+                headerBackgroundGrid.Opacity = 0.4;
+            else if (ApplicationSettings.IsPerformanceModeOn)
+                headerBackgroundGrid.Opacity = 0.4;
+
+            Animation.BeginFadeAnimation(headerBackground).Completed += async (s, a) =>
+            {
+                if (ApplicationSettings.TransparencyEnabled)
+                {
+                    if (ApplicationSettings.IsPerformanceModeOn == false)
+                    {
+                        await Task.Delay(50);
+                        acrylic.Opacity = 0;
+                        acrylic.AcrylicNoise = acrylic.AcrylicEnabled = true;
+                        acrylic.AcrylicOpacity = 1;
+                        acrylic.AcrylicBackgroundSource = RPSToolkit.AcrylicType.Backdrop;
+
+                        Animation.BeginFadeAnimation(acrylic);
+                    }
+                }
+            };
+        }
+
+        private void playButton_Click(object sender, RoutedEventArgs e)
+        {
+            PlayerController.Play(this.Artist);
+        }
+
+        private void addButton_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> list = new List<string>();
+
+            var songs = Ctr_Song.Current.GetSongsByArtist(Artist);
+
+            foreach (Song song in songs)
+                list.Add(song.SongURI);
+
+            PlaylistHelper.RequestPlaylistPicker(this, list);
+        }
+
+        private void moreButton_Click(object sender, RoutedEventArgs e)
+        {
+            PopupHelper.GetInstance(sender).ShowPopupMenu(Artist, true, new Point(0, 0));
+        }
+
+        private void CircleImage_ImageOpened(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CircleImage_ImageFailed(object sender, RoutedEventArgs e)
+        {
+            var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("OpenArtistConnectedAnimation");
+            if (anim != null)
+            {
+                circleImage.Opacity = 1;
+                anim.TryStart(circleImage);
+            }
+        }
+
+        private async void webServiceButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var result = await LastFm.Current.Client.Artist.GetInfoAsync(this.Artist.Name, ApplicationInfo.Current.Language, true);
+            if (result.Success)
+            {
+                LastArtist artist = result.Content;
+
+                NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
+            }
+        }
+
+        private void BioTB_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            bioFlyoutTB.Text = _bio;
+            bioTB.ContextFlyout.ShowAt(bioTB);
         }
     }
 }

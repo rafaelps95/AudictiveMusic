@@ -8,19 +8,20 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace ClassLibrary.Helpers
 {
     public class NavigationHelper
     {
-        public delegate void NavigationRequestedHandler(object sender, Type targetPage, object parameter = null, bool mainFrame = false);
+        public delegate void NavigationRequestedHandler(object sender, Type targetPage, object parameter, bool mainFrame, NavigationTransitionInfo navigationTransitionInfo);
         public static event NavigationRequestedHandler NavigationRequested;
         public delegate void NavigationClearRequestedHandler(object sender, bool mainFrame);
         public static event RoutedEventHandler BackRequested;
         public static event RoutedEventHandler ForwardRequested;
         public static event NavigationClearRequestedHandler ClearRequested;
 
-        public static void Navigate(object sender, Type targetPage, object parameter = null, bool mainFrame = false) => NavigationRequested?.Invoke(sender, targetPage, parameter, mainFrame);
+        public static void Navigate(object sender, Type targetPage, object parameter = null, bool mainFrame = false, NavigationTransitionInfo navigationTransitionInfo = null) => NavigationRequested?.Invoke(sender, targetPage, parameter, mainFrame, navigationTransitionInfo);
 
         public static void Back(object sender) => BackRequested?.Invoke(sender, new RoutedEventArgs());
 

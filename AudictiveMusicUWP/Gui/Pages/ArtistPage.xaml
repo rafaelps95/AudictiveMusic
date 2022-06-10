@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:toolkit="using:RPSToolkit"
     x:Name="root">
 
     <Page.Resources>
@@ -13,7 +14,6 @@
     </Page.Resources>
 
     <Grid>
-        <ProgressRing x:Name="progress" IsActive="true" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Width="50" Height="50" />
         <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5">
             <Grid x:Name="pageBackground" Opacity="0">
                 <Grid.Background>
@@ -39,8 +39,91 @@
                     </Grid.RowDefinitions>
 
                     <!--<Grid x:Name="topBlankSpaceForHeader" Grid.Row="0" Height="225" />-->
-                    <local:MediaPageHeader x:Name="header" Canvas.ZIndex="3" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+                    <!--<local:MediaPageHeader x:Name="header" Canvas.ZIndex="3" VerticalAlignment="Top" HorizontalAlignment="Stretch" />-->
 
+                    <Grid x:Name="header" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                        <Grid x:Name="headerBackgroundGrid" Opacity="0.6">
+                            <Grid.Background>
+                                <ImageBrush x:Name="headerBackground" Opacity="0" Stretch="UniformToFill" />
+                            </Grid.Background>
+                        </Grid>
+                        <toolkit:Acrylic x:Name="acrylic" Opacity="0" AcrylicNoise="False" AcrylicEnabled="False" />
+                        <Border CornerRadius="10" x:Name="headerBorder" Margin="20" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" Background="{ThemeResource DefaultPageBackgroundLowBrush}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="20" />
+                                </Grid.RowDefinitions>
+
+                                <local:CircleImage x:Name="circleImage" FallbackSource="ms-appx:///Assets/artist-error.png" ImageFailed="CircleImage_ImageFailed" ImageOpened="CircleImage_ImageOpened" Height="150" Width="150" Stroke="{ThemeResource DefaultPageBorderBrush}" StrokeThickness="1" Grid.Column="1" Grid.Row="1" />
+
+                                <Grid x:Name="headerRightGrid" VerticalAlignment="Center" Grid.Column="3" Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="artistName" TextTrimming="CharacterEllipsis" FontSize="28" FontWeight="Medium" Grid.Row="0" VerticalAlignment="Bottom" />
+                                    <StackPanel Grid.Row="1" Margin="0,5" Orientation="Horizontal">
+                                        <TextBlock x:Name="subtitle1" FontSize="10" />
+                                        <TextBlock x:Name="subtitleSeparator" Visibility="Collapsed" Text="&#xECCC;" Margin="5,0,5,0" FontSize="6" VerticalAlignment="Center" FontFamily="{ThemeResource IconFont}" />
+                                        <TextBlock x:Name="subtitle2" Visibility="Collapsed" FontSize="10" />
+                                    </StackPanel>
+                                    <StackPanel x:Name="buttonsArea" Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Margin="-5,5,5,5">
+                                        <Button Background="{Binding AccentColor, Mode=TwoWay, Source={ThemeResource ApplicationAccentColor}}" Foreground="{Binding ForegroundColor, Mode=TwoWay, Source={ThemeResource ApplicationAccentColor}}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" FontSize="15" IsTextScaleFactorEnabled="False" x:Name="playButton" Click="playButton_Click" Content="" Style="{StaticResource ModernIconButtonStyle}" VerticalAlignment="Center" />
+                                        <Button Background="{ThemeResource DefaultButtonBackgroundBrush}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" FontSize="15" IsTextScaleFactorEnabled="False" x:Name="addButton" Click="addButton_Click" Content="" Style="{StaticResource ModernIconButtonStyle}" VerticalAlignment="Center"/>
+                                        <Button Background="{ThemeResource DefaultButtonBackgroundBrush}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" FontSize="15" IsTextScaleFactorEnabled="False" x:Name="moreButton" Click="moreButton_Click" Content="" Style="{StaticResource ModernIconButtonStyle}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Grid>
+                                <Grid x:Name="bioGrid" MaxWidth="500" Grid.Column="4" Grid.Row="1" VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock FontSize="16" Text="Biografia" />
+                                    <TextBlock x:Name="bioTB" Tapped="BioTB_Tapped" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" MaxLines="4" Grid.Row="1">
+                                        <TextBlock.ContextFlyout>
+                                            <Flyout>
+                                                <Flyout.FlyoutPresenterStyle>
+                                                    <Style TargetType="FlyoutPresenter">
+                                                        <Setter Property="MinWidth" Value="200" />
+                                                        <Setter Property="Padding" Value="0" />
+                                                        <Setter Property="MinHeight" Value="200" />
+                                                        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                                                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                                                    </Style>
+                                                </Flyout.FlyoutPresenterStyle>
+                                                    <Grid Width="500" Margin="5">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="*" />
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock FontSize="16" Text="Biografia" />
+                                                        <TextBlock x:Name="bioFlyoutTB" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" Grid.Row="1" />
+                                                    </Grid>
+                                            </Flyout>
+                                        </TextBlock.ContextFlyout>
+                                        <Run x:Name="bio" />
+                                        <Hyperlink x:Name="moreBio"><Run Text="Ler mais" /></Hyperlink>
+
+                                    </TextBlock>
+                                </Grid>
+                                
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    
+                    
                     <TextBlock Grid.Row="2" x:Name="albumsHeader" x:Uid="Albums" Margin="12,12,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" Text="Álbuns" />
                     <ScrollViewer x:Name="albumsScroll" Grid.Row="3" HorizontalScrollMode="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left">
                         <GridView Loaded="albumsList_Loaded" x:Name="albumsList" Padding="10,0,20,20" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollMode="Disabled"

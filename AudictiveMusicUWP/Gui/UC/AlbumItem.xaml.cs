@@ -108,21 +108,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void AlbumCover_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 1,
-                BeginTime = TimeSpan.FromMilliseconds(200),
-                Duration = TimeSpan.FromMilliseconds(1200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(1, 1200, sender as Image, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut),false, 200);
 
-            Storyboard.SetTargetProperty(da, "Opacity");
-            Storyboard.SetTarget(da, sender as Image);
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)

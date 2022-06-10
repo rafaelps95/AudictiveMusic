@@ -15,7 +15,6 @@
     </Page.Resources>
 
     <Grid>
-        <ProgressRing x:Name="progress" IsActive="true" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Width="50" Height="50" />
         <ScrollViewer HorizontalScrollMode="Disabled">
 
             <Grid x:Name="layoutRoot" Padding="0,0,0,120" RenderTransformOrigin="0.5, 0.5">

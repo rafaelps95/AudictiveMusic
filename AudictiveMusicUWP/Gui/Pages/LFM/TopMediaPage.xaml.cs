@@ -364,7 +364,7 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
             }
         }
 
-        private async void CircleImage_ImageFailed(object sender, EventArgs e)
+        private async void CircleImage_ImageFailed(object sender, RoutedEventArgs e)
         {
             CustomLastArtist art = ((FrameworkElement)sender).DataContext as CustomLastArtist;
 

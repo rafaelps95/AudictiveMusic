@@ -22,7 +22,7 @@
     </Page.Transitions>-->
 
     <Grid>
-        <ProgressRing x:Name="progress" IsActive="true" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Width="50" Height="50" />
+        <local:ModernProgressBar Canvas.ZIndex="10" x:Name="progress" IsActive="true" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
         <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5">
 
             <SemanticZoom ViewChangeStarted="SemanticZoom_ViewChangeStarted">

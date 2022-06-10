@@ -283,69 +283,23 @@ namespace AudictiveMusicUWP.Gui.UC
 
             double x = GetTranslateXToCenter();
 
-
-
-
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da;
-
+            Animation animation = new Animation();
             if (IsCompact)
             {
                 boxTranslate.X = x;
                 searchBox.Opacity = 0;
                 searchBox.Visibility = Visibility.Visible;
 
-                da = new DoubleAnimation()
-                {
-                    To = 1,
-                    Duration = TimeSpan.FromMilliseconds(800),
-                    EasingFunction = new CircleEase()
-                    {
-                        EasingMode = EasingMode.EaseInOut,
-                    },
-                    EnableDependentAnimation = true,
-
-                };
-
-                Storyboard.SetTarget(da, searchBox);
-                Storyboard.SetTargetProperty(da, "UIElement.Opacity");
+                animation.AddDoubleAnimation(1, 800, searchBox, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseInOut));
             }
             else
             {
-                da = new DoubleAnimation()
-                {
-                    To = x,
-                    Duration = TimeSpan.FromMilliseconds(800),
-                    EasingFunction = new CircleEase()
-                    {
-                        EasingMode = EasingMode.EaseInOut,
-                    },
-                    EnableDependentAnimation = true,
-
-                };
-
-                Storyboard.SetTarget(da, boxTranslate);
-                Storyboard.SetTargetProperty(da, "TranslateTransform.X");
+                animation.AddDoubleAnimation(x, 800, boxTranslate, "X", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseInOut));
             }
 
+            animation.AddDoubleAnimation(0.6, 800, dismissArea, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseInOut));
 
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 0.6,
-                Duration = TimeSpan.FromMilliseconds(800),
-                EasingFunction = new CircleEase()
-                {
-                    EasingMode = EasingMode.EaseInOut,
-                },
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da2, dismissArea);
-            Storyboard.SetTargetProperty(da2, "UIElement.Opacity");
-
-            sb.Children.Add(da);
-            sb.Children.Add(da2);
-            sb.Begin();
+            animation.Begin();
         }
 
         /// <summary>
@@ -389,38 +343,11 @@ namespace AudictiveMusicUWP.Gui.UC
             else
                 translateTo = GetTranslateXToCenter();
 
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = translateTo,
-                Duration = TimeSpan.FromMilliseconds(800),
-                EasingFunction = new CircleEase()
-                {
-                    EasingMode = EasingMode.EaseInOut,
-                },
-                EnableDependentAnimation = true,
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(translateTo, 800, boxTranslate, "X", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseInOut));
+            animation.AddDoubleAnimation(0, 800, dismissArea, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseInOut));
 
-            Storyboard.SetTarget(da, boxTranslate);
-            Storyboard.SetTargetProperty(da, "TranslateTransform.X");
-
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(800),
-                EasingFunction = new CircleEase()
-                {
-                    EasingMode = EasingMode.EaseInOut,
-                },
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da2, dismissArea);
-            Storyboard.SetTargetProperty(da2, "UIElement.Opacity");
-
-            sb.Children.Add(da);
-            sb.Children.Add(da2);
-            sb.Begin();
+            animation.Begin();
 
             searchBox.TextChanged -= searchBox_TextChanged;
             searchBox.Text = "";
@@ -510,21 +437,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void Artist_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 1,
-                BeginTime = TimeSpan.FromMilliseconds(200),
-                Duration = TimeSpan.FromMilliseconds(1200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(1, 1200, sender as Image, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut), false, 200);
 
-            Storyboard.SetTargetProperty(da, "Opacity");
-            Storyboard.SetTarget(da, sender as Image);
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private async void DownloadImage(Artist artist)
@@ -549,41 +465,20 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void AlbumCover_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 1,
-                BeginTime = TimeSpan.FromMilliseconds(200),
-                Duration = TimeSpan.FromMilliseconds(1200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(1, 1200, sender as Image, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut), false, 200);
 
-            Storyboard.SetTargetProperty(da, "Opacity");
-            Storyboard.SetTarget(da, sender as Image);
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private void albumItemOverlay_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
-                Storyboard sb = new Storyboard();
+                Animation animation = new Animation();
+                animation.AddDoubleAnimation(0.7, 200, sender as Border, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-                DoubleAnimation da = new DoubleAnimation()
-                {
-                    To = 0.7,
-                    Duration = TimeSpan.FromMilliseconds(200),
-                };
-
-                Storyboard.SetTarget(da, sender as Border);
-                Storyboard.SetTargetProperty(da, "Opacity");
-
-                sb.Children.Add(da);
-
-                sb.Begin();
+                animation.Begin();
             }
         }
 
@@ -591,20 +486,10 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
-                Storyboard sb = new Storyboard();
+                Animation animation = new Animation();
+                animation.AddDoubleAnimation(0, 200, sender as Border, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-                DoubleAnimation da = new DoubleAnimation()
-                {
-                    To = 0,
-                    Duration = TimeSpan.FromMilliseconds(200),
-                };
-
-                Storyboard.SetTarget(da, sender as Border);
-                Storyboard.SetTargetProperty(da, "Opacity");
-
-                sb.Children.Add(da);
-
-                sb.Begin();
+                animation.Begin();
             }
         }
 
@@ -638,7 +523,7 @@ namespace AudictiveMusicUWP.Gui.UC
             NavigationHelper.Navigate(this, typeof(ArtistPage), e.ClickedItem);
         }
 
-        private void CircleImage_ImageFailed(object sender, EventArgs e)
+        private void CircleImage_ImageFailed(object sender, RoutedEventArgs e)
         {
             Artist art = ((FrameworkElement)sender).DataContext as Artist;
 

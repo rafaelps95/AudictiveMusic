@@ -187,10 +187,10 @@ namespace AudictiveMusicUWP.Gui.Pages
             CreateLastFmLogin();
         }
 
-        private void NavigationHelper_NavigationRequested(object sender, Type targetPage, object parameter = null, bool mainFrame = false)
+        private void NavigationHelper_NavigationRequested(object sender, Type targetPage, object parameter, bool mainFrame, NavigationTransitionInfo navigationTransitionInfo)
         {
             if (mainFrame != true)
-                Navigate(targetPage, parameter);
+                Navigate(targetPage, parameter, navigationTransitionInfo);
             else
                 Frame.Navigate(targetPage, parameter);
         }
@@ -207,7 +207,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 if (MainFrame.CanGoBack)
                     MainFrame.GoBack();
                 else
-                    Navigate(typeof(Playlists));
+                    Navigate(typeof(Playlists), null);
             }
         }
 
@@ -394,12 +394,13 @@ namespace AudictiveMusicUWP.Gui.Pages
         private async void UpdateThemeColor()
         {
             Color newColor = ApplicationSettings.CurrentThemeColor;
+            Color foreground = ApplicationSettings.CurrentForegroundColor;
             ApplicationAccentColor appAccentColor = Application.Current.Resources["ApplicationAccentColor"] as ApplicationAccentColor;
             appAccentColor.AccentColor = new SolidColorBrush(newColor);
+            appAccentColor.ForegroundColor = new SolidColorBrush(foreground);
 
             if (newColor.IsDarkColor())
             {
-                appAccentColor.ForegroundColor = new SolidColorBrush(Colors.White);
                 navBar.RequestedTheme = ElementTheme.Dark;
 
                 if (ApplicationInfo.Current.IsMobile == false)
@@ -412,7 +413,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
             else
             {
-                appAccentColor.ForegroundColor = new SolidColorBrush(Colors.Black);
                 navBar.RequestedTheme = ElementTheme.Light;
 
                 if (ApplicationInfo.Current.IsMobile == false)
@@ -428,36 +428,11 @@ namespace AudictiveMusicUWP.Gui.Pages
             titleBarTitle.Foreground = appAccentColor.ForegroundColor;
             //await Task.Delay(100);
 
-            Storyboard sb = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddColorAnimation(newColor, 395, acrylic, "AcrylicTint", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true, 100);
+            animation.AddColorAnimation(newColor, 395, footerAcrylic, "AcrylicTint", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true, 100);
 
-            ColorAnimation ca = new ColorAnimation()
-            {
-                To = newColor,
-                Duration = TimeSpan.FromMilliseconds(395),
-                EnableDependentAnimation = true,
-                EasingFunction = new SineEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(ca, acrylic);
-            Storyboard.SetTargetProperty(ca, "AcrylicTint");
-
-            sb.Children.Add(ca);
-
-            ColorAnimation ca1 = new ColorAnimation()
-            {
-                To = newColor,
-                Duration = TimeSpan.FromMilliseconds(395),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-            };
-
-            Storyboard.SetTarget(ca1, footerAcrylic);
-            Storyboard.SetTargetProperty(ca1, "AcrylicTint");
-
-            sb.Children.Add(ca1);
-
-            await Task.Delay(100);
-            sb.Begin();
+            animation.Begin();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -1018,7 +993,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         }
 
 
-        private void Navigate(Type targetPage, object parameter = null)
+        private void Navigate(Type targetPage, object parameter, NavigationTransitionInfo navigationTransitionInfo = null)
         {
             MainFrameNavigating = true;
 
@@ -1026,7 +1001,10 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
             }
 
-            MainFrame.Navigate(targetPage, parameter, new DrillInNavigationTransitionInfo());
+            if (navigationTransitionInfo == null)
+                MainFrame.Navigate(targetPage, parameter, new DrillInNavigationTransitionInfo());
+            else
+                MainFrame.Navigate(targetPage, parameter, navigationTransitionInfo);
         }
 
         private void nowPlaying_Drop(object sender, DragEventArgs e)

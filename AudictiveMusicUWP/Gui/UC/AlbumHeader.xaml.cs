@@ -97,21 +97,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void border_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                From = 0,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 1, 200, border, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(da, border);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private void border_ImageFailed(object sender, ExceptionRoutedEventArgs e)
@@ -121,21 +110,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void Blurbmp_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                From = 0,
-                To = 0.4,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 0.4, 300, background, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(da, background);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private void moreButton_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using ClassLibrary.Entities;
+﻿using AudictiveMusicUWP.Gui.Util;
+using ClassLibrary.Entities;
 using RPSToolkit;
 using System;
 using System.Collections.Generic;
@@ -124,51 +125,14 @@ namespace AudictiveMusicUWP.Gui.UC
             _isOpen = true;
             ActionBarInitiated?.Invoke(this, new RoutedEventArgs());
 
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(1, 150, actionBar, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(0, 150, actionBarTranslate, "Y", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(1, 150, shadow, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(da, actionBar);
-            Storyboard.SetTargetProperty(da, "Opacity");
+            animation.Completed += (s, a) => { actionBar.IsHitTestVisible = true; };
 
-            sb.Children.Add(da);
-
-
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da1, actionBarTranslate);
-            Storyboard.SetTargetProperty(da1, "Y");
-
-            sb.Children.Add(da1);
-
-
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da2, shadow);
-            Storyboard.SetTargetProperty(da2, "Opacity");
-
-            sb.Children.Add(da2);
-
-            sb.Completed += (s, a) => { actionBar.IsHitTestVisible = true; };
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private void albumCover_Holding(object sender, HoldingRoutedEventArgs e)
@@ -193,62 +157,20 @@ namespace AudictiveMusicUWP.Gui.UC
             else
                 loveIndicator.Text = "";
 
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0.8, 1, 340, loveIndicatorScale, "ScaleX", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(0.8, 1, 340, loveIndicatorScale, "ScaleY", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(0, 0.8, 220, loveIndicator, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+
+            animation.Completed += (s, a) =>
             {
-                From = 0.8,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(340),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
+                Animation animation2 = new Animation();
+                animation2.AddDoubleAnimation(0, 200, loveIndicator, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+
+                animation2.Begin();
             };
 
-            Storyboard.SetTarget(da, loveIndicatorScale);
-            Storyboard.SetTargetProperty(da, "ScaleX");
-
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                From = 0.8,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(340),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da1, loveIndicatorScale);
-            Storyboard.SetTargetProperty(da1, "ScaleY");
-
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                From = 0,
-                To = 0.8,
-                Duration = TimeSpan.FromMilliseconds(220),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da2, loveIndicator);
-            Storyboard.SetTargetProperty(da2, "Opacity");
-
-            sb.Children.Add(da);
-            sb.Children.Add(da1);
-            sb.Children.Add(da2);
-
-            sb.Completed += (s, a) =>
-            {
-                Storyboard ssb = new Storyboard();
-                DoubleAnimation sda = new DoubleAnimation()
-                {
-                    To = 0,
-                    Duration = TimeSpan.FromMilliseconds(200),
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-                };
-
-                Storyboard.SetTarget(sda, loveIndicator);
-                Storyboard.SetTargetProperty(sda, "Opacity");
-
-                ssb.Children.Add(sda);
-                ssb.Begin();
-            };
-
-            sb.Begin();
+            animation.Begin();
 
             FavoriteStateToggled?.Invoke(this, new RoutedEventArgs());
         }
@@ -265,22 +187,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void Bitmap_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                From = 0,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(400),
-                EnableDependentAnimation = false,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 1, 400, albumCover, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(da, albumCover);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            animation.Begin();
 
             ImageOpened?.Invoke(sender, e);
         }
@@ -304,48 +214,13 @@ namespace AudictiveMusicUWP.Gui.UC
             ActionBarClosed?.Invoke(this, new RoutedEventArgs());
             actionBar.IsHitTestVisible = false;
 
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
 
-            Storyboard.SetTarget(da, actionBar);
-            Storyboard.SetTargetProperty(da, "Opacity");
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 150, actionBar, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(20, 150, actionBarTranslate, "Y", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(0, 150, shadow, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            sb.Children.Add(da);
-
-
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 20,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da1, actionBarTranslate);
-            Storyboard.SetTargetProperty(da1, "Y");
-
-            sb.Children.Add(da1);
-
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da2, shadow);
-            Storyboard.SetTargetProperty(da2, "Opacity");
-
-            sb.Children.Add(da2);
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private async void AlbumGrid_PointerExited(object sender, PointerRoutedEventArgs e)

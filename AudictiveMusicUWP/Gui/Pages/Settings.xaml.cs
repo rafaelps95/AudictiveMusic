@@ -121,7 +121,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 this.CurrentView = SettingsPageContent.Menu;
             }
 
-            OpenPage(NavMode == NavigationMode.Back);
+            OpenPage();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -312,8 +312,14 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         }
 
-        private void OpenPage(bool reload)
+        private async void OpenPage()
         {
+            LoadSettings();
+            if (this.NavMode != NavigationMode.Back)
+            {
+                await Task.Delay(600);
+                HandleNavigation();
+            }
             //try
             //{
             //    Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
@@ -463,12 +469,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private async void OpenPageTransition_Completed(object sender, object e)
         {
-            LoadSettings();
-            if (this.NavMode != NavigationMode.Back)
-            {
-                await Task.Delay(200);
-                HandleNavigation();
-            }
+
         }
 
         private void HandleNavigation()

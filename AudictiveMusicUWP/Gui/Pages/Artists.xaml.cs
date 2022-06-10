@@ -231,30 +231,18 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void listView_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (listView.SelectionMode == ListViewSelectionMode.None)
+            {
+                //ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("OpenArtistConnectedAnimation", (UIElement)listView.ContainerFromItem(e.ClickedItem));
                 NavigationHelper.Navigate(this, typeof(ArtistPage), e.ClickedItem);
+            }
         }
 
         private void Artist_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 1,
-                BeginTime = TimeSpan.FromMilliseconds(200),
-                Duration = TimeSpan.FromMilliseconds(1200),
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTargetProperty(da, "Opacity");
-            Storyboard.SetTarget(da, sender as Image);
-
-            sb.Children.Add(da);
-
-            sb.Begin();
-
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(1, 1200, sender as Image, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut), false, 200);
+            animation.Begin();
         }
-
-
 
         private async void Artist_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
@@ -309,7 +297,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         }
 
-        private async void CircleImage_ImageFailed(object sender, EventArgs e)
+        private async void CircleImage_ImageFailed(object sender, RoutedEventArgs e)
         {
             await Dispatcher.RunIdleAsync((s) =>
             {

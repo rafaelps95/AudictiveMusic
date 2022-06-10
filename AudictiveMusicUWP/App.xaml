@@ -8,6 +8,9 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="DefaultPageBackgroundBrush" Color="#F2F2F2" />
+                    <SolidColorBrush x:Key="DefaultPageBackgroundLowBrush" Color="#BBF2F2F2" />
+                    <SolidColorBrush x:Key="DefaultPageBorderBrush" Color="#66999999" />
+                    <SolidColorBrush x:Key="DefaultButtonBackgroundBrush" Color="#88F2F2F2" />
                     <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#FBFBFB" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemBackgroundBrush" Color="#FFB6B6B6" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemPointerOverBackgroundBrush" Color="#FFC5C5C5" />
@@ -18,6 +21,9 @@
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="DefaultPageBackgroundBrush" Color="#303030" />
+                    <SolidColorBrush x:Key="DefaultPageBackgroundLowBrush" Color="#BB303030" />
+                    <SolidColorBrush x:Key="DefaultPageBorderBrush" Color="#66999999" />
+                    <SolidColorBrush x:Key="DefaultButtonBackgroundBrush" Color="#88303030" />
                     <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#2D2D2D" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemBackgroundBrush" Color="#FF353535" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemPointerOverBackgroundBrush" Color="#FF474747" />
@@ -509,6 +515,8 @@
                 <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
                 <Setter Property="Padding" Value="10"/>
                 <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
@@ -546,7 +554,7 @@
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <Border x:Name="Background" Opacity="1" CornerRadius="5" Background="{TemplateBinding Background}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                                <Border x:Name="Background" Opacity="1" CornerRadius="5" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
 
                                 <Border x:Name="Border" Opacity="0" CornerRadius="5" Background="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                                 <ContentPresenter x:Name="Icon" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="{ThemeResource IconFont}" FontSize="{TemplateBinding FontSize}" />

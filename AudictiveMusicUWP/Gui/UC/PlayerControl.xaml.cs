@@ -294,8 +294,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void Touch3D_VisibilityChanged(bool isVisible)
         {
-            if (isVisible == false)
-                HideTouch3D();
+
         }
 
         private void ApplicationSettings_BlurLevelChanged()
@@ -311,8 +310,6 @@ namespace AudictiveMusicUWP.Gui.UC
                 {
                     Name = e.Argument,
                 };
-
-                HideTouch3D();
 
                 NavigationHelper.Navigate(this, typeof(ArtistPage), artist);
             }
@@ -479,15 +476,12 @@ namespace AudictiveMusicUWP.Gui.UC
                 fullView.Opacity = 1;
                 compactView.Opacity = 0;
                 fullViewTransform.TranslateY = 0;
-                (this.Resources["fadeInBlur"] as Storyboard).Begin();
+                Animation.RunAnimation(this.Resources["fadeInBlur"]);
 
                 return;
             }
 
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da;
-            DoubleAnimation da1;
-            DoubleAnimation da2;
+            Animation animation = new Animation();
 
             if (this.Mode == DisplayMode.Compact)
             {
@@ -496,31 +490,11 @@ namespace AudictiveMusicUWP.Gui.UC
 
                 HidePlaylist();
 
-                da = new DoubleAnimation()
-                {
-                    To = 0,
-                    Duration = TimeSpan.FromMilliseconds(150),
-                    EnableDependentAnimation = true,
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut } 
-                };
+                animation.AddDoubleAnimation(0, 150, fullView, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+                animation.AddDoubleAnimation(1, 150, compactView, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+                animation.AddDoubleAnimation(80, 150, fullViewTransform, "TranslateY", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-                da1 = new DoubleAnimation()
-                {
-                    To = 1,
-                    Duration = TimeSpan.FromMilliseconds(150),
-                    EnableDependentAnimation = true,
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-                };
-
-                da2 = new DoubleAnimation()
-                {
-                    To = 80,
-                    Duration = TimeSpan.FromMilliseconds(150),
-                    EnableDependentAnimation = true,
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-                };
-
-                sb.Completed += (s, a) =>
+                animation.Completed += (s, a) =>
                 {
                     compactView.IsHitTestVisible = true;
                     //fullView.Visibility = Visibility.Collapsed;
@@ -531,33 +505,13 @@ namespace AudictiveMusicUWP.Gui.UC
                 compactView.IsHitTestVisible = false;
                 fullView.IsHitTestVisible = true;
 
-                da = new DoubleAnimation()
-                {
-                    To = 1,
-                    Duration = TimeSpan.FromMilliseconds(150),
-                    EnableDependentAnimation = true,
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-                };
+                animation.AddDoubleAnimation(1, 150, fullView, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+                animation.AddDoubleAnimation(0, 150, compactView, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+                animation.AddDoubleAnimation(0, 150, fullViewTransform, "TranslateY", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-                da1 = new DoubleAnimation()
+                animation.Completed += (s, a) =>
                 {
-                    To = 0,
-                    Duration = TimeSpan.FromMilliseconds(150),
-                    EnableDependentAnimation = true,
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-                };
-
-                da2 = new DoubleAnimation()
-                {
-                    To = 0,
-                    Duration = TimeSpan.FromMilliseconds(150),
-                    EnableDependentAnimation = true,
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-                };
-
-                sb.Completed += (s, a) =>
-                {
-                    (this.Resources["fadeInBlur"] as Storyboard).Begin();
+                    Animation.RunAnimation(this.Resources["fadeInBlur"]);
                 };
 
                 if (ApplicationSettings.ThemesUserAware == false)
@@ -575,22 +529,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 }
             }
 
-            Storyboard.SetTarget(da, fullView);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            sb.Children.Add(da);
-
-            Storyboard.SetTarget(da1, compactView);
-            Storyboard.SetTargetProperty(da1, "Opacity");
-
-            sb.Children.Add(da1);
-
-            Storyboard.SetTarget(da2, fullViewTransform);
-            Storyboard.SetTargetProperty(da2, "TranslateY");
-
-            sb.Children.Add(da2);
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private void PlayerControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -843,42 +782,12 @@ namespace AudictiveMusicUWP.Gui.UC
                 Color opposite = color.GetOppositeColor();
                 Color strongest = color.ChangeColorBrightness(-0.3f);
 
-                Storyboard sb = new Storyboard();
-                ColorAnimation ca1 = new ColorAnimation()
-                {
-                    To = color,
-                    Duration = TimeSpan.FromMilliseconds(400),
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-                };
+                Animation animation = new Animation();
+                animation.AddColorAnimation(color, 400, hexagonColorA, "Color", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+                animation.AddColorAnimation(opposite, 400, hexagonColorC, "Color", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+                animation.AddColorAnimation(strongest, 400, hexagonColorB, "Color", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-                Storyboard.SetTarget(ca1, hexagonColorA);
-                Storyboard.SetTargetProperty(ca1, "Color");
-
-                ColorAnimation ca2 = new ColorAnimation()
-                {
-                    To = opposite,
-                    Duration = TimeSpan.FromMilliseconds(400),
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-                };
-
-                Storyboard.SetTarget(ca2, hexagonColorC);
-                Storyboard.SetTargetProperty(ca2, "Color");
-
-                ColorAnimation ca3 = new ColorAnimation()
-                {
-                    To = strongest,
-                    Duration = TimeSpan.FromMilliseconds(400),
-                    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-                };
-
-                Storyboard.SetTarget(ca3, hexagonColorB);
-                Storyboard.SetTargetProperty(ca3, "Color");
-
-                sb.Children.Add(ca1);
-                sb.Children.Add(ca2);
-                sb.Children.Add(ca3);
-
-                sb.Begin();
+                animation.Begin();
             }
 
             if (color.IsDarkColor())
@@ -895,32 +804,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void UpdateBackground(Song song)
         {
-            Storyboard sb = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 250, background, "Opacity");
 
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(250),
-                EnableDependentAnimation = false,
-            };
-
-            //ColorAnimation ca = new ColorAnimation()
-            //{
-            //    To = Colors.Black,
-            //    Duration = TimeSpan.FromMilliseconds(250),
-            //    EnableDependentAnimation = false,
-            //};
-
-            Storyboard.SetTarget(da, background);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            //Storyboard.SetTarget(ca, colorOverlayBrush);
-            //Storyboard.SetTargetProperty(ca, "Color");
-
-            sb.Children.Add(da);
-            //sb.Children.Add(ca);
-
-            sb.Completed += async (s, a) =>
+            animation.Completed += async (s, a) =>
             {
                 if (song != null)
                 {
@@ -935,46 +822,21 @@ namespace AudictiveMusicUWP.Gui.UC
                 }
             };
 
-            sb.Begin();
+            animation.Begin();
         }
 
-        private async void UpdateBackground(Color color, string albumID)
+        private void UpdateBackground(Color color, string albumID)
         {
-            Storyboard sb = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 250, background, "Opacity");
 
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(250),
-                EnableDependentAnimation = false,
-            };
-
-            //ColorAnimation ca = new ColorAnimation()
-            //{
-            //    To = Colors.Black,
-            //    Duration = TimeSpan.FromMilliseconds(250),
-            //    EnableDependentAnimation = false,
-            //};
-
-            Storyboard.SetTarget(da, background);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            //Storyboard.SetTarget(ca, colorOverlayBrush);
-            //Storyboard.SetTargetProperty(ca, "Color");
-
-            sb.Children.Add(da);
-            //sb.Children.Add(ca);
-
-            sb.Completed += async (s, a) =>
+            animation.Completed += async (s, a) =>
             {
                 await Task.Delay(50);
                 backgroundBitmapImage.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + albumID + "_blur.jpg");
             };
 
-            sb.Begin();
-
-
-
+            animation.Begin();
         }
 
 
@@ -1134,22 +996,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void currentAlbumBitmap_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                From = 0,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(400),
-                EnableDependentAnimation = false,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 1, 400, albumCover, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(da, albumCover);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            sb.Children.Add(da);
-
-            sb.Begin();
+            animation.Begin();
 
         }
 
@@ -1229,23 +1079,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void backgroundBitmapImage_ImageOpened(object sender, RoutedEventArgs e)
         {
-            Storyboard sb = this.Resources["fadeInBackground"] as Storyboard;
-            sb.Begin();
-            //Storyboard sb = new Storyboard();
-            //DoubleAnimation da = new DoubleAnimation()
-            //{
-            //    To = 0.8,
-            //    Duration = TimeSpan.FromMilliseconds(300),
-            //    BeginTime = TimeSpan.FromMilliseconds(100),
-            //    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut },
-            //    EnableDependentAnimation = false,
-            //};
-
-            //Storyboard.SetTarget(da, background);
-            //Storyboard.SetTargetProperty(da, "Opacity");
-
-            //sb.Children.Add(da);
-            //sb.Begin();
+            Animation.RunAnimation(this.Resources["fadeInBackground"]);
         }
 
         private void Repeat_Click(object sender, RoutedEventArgs e)
@@ -1279,42 +1113,23 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             playlist.Opacity = 1;
             playlistRightBorderOverlay.Opacity = 0;
+
             #region open playlist animation
-            Storyboard sb = new Storyboard();
 
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(250),
-                EnableDependentAnimation = false,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0,
+                250,
+                playlistTranslate,
+                "X", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(da, playlistTranslate);
-            Storyboard.SetTargetProperty(da, "X");
-            sb.Children.Add(da);
-
-
-            //DoubleAnimation da1 = new DoubleAnimation()
-            //{
-            //    To = playlist.ActualWidth * -1,
-            //    Duration = TimeSpan.FromMilliseconds(250),
-            //    EnableDependentAnimation = false,
-            //    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            //};
-
-            //Storyboard.SetTarget(da1, PlayerControlsContainerTranslate);
-            //Storyboard.SetTargetProperty(da1, "X");
-            //sb.Children.Add(da1);
-
-            sb.Completed += (s, a) =>
+            animation.Completed += (s, a) =>
             {
                 playlist.IsHitTestVisible = true;
 
                 if (IsPlaylistLoaded)
                     playlist.ScrollToSelectedIndex();
             };
-            sb.Begin();
+            animation.Begin();
 
             #endregion 
 
@@ -1351,33 +1166,13 @@ namespace AudictiveMusicUWP.Gui.UC
             dismissArea.IsHitTestVisible = false;
             IsPlaylistOpened = false;
 
-            Storyboard sb = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(playlist.ActualWidth,
+                250,
+                playlistTranslate,
+                "X", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = playlist.ActualWidth,
-                Duration = TimeSpan.FromMilliseconds(250),
-                EnableDependentAnimation = false,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da, playlistTranslate);
-            Storyboard.SetTargetProperty(da, "X");
-            sb.Children.Add(da);
-
-
-            //DoubleAnimation da1 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(250),
-            //    EnableDependentAnimation = false,
-            //    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            //};
-
-            //Storyboard.SetTarget(da1, PlayerControlsContainerTranslate);
-            //Storyboard.SetTargetProperty(da1, "X");
-            //sb.Children.Add(da1);
-            sb.Begin();
+            animation.Begin();
         }
 
         private void closePlaylistButton_Click(object sender, RoutedEventArgs e)
@@ -1385,67 +1180,10 @@ namespace AudictiveMusicUWP.Gui.UC
             HidePlaylist();
         }
 
-        private void albumCover_Holding(object sender, HoldingRoutedEventArgs e)
-        {
-            if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
-            {
-                Point point = e.GetPosition(this);
-                ShowTouch3D(point);
-            }
-        }
-
-        private void ShowTouch3D(Point point)
-        {
-
-            albumCover.ManipulationMode = ManipulationModes.None;
-            albumCover.ManipulationDelta -= player_ManipulationDelta;
-            albumCover.ManipulationCompleted -= player_ManipulationCompleted;
-
-            //if ((point.X + 15) + 200 > ApplicationInfo.Current.AppArea.Width)
-            //{
-                //double d = point.X + 15 + 200 - ApplicationInfo.Current.AppArea.Width;
-                //touch3D.IconsPosition = new Thickness(point.X + 15 - d, point.Y - 100, 0, 0);
-                double d = this.ActualWidth / 2 - 100;
-                touch3D.IconsPosition = new Thickness(d, point.Y - 100, 0, 0);
-            //}
-            //else
-            //    touch3D.IconsPosition = new Thickness(point.X + 15, point.Y - 100, 0, 0);
-
-            touch3D.Set(Touch3D.Mode.NowPlaying, Ctr_Song.Current.GetSong(new Song() { SongURI = CurrentTrackPath }));
-
-
-
-            touch3D.Show();
-
-            /*Storyboard sb = new Storyboard();
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = 0.8,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = false,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da, touch3DOverlay);
-            Storyboard.SetTargetProperty(da, "Opacity");
-
-            sb.Children.Add(da);
-            sb.Begin();
-
-            touch3DOverlay.IsHitTestVisible = true;*/
-        }
-
         private void albumCover_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (touch3D.IsTouch3DOpened)
                 touch3D.Hide();
-        }
-
-        public void HideTouch3D()
-        {
-            albumCover.ManipulationMode = ManipulationModes.All;
-            albumCover.ManipulationDelta += player_ManipulationDelta;
-            albumCover.ManipulationCompleted += player_ManipulationCompleted;
         }
 
         private async void albumCover_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1556,7 +1294,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void touch3DOverlay_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            HideTouch3D();
+
         }
 
         private void currentAlbumBitmap_ImageFailed(object sender, ExceptionRoutedEventArgs e)
@@ -1592,68 +1330,6 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 Ctr_Song.Current.SetFavoriteState(ApplicationSettings.CurrentSong, true);
             }
-
-            //if (ApplicationSettings.CurrentSong.IsFavorite)
-            //    loveIndicator.Text = "";
-            //else
-            //    loveIndicator.Text = "";
-
-            //Storyboard sb = new Storyboard();
-            //DoubleAnimation da = new DoubleAnimation()
-            //{
-            //    From = 0.8,
-            //    To = 1,
-            //    Duration = TimeSpan.FromMilliseconds(340),
-            //    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            //};
-
-            //Storyboard.SetTarget(da, loveIndicatorScale);
-            //Storyboard.SetTargetProperty(da, "ScaleX");
-
-            //DoubleAnimation da1 = new DoubleAnimation()
-            //{
-            //    From = 0.8,
-            //    To = 1,
-            //    Duration = TimeSpan.FromMilliseconds(340),
-            //    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            //};
-
-            //Storyboard.SetTarget(da1, loveIndicatorScale);
-            //Storyboard.SetTargetProperty(da1, "ScaleY");
-
-            //DoubleAnimation da2 = new DoubleAnimation()
-            //{
-            //    From = 0,
-            //    To = 0.8,
-            //    Duration = TimeSpan.FromMilliseconds(220),
-            //    EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            //};
-
-            //Storyboard.SetTarget(da2, loveIndicator);
-            //Storyboard.SetTargetProperty(da2, "Opacity");
-
-            //sb.Children.Add(da);
-            //sb.Children.Add(da1);
-            //sb.Children.Add(da2);
-
-            //sb.Completed += (s, a) =>
-            //{
-            //    Storyboard ssb = new Storyboard();
-            //    DoubleAnimation sda = new DoubleAnimation()
-            //    {
-            //        To = 0,
-            //        Duration = TimeSpan.FromMilliseconds(200),
-            //        EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            //    };
-
-            //    Storyboard.SetTarget(sda, loveIndicator);
-            //    Storyboard.SetTargetProperty(sda, "Opacity");
-
-            //    ssb.Children.Add(sda);
-            //    ssb.Begin();
-            //};
-
-            //sb.Begin();
         }
 
         private void previousButton_Holding(object sender, HoldingRoutedEventArgs e)
@@ -1813,182 +1489,23 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void BeginPointerOverAnimation()
         {
-            Storyboard storyboard = new Storyboard();
-
-            //DoubleAnimation da1 = new DoubleAnimation()
-            //{
-            //    To = 0.1,
-            //    Duration = TimeSpan.FromMilliseconds(300),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da1, compactPlayerHoverIndicator);
-            //Storyboard.SetTargetProperty(da1, "Opacity");
-
-            //storyboard.Children.Add(da1);
-
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da2, compactPlayerExpandIndicator);
-            Storyboard.SetTargetProperty(da2, "Opacity");
-
-            storyboard.Children.Add(da2);
-
-            //DoubleAnimation da3 = new DoubleAnimation()
-            //{
-            //    To = negative,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da3, iconTranslate);
-            //Storyboard.SetTargetProperty(da3, "Y");
-
-            //storyboard.Children.Add(da3);
-
-            //DoubleAnimation da4 = new DoubleAnimation()
-            //{
-            //    To = positive,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da4, textTranslate);
-            //Storyboard.SetTargetProperty(da4, "Y");
-
-            //storyboard.Children.Add(da4);
-
-            //DoubleAnimation da5 = new DoubleAnimation()
-            //{
-            //    To = 0.6,
-            //    Duration = TimeSpan.FromMilliseconds(100),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da5, contentPresenter);
-            //Storyboard.SetTargetProperty(da5, "Opacity");
-
-            //storyboard.Children.Add(da5);
-
-            storyboard.Begin();
-
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(1, 200, compactPlayerExpandIndicator, "Opacity");
+            animation.Begin();
         }
 
         private void BeginNormalAnimation()
         {
-            Storyboard storyboard = new Storyboard();
-
-            //DoubleAnimation da1 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(300),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da1, compactPlayerHoverIndicator);
-            //Storyboard.SetTargetProperty(da1, "Opacity");
-
-            //storyboard.Children.Add(da1);
-
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da2, compactPlayerExpandIndicator);
-            Storyboard.SetTargetProperty(da2, "Opacity");
-
-            storyboard.Children.Add(da2);
-
-            //DoubleAnimation da3 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da3, iconTranslate);
-            //Storyboard.SetTargetProperty(da3, "Y");
-
-            //storyboard.Children.Add(da3);
-
-            //DoubleAnimation da4 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da4, textTranslate);
-            //Storyboard.SetTargetProperty(da4, "Y");
-
-            //storyboard.Children.Add(da4);
-
-            //DoubleAnimation da5 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(100),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da5, contentPresenter);
-            //Storyboard.SetTargetProperty(da5, "Opacity");
-
-            //storyboard.Children.Add(da5);
-
-
-            storyboard.Begin();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 200, compactPlayerExpandIndicator, "Opacity");
+            animation.Begin();
         }
 
         private void BeginPressedAnimation()
         {
-            Storyboard storyboard = new Storyboard();
-
-            //DoubleAnimation da1 = new DoubleAnimation()
-            //{
-            //    To = 0.2,
-            //    Duration = TimeSpan.FromMilliseconds(300),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da1, compactPlayerHoverIndicator);
-            //Storyboard.SetTargetProperty(da1, "Opacity");
-
-            //storyboard.Children.Add(da1);
-
-            DoubleAnimation da2 = new DoubleAnimation()
-            {
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da2, compactPlayerExpandIndicator);
-            Storyboard.SetTargetProperty(da2, "Opacity");
-
-            storyboard.Children.Add(da2);
-
-            //DoubleAnimation da3 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da3, Background);
-            //Storyboard.SetTargetProperty(da3, "Opacity");
-
-            //storyboard.Children.Add(da3);
-
-            storyboard.Begin();
-
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(1, 200, compactPlayerExpandIndicator, "Opacity");
+            animation.Begin();
         }
 
         private void CompactBarExpandButton_Click(object sender, RoutedEventArgs e)
@@ -2071,70 +1588,41 @@ namespace AudictiveMusicUWP.Gui.UC
         private void ShowPlaylistHint()
         {
             playlist.Opacity = 0.5;
-            Storyboard sb = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(playlist.ActualWidth - 110,
+                150,
+                playlistTranslate,
+                "X", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = playlist.ActualWidth - 110,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            animation.AddDoubleAnimation(1,
+                150,
+                playlistRightBorderOverlay,
+                "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(da, playlistTranslate);
-            Storyboard.SetTargetProperty(da, "X");
-            sb.Children.Add(da);
-
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da1, playlistRightBorderOverlay);
-            Storyboard.SetTargetProperty(da1, "Opacity");
-            sb.Children.Add(da1);
-
-            sb.Begin();
+            animation.Begin();
         }
 
         private void HidePlaylistHint()
         {
-            Storyboard sb = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(playlist.ActualWidth,
+                150,
+                playlistTranslate,
+                "X", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            DoubleAnimation da = new DoubleAnimation()
-            {
-                To = playlist.ActualWidth,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
+            animation.AddDoubleAnimation(0,
+                150,
+                playlistRightBorderOverlay,
+                "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            Storyboard.SetTarget(da, playlistTranslate);
-            Storyboard.SetTargetProperty(da, "X");
-            sb.Children.Add(da);
+            animation.Begin();
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(150),
-                EnableDependentAnimation = true,
-                EasingFunction = new CircleEase() { EasingMode = EasingMode.EaseOut }
-            };
-
-            Storyboard.SetTarget(da1, playlistRightBorderOverlay);
-            Storyboard.SetTargetProperty(da1, "Opacity");
-            sb.Children.Add(da1);
-
-
-            sb.Completed += (s, a) =>
+            animation.Completed += (s, a) =>
             {
                 playlist.Opacity = 1;
             };
 
-            sb.Begin();
+            animation.Begin();
         }
 
         private void PlaylistRightBorder_PointerPressed(object sender, PointerRoutedEventArgs e)

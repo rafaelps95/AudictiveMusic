@@ -235,6 +235,33 @@ namespace AudictiveMusicUWP.Gui.Util
                 }
             }
 
+            if (mediaItem.GetType() == typeof(Artist))
+            {
+                if (ApplicationInfo.Current.HasInternetConnection)
+                {
+                    menu.Items.Add(new MenuFlyoutSeparator());
+
+                    MenuFlyoutItem item9 = new MenuFlyoutItem()
+                    {
+                        Text = ApplicationInfo.Current.Resources.GetString("ArtistOnLastfm"),
+                        Tag = "\uE8A7",
+                    };
+                    item9.Click += async (s, a) =>
+                    {
+                        var result = await LastFm.Current.Client.Artist.GetInfoAsync(((Artist)mediaItem).Name, ApplicationInfo.Current.Language, true);
+                        if (result.Success)
+                        {
+                            LastArtist artist = result.Content;
+
+                            NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
+                        }
+                    };
+
+                    menu.Items.Add(item9);
+
+                }
+            }
+
             menu.ShowAt(_sender as FrameworkElement);
 
             if (showAtPoint)

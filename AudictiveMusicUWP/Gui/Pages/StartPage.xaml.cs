@@ -271,7 +271,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             DateTimeOffset dateTime = DateTimeOffset.Now.ToUniversalTime();
             dateTime = dateTime.AddDays(-7);
 
-            var result = await LastFm.Current.Client.User.GetRecentScrobbles(ApplicationSettings.LastFmSessionUsername, dateTime, 1, 5);
+            var result = await LastFm.Current.Client.User.GetRecentScrobbles(ApplicationSettings.LastFmSessionUsername, dateTime, null, false, 1, 5);
             if (result.Success)
             {
                 var content = result.Content.ToList();

@@ -60,7 +60,7 @@ namespace ClassLibrary.Helpers
             if (isDark)
                 color = Color.FromArgb(255, 85, 85, 85);
             else
-                color = Color.FromArgb(255, 220, 220, 220);
+                color = Color.FromArgb(255, 255, 255, 255);
             return color;
         }
 
@@ -116,7 +116,7 @@ namespace ClassLibrary.Helpers
         {
             get
             {
-                return WindowSize.Width > 500;
+                return WindowSize.Width > 400;
             }
         }
 

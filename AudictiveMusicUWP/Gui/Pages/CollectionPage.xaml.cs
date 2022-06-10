@@ -54,8 +54,6 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             if (e.NavigationMode == NavigationMode.Refresh)
                 return;
-
-            progress.IsActive = true;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -112,7 +110,6 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void OpenPage(bool reload)
         {
-            progress.IsActive = false;
             //Storyboard sb = this.Resources["OpenPageTransition"] as Storyboard;
 
             //if (reload)
@@ -135,7 +132,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void Navigate(Type destination)
         {
-            frame.Navigate(destination, null, new DrillInNavigationTransitionInfo());
+            frame.Navigate(destination, null, new ContinuumNavigationTransitionInfo());
         }
 
         private void albumsButton_Click(object sender, RoutedEventArgs e)

@@ -57,7 +57,7 @@
         <!--<local:Acrylic AcrylicMode="App" IsBlurEnabled="True" BlurOpacity="1" x:Name="acrylic" Grid.Row="0" Grid.Column="1" Tint="{Binding AccentColor, ElementName=root}" ContrastColor="{ThemeResource SystemChromeMediumColor}" Contrast="0.8" />-->
         <toolkit:Acrylic AcrylicBackgroundSource="Backdrop" AcrylicEnabled="True" AcrylicOpacity="1" x:Name="acrylic" Grid.Row="0" Grid.Column="1" AcrylicTint="{ThemeResource SystemChromeMediumColor}" AcrylicTintOpacity="0.2" AcrylicFallbackOpacity="0.9" AcrylicBrightness="1" />
 
-        <ProgressRing x:Name="progress" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="50" IsActive="False" />
+        <local:ModernProgressBar Canvas.ZIndex="10" x:Name="progress" IsActive="False" IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
         <ListView Padding="0,0,0,100" Grid.Column="1" Grid.Row="0" CanReorderItems="True" CanDragItems="True" AllowDrop="True" DragItemsStarting="MusicPlaylist_DragItemsStarting" DragItemsCompleted="MusicPlaylist_DragItemsCompleted" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Enabled" Name="MusicPlaylist">
             <ListView.ItemContainerTransitions>
                 <TransitionCollection>

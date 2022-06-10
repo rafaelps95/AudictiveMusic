@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AudictiveMusicUWP.Gui.Util;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -173,69 +174,13 @@ namespace AudictiveMusicUWP.Gui.UC
             double positive = GetTranslateOffset()[0];
             double negative = GetTranslateOffset()[1];
 
-            Storyboard storyboard = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0.2, 300, Background, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(negative, 200, iconTranslate, "Y", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(positive, 200, textTranslate, "Y", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(1, 100, contentPresenter, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0.2,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da1, Background);
-            Storyboard.SetTargetProperty(da1, "Opacity");
-
-            storyboard.Children.Add(da1);
-
-            //DoubleAnimation da2 = new DoubleAnimation()
-            //{
-            //    To = 1,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da2, checkMarkScale);
-            //Storyboard.SetTargetProperty(da2, "ScaleY");
-
-            //storyboard.Children.Add(da2);
-
-            DoubleAnimation da3 = new DoubleAnimation()
-            {
-                To = negative,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da3, iconTranslate);
-            Storyboard.SetTargetProperty(da3, "Y");
-
-            storyboard.Children.Add(da3);
-
-            DoubleAnimation da4 = new DoubleAnimation()
-            {
-                To = positive,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da4, textTranslate);
-            Storyboard.SetTargetProperty(da4, "Y");
-
-            storyboard.Children.Add(da4);
-
-            DoubleAnimation da5 = new DoubleAnimation()
-            {
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(100),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da5, contentPresenter);
-            Storyboard.SetTargetProperty(da5, "Opacity");
-
-            storyboard.Children.Add(da5);
-
-            storyboard.Begin();
+            animation.Begin();
         }
 
 
@@ -244,183 +189,29 @@ namespace AudictiveMusicUWP.Gui.UC
             double positive = GetTranslateOffset()[0];
             double negative = GetTranslateOffset()[1];
 
-            Storyboard storyboard = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(negative, 200, iconTranslate, "Y", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(positive, 200, textTranslate, "Y", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(1, 100, contentPresenter, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            //DoubleAnimation da1 = new DoubleAnimation()
-            //{
-            //    To = 0.2,
-            //    Duration = TimeSpan.FromMilliseconds(300),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da1, Background);
-            //Storyboard.SetTargetProperty(da1, "Opacity");
-
-            //storyboard.Children.Add(da1);
-
-            //DoubleAnimation da2 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da2, checkMarkScale);
-            //Storyboard.SetTargetProperty(da2, "ScaleY");
-
-            //storyboard.Children.Add(da2);
-
-            DoubleAnimation da3 = new DoubleAnimation()
-            {
-                To = negative,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da3, iconTranslate);
-            Storyboard.SetTargetProperty(da3, "Y");
-
-            storyboard.Children.Add(da3);
-
-            DoubleAnimation da4 = new DoubleAnimation()
-            {
-                To = positive,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da4, textTranslate);
-            Storyboard.SetTargetProperty(da4, "Y");
-
-            storyboard.Children.Add(da4);
-
-            DoubleAnimation da5 = new DoubleAnimation()
-            {
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(100),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da5, contentPresenter);
-            Storyboard.SetTargetProperty(da5, "Opacity");
-
-            storyboard.Children.Add(da5);
-
-            storyboard.Begin();
-
+            animation.Begin();
         }
 
         private void BeginNormalAnimation()
         {
             icon.Opacity = 1;
 
-            Storyboard storyboard = new Storyboard();
+            Animation animation = new Animation();
+            animation.AddDoubleAnimation(0, 300, Background, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(0, 200, iconTranslate, "Y", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(0, 200, textTranslate, "Y", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
+            animation.AddDoubleAnimation(0, 100, contentPresenter, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
 
-            DoubleAnimation da1 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(300),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da1, Background);
-            Storyboard.SetTargetProperty(da1, "Opacity");
-
-            storyboard.Children.Add(da1);
-
-            //DoubleAnimation da2 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da2, checkMarkScale);
-            //Storyboard.SetTargetProperty(da2, "ScaleY");
-
-            //storyboard.Children.Add(da2);
-
-            DoubleAnimation da3 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da3, iconTranslate);
-            Storyboard.SetTargetProperty(da3, "Y");
-
-            storyboard.Children.Add(da3);
-
-            DoubleAnimation da4 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(200),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da4, textTranslate);
-            Storyboard.SetTargetProperty(da4, "Y");
-
-            storyboard.Children.Add(da4);
-
-            DoubleAnimation da5 = new DoubleAnimation()
-            {
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(100),
-                EnableDependentAnimation = true,
-            };
-
-            Storyboard.SetTarget(da5, contentPresenter);
-            Storyboard.SetTargetProperty(da5, "Opacity");
-
-            storyboard.Children.Add(da5);
-
-
-            storyboard.Begin();
+            animation.Begin();
         }
 
         private void BeginPressedAnimation()
         {
-            Storyboard storyboard = new Storyboard();
-
-            //DoubleAnimation da1 = new DoubleAnimation()
-            //{
-            //    To = 0.3,
-            //    Duration = TimeSpan.FromMilliseconds(300),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da1, Background);
-            //Storyboard.SetTargetProperty(da1, "Opacity");
-
-            //storyboard.Children.Add(da1);
-
-            //DoubleAnimation da2 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da2, checkMarkScale);
-            //Storyboard.SetTargetProperty(da2, "ScaleY");
-
-            //storyboard.Children.Add(da2);
-
-            //DoubleAnimation da3 = new DoubleAnimation()
-            //{
-            //    To = 0,
-            //    Duration = TimeSpan.FromMilliseconds(200),
-            //    EnableDependentAnimation = true,
-            //};
-
-            //Storyboard.SetTarget(da3, Background);
-            //Storyboard.SetTargetProperty(da3, "Opacity");
-
-            //storyboard.Children.Add(da3);
-
-            storyboard.Begin();
 
         }
 

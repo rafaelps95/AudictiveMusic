@@ -12,7 +12,6 @@
 
 
     <Grid>
-        <ProgressRing x:Name="progress" IsActive="true" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Width="50" Height="50" />
         <Grid x:Name="layoutRoot" RenderTransformOrigin="0.5, 0.5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48" />
@@ -43,7 +42,7 @@
 
                     </Grid.RowDefinitions>
 
-                    <Grid CornerRadius="5" Height="150" Width="150" Margin="20" HorizontalAlignment="Center">
+                    <Grid x:Name="destinationElement" CornerRadius="5" Height="150" Width="150" Margin="20" HorizontalAlignment="Center">
                         <!--<Grid.Background>
                             <SolidColorBrush x:Name="appColor" Color="#FFDC572E" />
                         </Grid.Background>-->
