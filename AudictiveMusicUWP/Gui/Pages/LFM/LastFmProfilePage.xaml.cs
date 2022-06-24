@@ -32,6 +32,20 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
             Recommended
         }
 
+
+
+        public string Bio
+        {
+            get { return (string)GetValue(BioProperty); }
+            set { SetValue(BioProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Bio.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BioProperty =
+            DependencyProperty.Register("Bio", typeof(string), typeof(LastFmProfilePage), new PropertyMetadata(string.Empty));
+
+
+
         private NavigationMode NavMode
         {
             get;
@@ -127,6 +141,9 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
             header.SetContext(lastArtist);
             recentButton.Visibility = followingButton.Visibility = Visibility.Collapsed;
 
+            this.Bio = lastArtist.Bio.Content;
+            if (string.IsNullOrWhiteSpace(this.Bio) == false)
+                bioGrid.Visibility = Visibility.Visible;
 
             NavigateToPage(LastFmPage.TopMedia, lastArtist);
         }
@@ -209,6 +226,27 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
         private void recommendedButton_Click(object sender, RoutedEventArgs e)
         {
             NavigateToPage(LastFmPage.Recommended, this.DataContext);
+        }
+
+        private void BioTB_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            OpenBioFlyout(sender);
+        }
+
+        private void OpenBioFlyout(object sender)
+        {
+            bioFlyoutTB.Text = this.Bio;
+
+            if (ApplicationInfo.Current.IsMobile)
+                bioTB.ContextFlyout.Placement = Windows.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Full;
+            else
+                bioTB.ContextFlyout.Placement = Windows.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Top;
+            bioTB.ContextFlyout.ShowAt((FrameworkElement)sender);
+        }
+
+        private void ReadMore_Click(object sender, RoutedEventArgs e)
+        {
+            OpenBioFlyout(sender);
         }
     }
 }

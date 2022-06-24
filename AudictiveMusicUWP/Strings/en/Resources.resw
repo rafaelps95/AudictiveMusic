@@ -988,7 +988,7 @@
     <value>Home</value>
   </data>
   <data name="SuggestionForYou.Text" xml:space="preserve">
-    <value>A suggestion for you...</value>
+    <value>A suggestion for you</value>
   </data>
   <data name="AddToFavoritesCaption.Text" xml:space="preserve">
     <value>Have easy access to the music you love</value>

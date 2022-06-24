@@ -171,25 +171,43 @@ namespace ClassLibrary.Helpers
         //}
 
 
-        public static async Task SaveBiography(XmlDocument xmlDoc, string artist)
+        public static async Task<string> GetArtistBiography(string artist)
         {
-            XmlElement fullNode = xmlDoc.SelectSingleNode("/lfm/artist/bio/content") as XmlElement;
+            string bio = "";
+            string fileName = string.Format("bio_{0}_{1}.txt", StringHelper.RemoveSpecialChar(artist), ApplicationInfo.Current.Language.ToLower());
             StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Artists", CreationCollisionOption.OpenIfExists);
-            StorageFile bioFile = await folder.CreateFileAsync(StringHelper.RemoveSpecialChar(artist) + "_bio.txt", CreationCollisionOption.ReplaceExisting);
+            IStorageItem bioStorageItem = await folder.TryGetItemAsync(fileName);
 
-            string bio = fullNode.InnerText;
-
-            try
+            if (bioStorageItem == null)
             {
-                if (bio.Contains("<a href=\"https://www.last.fm/music"))
-                    bio = bio.Split(new string[] { "<a href=\"https://www.last.fm/music" }, StringSplitOptions.None)[0];
+                if (ApplicationInfo.Current.HasInternetConnection == false)
+                    return bio;
+
+                try
+                {
+                    var result = await LastFm.Current.Client.Artist.GetInfoAsync(artist, ApplicationInfo.Current.Language, true);
+                    if (result.Success)
+                    {
+                        bio = result.Content.Bio.Content;
+
+                        StorageFile bioFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+                        await FileIO.WriteTextAsync(bioFile, bio);
+
+                    }
+                }
+                catch
+                {
+
+                }
             }
-            catch
+            else
             {
-
+                StorageFile bioFile = await folder.GetFileAsync(fileName);
+                bio = await FileIO.ReadTextAsync(bioFile);
             }
 
-            await FileIO.WriteTextAsync(bioFile, fullNode.InnerText);
+            return bio;
         }
 
         public async Task<bool> Login(string username, string password)

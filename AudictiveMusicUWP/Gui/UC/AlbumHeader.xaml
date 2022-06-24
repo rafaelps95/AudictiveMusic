@@ -44,7 +44,7 @@
                 </Rectangle.Fill>
             </Rectangle>
 
-            <Border x:Name="border" Opacity="0" Grid.Row="1" Grid.RowSpan="2" BorderThickness="3" HorizontalAlignment="Left" Margin="10,0,10,0" VerticalAlignment="Bottom" Width="150" Height="150">
+            <Border x:Name="border" CornerRadius="5" Opacity="0" Grid.Row="1" Grid.RowSpan="2" BorderThickness="2" HorizontalAlignment="Left" Margin="10,0,10,0" VerticalAlignment="Bottom" Width="150" Height="150">
                 <Border.Background>
                     <ImageBrush x:Name="borderBrush" ImageOpened="border_ImageOpened" ImageFailed="border_ImageFailed" Stretch="UniformToFill" />
                 </Border.Background>

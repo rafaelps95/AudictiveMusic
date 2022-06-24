@@ -131,7 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary\ClassLibrary.csproj">
-      <Project>{9018AA24-DD82-4883-B645-E678BF05A0AC}</Project>
+      <Project>{9018aa24-dd82-4883-b645-e678bf05a0ac}</Project>
       <Name>ClassLibrary</Name>
     </ProjectReference>
   </ItemGroup>

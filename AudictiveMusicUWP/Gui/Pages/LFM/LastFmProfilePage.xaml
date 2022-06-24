@@ -19,6 +19,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <local:MediaPageHeader x:Name="header" Canvas.ZIndex="3" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
                     <ScrollViewer VerticalScrollMode="Disabled" Padding="0,10,0,10" VerticalScrollBarVisibility="Hidden" HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" Grid.ColumnSpan="3" Grid.Row="1">
@@ -38,6 +39,42 @@
                             </TransitionCollection>
                         </Frame.ContentTransitions>
                     </Frame>
+
+                    <Grid x:Name="bioGrid" Visibility="Collapsed" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Margin="12,12,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" x:Uid="Bio" />
+                        <TextBlock Margin="12,0,12,12" x:Name="bioTB" Text="{Binding ElementName=root, Path=Bio}" Tapped="BioTB_Tapped" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" MaxLines="6" Grid.Row="1">
+                            <TextBlock.ContextFlyout>
+                                <Flyout>
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="MinWidth" Value="200" />
+                                            <Setter Property="Padding" Value="0" />
+                                            <Setter Property="MinHeight" Value="200" />
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
+                                    <Grid HorizontalAlignment="Stretch" Margin="20">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Margin="0,0,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" x:Uid="Bio" />
+                                        <TextBlock x:Name="bioFlyoutTB" IsTextSelectionEnabled="True" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" Grid.Row="1" />
+                                    </Grid>
+                                </Flyout>
+                            </TextBlock.ContextFlyout>
+                        </TextBlock>
+                        <Button Grid.Row="2" Style="{StaticResource InlineButtonStyle}" x:Uid="ReadMore" x:Name="readMore" Click="ReadMore_Click" HorizontalAlignment="Right" Margin="12,0,12,12" />
+
+                    </Grid>
+
 
 
 

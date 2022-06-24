@@ -301,6 +301,10 @@
     <Content Include="Assets\FB-f-Logo__blue_29.png" />
     <Content Include="Assets\lastfm_fulllogo.png" />
     <Content Include="Assets\lastfm_circlelogo.png" />
+    <Content Include="Assets\lastfm_logo-light.png" />
+    <Content Include="Assets\lastfm_logo-transparent.png" />
+    <Content Include="Assets\lastfm_logo-transparent2.png" />
+    <Content Include="Assets\lastfm_logo-dark.png" />
     <Content Include="Assets\lastfm_logo.png" />
     <Content Include="Assets\localmediabutton.png" />
     <Content Include="Assets\Logos\Fluent\AboutPageLogo.png" />

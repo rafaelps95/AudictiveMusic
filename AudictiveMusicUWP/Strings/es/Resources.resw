@@ -976,7 +976,7 @@
     <value>Inicio</value>
   </data>
   <data name="SuggestionForYou.Text" xml:space="preserve">
-    <value>Una sugerencia para usted...</value>
+    <value>Una sugerencia para usted</value>
   </data>
   <data name="AddToFavoritesCaption.Text" xml:space="preserve">
     <value>Tener acceso fácil a la música que amas</value>

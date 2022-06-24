@@ -11,12 +11,14 @@
                     <SolidColorBrush x:Key="DefaultPageBackgroundLowBrush" Color="#BBF2F2F2" />
                     <SolidColorBrush x:Key="DefaultPageBorderBrush" Color="#66999999" />
                     <SolidColorBrush x:Key="DefaultButtonBackgroundBrush" Color="#88F2F2F2" />
+                    <SolidColorBrush x:Key="DefaultCardBackgroundBrush" Color="#E2E2E2" />
                     <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#FBFBFB" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemBackgroundBrush" Color="#FFB6B6B6" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemPointerOverBackgroundBrush" Color="#FFC5C5C5" />
                     <SolidColorBrush x:Key="ScrollBarThumbBackground" Color="#8B8988" />
                     <SolidColorBrush x:Key="ScrollBarButtonPointerOverBrush" Color="#605E5E" />
                     <SolidColorBrush x:Key="ScrollBarThumbBorderBrush" Color="#C5C2C1" />
+                    <BitmapImage x:Key="LastFmThemedLogo" UriSource="ms-appx:///Assets/lastfm_logo-light.png" />
                     <x:Boolean x:Key="IsDarkTheme">false</x:Boolean>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
@@ -24,12 +26,14 @@
                     <SolidColorBrush x:Key="DefaultPageBackgroundLowBrush" Color="#BB303030" />
                     <SolidColorBrush x:Key="DefaultPageBorderBrush" Color="#66999999" />
                     <SolidColorBrush x:Key="DefaultButtonBackgroundBrush" Color="#88303030" />
+                    <SolidColorBrush x:Key="DefaultCardBackgroundBrush" Color="#404040" />
                     <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#2D2D2D" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemBackgroundBrush" Color="#FF353535" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemPointerOverBackgroundBrush" Color="#FF474747" />
                     <SolidColorBrush x:Key="ScrollBarThumbBackground" Color="#A29E9F" />
                     <SolidColorBrush x:Key="ScrollBarButtonPointerOverBrush" Color="#D1CFCF" />
                     <SolidColorBrush x:Key="ScrollBarThumbBorderBrush" Color="#6A6465" />
+                    <BitmapImage x:Key="LastFmThemedLogo" UriSource="ms-appx:///Assets/lastfm_logo-dark.png" />
                     <x:Boolean x:Key="IsDarkTheme">true</x:Boolean>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Default">

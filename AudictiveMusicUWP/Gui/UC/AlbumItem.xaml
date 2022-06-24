@@ -84,15 +84,15 @@
     </UserControl.Resources>
 
 
-    <Border RequestedTheme="{Binding Color, Converter={StaticResource requestedThemeByColorConverter}}" CornerRadius="6" Margin="5" RenderTransformOrigin="0.5,0.5">
+    <Border RequestedTheme="{Binding Color, Converter={StaticResource requestedThemeByColorConverter}}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" CornerRadius="5" Margin="5" RenderTransformOrigin="0.5,0.5">
         <Border.RenderTransform>
             <ScaleTransform x:Name="gridScale" ScaleX="1" ScaleY="1" />
         </Border.RenderTransform>
+        <Border.Background>
+            <SolidColorBrush Opacity="1" Color="{Binding Color}" />
+        </Border.Background>
 
         <Grid Width="{Binding ItemLength, ElementName=root}" PointerReleased="Grid_PointerReleased" PointerCanceled="repeatButton_PointerExited" Holding="Grid_Holding" RightTapped="Grid_RightTapped">
-            <Grid.Background>
-                <SolidColorBrush Opacity="1" Color="{Binding Color}" />
-            </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -101,9 +101,15 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="{Binding ItemLength, ElementName=root}" />
             </Grid.ColumnDefinitions>
-            <Grid Background="Gray" Height="{Binding ItemLength, ElementName=root}">
-                <TextBlock Text="" FontFamily="{ThemeResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF737373" />
-                <Image Source="{Binding Image}" ImageOpened="AlbumCover_ImageOpened" Opacity="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+            <Grid Height="{Binding ItemLength, ElementName=root}">
+                <Border CornerRadius="5,5,0,0" Background="Gray">
+                    <TextBlock Text="" FontFamily="{ThemeResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF737373" />
+                </Border>
+                <Border Opacity="0" CornerRadius="5,5,0,0" x:Name="cover" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding Image}" ImageOpened="AlbumCover_ImageOpened" />
+                    </Border.Background>
+                </Border>
                 <Border x:Name="albumItemOverlay" Opacity="0">
                     <Border.Background>
                         <SolidColorBrush Color="{Binding Color}" Opacity="1" />

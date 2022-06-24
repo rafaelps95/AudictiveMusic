@@ -9,7 +9,9 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using RPSToolkit;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -22,8 +24,14 @@ namespace AudictiveMusicUWP.Gui.UC
 
         public Card()
         {
+            this.Loaded += Card_Loaded;
             this.SizeChanged += Card_SizeChanged;
             this.InitializeComponent();
+        }
+
+        private void Card_Loaded(object sender, RoutedEventArgs e)
+        {
+            shadow.ApplyShadow();
         }
 
         public void SetContext(MediaItem context)
@@ -39,8 +47,15 @@ namespace AudictiveMusicUWP.Gui.UC
                 textRow2.Text = song.Artist;
 
                 Color color = ImageHelper.GetColorFromHex(song.HexColor);
-                gradientStop1.Color = color.ChangeColorBrightness(-0.6f);
+                gradientStop1.Color = color.ChangeColorBrightness(-0.3f);
+
                 gradientStop2.Color = color;
+                playButton.Background = new SolidColorBrush(color);
+
+                if (color.IsDarkColor())
+                    playButton.RequestedTheme = ElementTheme.Dark;
+                else
+                    playButton.RequestedTheme = ElementTheme.Light;
 
                 BitmapImage bmp = new BitmapImage();
                 bmp.ImageFailed += Bmp_ImageFailed;
@@ -68,7 +83,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void Card_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            this.Height = e.NewSize.Width / 1.5;
+            
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
@@ -89,9 +104,28 @@ namespace AudictiveMusicUWP.Gui.UC
             }
         }
 
-        private void dotsButton_Tapped(object sender, TappedRoutedEventArgs e)
+        private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            PopupHelper.GetInstance(sender).ShowPopupMenu(_mediaItem, true, e.GetPosition((FrameworkElement)sender));
+            List<string> list = new List<string>();
+            if (this.ContextMode == Enumerators.MediaItemType.Song)
+            {
+                Song song = this.DataContext as Song;
+                list.Add(song.SongURI);
+            }
+            else if (this.ContextMode == Enumerators.MediaItemType.Album)
+            {
+
+            }
+            else if (this.ContextMode == Enumerators.MediaItemType.Artist)
+            {
+
+            }
+            PlaylistHelper.RequestPlaylistPicker(this, list);
+        }
+
+        private void DotsButton_Click(object sender, RoutedEventArgs e)
+        {
+            PopupHelper.GetInstance(sender).ShowPopupMenu(_mediaItem);
         }
     }
 }

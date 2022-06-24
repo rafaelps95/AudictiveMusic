@@ -20,6 +20,7 @@ using Windows.UI.Input;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -39,7 +40,22 @@ namespace AudictiveMusicUWP.Gui.Pages
         private int RepeatButtonCycleCounter;
         private bool ClickEventIsTouch;
         private Thickness TouchFlyoutMargin;
-        private string _bio;
+
+
+
+        public string Bio
+        {
+            get { return (string)GetValue(BioProperty); }
+            set { SetValue(BioProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Bio.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BioProperty =
+            DependencyProperty.Register("Bio", typeof(string), typeof(ArtistPage), new PropertyMetadata(string.Empty));
+
+
+
+        private bool _bioInHeader = true;
 
         public double AlbumItemLength
         {
@@ -109,32 +125,106 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             albumsList.Width = e.NewSize.Width;
             selectionItemsBar.Width = e.NewSize.Width;
-            _selectionBarOffset = header.ActualHeight + albumsHeader.ActualHeight + albumsScroll.ActualHeight + 25;
+            _selectionBarOffset = header.ActualHeight + albumsHeader.ActualHeight + albumsScroll.ActualHeight + 30;
 
             UpdateView(e.NewSize.Width);
         }
 
         private void UpdateView(double width)
         {
-            header.Width = width;
-
             if (width < 500)
             {
                 circleImage.Height = circleImage.Width = 75;
                 artistName.FontSize = 18;
                 headerBorder.Margin = new Thickness(10);
+
+                if (string.IsNullOrWhiteSpace(this.Bio))
+                {
+                    bioHeaderGrid.Visibility = bioGrid.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    bioHeaderGrid.Visibility = Visibility.Collapsed;
+                    bioGrid.Visibility = Visibility.Visible;
+                }
             }
             else if (width >= 500 && width < 600)
             {
                 circleImage.Height = circleImage.Width = 100;
                 artistName.FontSize = 24;
                 headerBorder.Margin = new Thickness(15);
+
+                if (string.IsNullOrWhiteSpace(this.Bio))
+                {
+                    bioHeaderGrid.Visibility = bioGrid.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    bioHeaderGrid.Visibility = Visibility.Collapsed;
+                    bioGrid.Visibility = Visibility.Visible;
+                }
+            }
+            else if (width >= 600 && width < 800)
+            {
+                circleImage.Height = circleImage.Width = 150;
+                artistName.FontSize = 28;
+                headerBorder.Margin = new Thickness(20);
+                bioHeaderGrid.MaxWidth = 300;
+
+                if (string.IsNullOrWhiteSpace(this.Bio))
+                {
+                    bioHeaderGrid.Visibility = bioGrid.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    bioHeaderGrid.Visibility = Visibility.Collapsed;
+                    bioGrid.Visibility = Visibility.Visible;
+                }
+            }
+            else if (width >= 800 && width < 950)
+            {
+                circleImage.Height = circleImage.Width = 150;
+                artistName.FontSize = 28;
+                headerBorder.Margin = new Thickness(20);
+                bioHeaderGrid.MaxWidth = 300;
+
+                if (string.IsNullOrWhiteSpace(this.Bio))
+                {
+                    bioHeaderGrid.Visibility = bioGrid.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    bioHeaderGrid.Visibility = Visibility.Visible;
+                    bioGrid.Visibility = Visibility.Collapsed;
+                }
             }
             else
             {
                 circleImage.Height = circleImage.Width = 150;
                 artistName.FontSize = 28;
                 headerBorder.Margin = new Thickness(20);
+                bioHeaderGrid.MaxWidth = 500;
+
+                if (string.IsNullOrWhiteSpace(this.Bio))
+                {
+                    bioHeaderGrid.Visibility = bioGrid.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    bioHeaderGrid.Visibility = Visibility.Visible;
+                    bioGrid.Visibility = Visibility.Collapsed;
+                }
+            }
+
+            header.Width = width;
+
+            try
+            {
+                bioGrid.Width = width - 10;
+            }
+            catch
+            {
+
             }
         }
 
@@ -156,18 +246,28 @@ namespace AudictiveMusicUWP.Gui.Pages
             //var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("OpenArtistConnectedAnimation");
             //if (anim != null)
             //{
-            //    anim.TryStart(circleImage);
+            //    anim.TryStart(header);
             //}
 
             await LoadMusic();
 
-            string lang = ApplicationInfo.Current.Language;
-            var result = await LastFm.Current.Client.Artist.GetInfoAsync(Artist.Name, ApplicationInfo.Current.Language, true);
-            if (result.Success)
+            _selectionBarOffset = header.ActualHeight + albumsHeader.ActualHeight + albumsScroll.ActualHeight + 30;
+
+            Bio = await LastFm.GetArtistBiography(Artist.Name);
+
+            if (string.IsNullOrWhiteSpace(Bio) == false)
             {
-                LastArtist artist = result.Content;
-                _bio = artist.Bio.Content;
-                bio.Text = _bio;
+                if (scrollContent.ActualWidth >= 800)
+                {
+                    bioHeaderGrid.Visibility = Visibility.Visible;
+                    bioGrid.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    bioHeaderGrid.Visibility = Visibility.Collapsed;
+                    bioGrid.Visibility = Visibility.Visible;
+                }
+                Animation.BeginFadeAnimation(bioHeaderGrid);
             }
 
             //StorageFile imgFile = null;
@@ -719,8 +819,34 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void BioTB_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            bioFlyoutTB.Text = _bio;
-            bioTB.ContextFlyout.ShowAt(bioTB);
+            OpenBioFlyout(sender, FlyoutPlacementMode.Left);
+        }
+
+        private void OpenBioFlyout(object sender, FlyoutPlacementMode flyoutPlacementMode)
+        {
+            bioFlyoutTB.Text = bioFlyoutTB2.Text = this.Bio;
+
+            if (ApplicationInfo.Current.IsMobile)
+                ((FrameworkElement)sender).ContextFlyout.Placement = FlyoutPlacementMode.Full;
+            else
+                ((FrameworkElement)sender).ContextFlyout.Placement = flyoutPlacementMode;
+            ((FrameworkElement)sender).ContextFlyout.ShowAt((FrameworkElement)sender);
+        }
+
+        private async void LastfmButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = await LastFm.Current.Client.Artist.GetInfoAsync(Artist.Name, ApplicationInfo.Current.Language, true);
+            if (result.Success)
+            {
+                LastArtist artist = result.Content;
+
+                NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
+            }
+        }
+
+        private void ReadMore_Click(object sender, RoutedEventArgs e)
+        {
+            OpenBioFlyout(bioTB2, FlyoutPlacementMode.Top);
         }
     }
 }

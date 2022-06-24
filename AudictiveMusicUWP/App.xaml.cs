@@ -130,24 +130,24 @@ namespace AudictiveMusicUWP
 
                 passedWelcomeScreen = ApplicationData.Current.LocalSettings.Values.ContainsKey("AudictiveMusic10RTM");
 
-                var toastTaskRegistered = false;
-                var toastTaskName = "PendingScrobbleTask";
+                var pendingScrobbleTaskRegistered = false;
+                var pendingScrobbleTaskName = "PendingScrobbleTask";
                 await BackgroundExecutionManager.RequestAccessAsync();
 
                 foreach (var task in BackgroundTaskRegistration.AllTasks)
                 {
-                    if (task.Value.Name == toastTaskName)
+                    if (task.Value.Name == pendingScrobbleTaskName)
                     {
-                        toastTaskRegistered = true;
+                        pendingScrobbleTaskRegistered = true;
                         break;
                     }
                 }
 
-                if (!toastTaskRegistered)
+                if (!pendingScrobbleTaskRegistered)
                 {
                     var builder = new BackgroundTaskBuilder();
 
-                    builder.Name = toastTaskName;
+                    builder.Name = pendingScrobbleTaskName;
                     builder.TaskEntryPoint = "PendingScrobbleBackgroundTask.PendingScrobbleTask";
                     builder.SetTrigger(new SystemTrigger(SystemTriggerType.InternetAvailable, false));
 

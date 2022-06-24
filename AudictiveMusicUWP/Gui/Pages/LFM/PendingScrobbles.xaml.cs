@@ -42,7 +42,14 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
 
         private void NetworkInformation_NetworkStatusChanged(object sender)
         {
-            //sendButton.IsEnabled = this.PendingList.Count > 0 && ApplicationInfo.Current.HasInternetConnection;
+            //try
+            //{
+            //    sendButton.IsEnabled = this.PendingList.Count > 0 && ApplicationInfo.Current.HasInternetConnection;
+            //}
+            //catch
+            //{
+
+            //}
         }
 
         private void PendingScrobble_Updated(object sender, RoutedEventArgs e)

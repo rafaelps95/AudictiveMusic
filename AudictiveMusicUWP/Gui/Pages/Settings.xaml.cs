@@ -317,7 +317,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             LoadSettings();
             if (this.NavMode != NavigationMode.Back)
             {
-                await Task.Delay(600);
+                await Task.Delay(1000);
                 HandleNavigation();
             }
             //try

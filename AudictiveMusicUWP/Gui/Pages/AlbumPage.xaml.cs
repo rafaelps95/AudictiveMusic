@@ -64,7 +64,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void AlbumPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _selectionBarOffset = header.ActualHeight;
-            selectionItemsBar.Width = e.NewSize.Width;
+            selectionItemsBar.Width = header.Width = e.NewSize.Width;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

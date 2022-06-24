@@ -26,8 +26,9 @@
             </Grid>
             <!--<local:ArtistHeader x:Name="header" Holding="artistHeader_Holding" RightTapped="artistHeader_RightTapped" Height="200" Canvas.ZIndex="3" VerticalAlignment="Top" HorizontalAlignment="Stretch" />-->
             <ScrollViewer x:Name="scroll" ViewChanging="scroll_ViewChanging" ViewChanged="scroll_ViewChanged" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" ZoomMode="Disabled">
-                <Grid x:Name="scrollContent" SizeChanged="ArtistPage_SizeChanged">
+                <Grid x:Name="scrollContent" Margin="0,0,0,110">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -50,7 +51,7 @@
                         </Grid>
                         <toolkit:Acrylic x:Name="acrylic" Opacity="0" AcrylicNoise="False" AcrylicEnabled="False" />
                         <Border CornerRadius="10" x:Name="headerBorder" Margin="20" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" Background="{ThemeResource DefaultPageBackgroundLowBrush}">
-                            <Grid>
+                            <Grid x:Name="headerContentGrid">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="20" />
                                     <ColumnDefinition Width="Auto" />
@@ -82,16 +83,21 @@
                                     <StackPanel x:Name="buttonsArea" Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Margin="-5,5,5,5">
                                         <Button Background="{Binding AccentColor, Mode=TwoWay, Source={ThemeResource ApplicationAccentColor}}" Foreground="{Binding ForegroundColor, Mode=TwoWay, Source={ThemeResource ApplicationAccentColor}}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" FontSize="15" IsTextScaleFactorEnabled="False" x:Name="playButton" Click="playButton_Click" Content="" Style="{StaticResource ModernIconButtonStyle}" VerticalAlignment="Center" />
                                         <Button Background="{ThemeResource DefaultButtonBackgroundBrush}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" FontSize="15" IsTextScaleFactorEnabled="False" x:Name="addButton" Click="addButton_Click" Content="" Style="{StaticResource ModernIconButtonStyle}" VerticalAlignment="Center"/>
+                                        <Button Background="{ThemeResource DefaultButtonBackgroundBrush}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" FontSize="15" IsTextScaleFactorEnabled="False" x:Name="lastfmButton" Click="LastfmButton_Click" Style="{StaticResource ModernIconButtonStyle}" Height="{Binding ElementName=playButton, Path=ActualHeight}" Width="{Binding ElementName=playButton, Path=ActualWidth}" VerticalAlignment="Center">
+                                            <Button.Content>
+                                                <Image Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{ThemeResource LastFmThemedLogo}" />
+                                            </Button.Content>
+                                        </Button>
                                         <Button Background="{ThemeResource DefaultButtonBackgroundBrush}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" FontSize="15" IsTextScaleFactorEnabled="False" x:Name="moreButton" Click="moreButton_Click" Content="" Style="{StaticResource ModernIconButtonStyle}" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Grid>
-                                <Grid x:Name="bioGrid" MaxWidth="500" Grid.Column="4" Grid.Row="1" VerticalAlignment="Center">
+                                <Grid x:Name="bioHeaderGrid" Visibility="Collapsed" Opacity="0" MaxWidth="500" Grid.Column="4" Grid.Row="1" VerticalAlignment="Center">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock FontSize="16" Text="Biografia" />
-                                    <TextBlock x:Name="bioTB" Tapped="BioTB_Tapped" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" MaxLines="4" Grid.Row="1">
+                                    <TextBlock FontSize="16" x:Uid="Bio" />
+                                    <TextBlock x:Name="bioTB" Text="{Binding ElementName=root, Path=Bio}" Tapped="BioTB_Tapped" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" MaxLines="4" Grid.Row="1">
                                         <TextBlock.ContextFlyout>
                                             <Flyout>
                                                 <Flyout.FlyoutPresenterStyle>
@@ -99,33 +105,38 @@
                                                         <Setter Property="MinWidth" Value="200" />
                                                         <Setter Property="Padding" Value="0" />
                                                         <Setter Property="MinHeight" Value="200" />
+                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                                         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
                                                         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                                                     </Style>
                                                 </Flyout.FlyoutPresenterStyle>
-                                                    <Grid Width="500" Margin="5">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="*" />
-                                                        </Grid.RowDefinitions>
-                                                        <TextBlock FontSize="16" Text="Biografia" />
-                                                        <TextBlock x:Name="bioFlyoutTB" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" Grid.Row="1" />
-                                                    </Grid>
+                                                <Grid HorizontalAlignment="Stretch" Margin="20">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+                                                    <TextBlock Margin="0,0,0,12" x:Uid="Bio" Style="{ThemeResource SubtitleTextBlockStyle}" />
+                                                    <TextBlock x:Name="bioFlyoutTB" IsTextSelectionEnabled="True" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" Grid.Row="1" />
+                                                </Grid>
                                             </Flyout>
                                         </TextBlock.ContextFlyout>
-                                        <Run x:Name="bio" />
-                                        <Hyperlink x:Name="moreBio"><Run Text="Ler mais" /></Hyperlink>
-
                                     </TextBlock>
                                 </Grid>
                                 
                             </Grid>
                         </Border>
                     </Grid>
-                    
-                    
-                    <TextBlock Grid.Row="2" x:Name="albumsHeader" x:Uid="Albums" Margin="12,12,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" Text="Álbuns" />
-                    <ScrollViewer x:Name="albumsScroll" Grid.Row="3" HorizontalScrollMode="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left">
+                    <Grid Canvas.ZIndex="2" Grid.Row="1" Height="5" Opacity="0.5" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" >
+                        <Grid.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                    </Grid>
+
+                    <TextBlock Grid.Row="1" x:Name="albumsHeader" x:Uid="Albums" Margin="12,17,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" Text="Álbuns" />
+                    <ScrollViewer x:Name="albumsScroll" Grid.Row="2" HorizontalScrollMode="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left">
                         <GridView Loaded="albumsList_Loaded" x:Name="albumsList" Padding="10,0,20,20" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollMode="Disabled"
                           IsItemClickEnabled="True" SelectionMode="None" ItemClick="albumsList_ItemClick">
                             <GridView.ItemContainerTransitions>
@@ -169,11 +180,11 @@
                             </GridView.ItemTemplate>
                         </GridView>
                     </ScrollViewer>
-                    <TextBlock Grid.Row="4" x:Name="songsHeader" x:Uid="Songs" Margin="12,12,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" Text="Músicas" />
+                    <TextBlock Grid.Row="3" x:Name="songsHeader" x:Uid="Songs" Margin="12,12,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" Text="Músicas" />
 
-                    <local:SelectedItemsBar Canvas.ZIndex="2" Grid.Row="4" Grid.RowSpan="2" SelectionModeChanged="SelectionItemsBar_SelectionModeChanged" PlaySelected="SelectionItemsBar_PlaySelected" AddSelected="SelectionItemsBar_AddSelected" ClearRequest="SelectionItemsBar_ClearRequest" SelectAllRequest="SelectionItemsBar_SelectAllRequest" ShareSelected="SelectionItemsBar_ShareSelected" x:Name="selectionItemsBar" Visibility="Visible" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+                    <local:SelectedItemsBar Canvas.ZIndex="2" Grid.Row="3" Grid.RowSpan="2" SelectionModeChanged="SelectionItemsBar_SelectionModeChanged" PlaySelected="SelectionItemsBar_PlaySelected" AddSelected="SelectionItemsBar_AddSelected" ClearRequest="SelectionItemsBar_ClearRequest" SelectAllRequest="SelectionItemsBar_SelectAllRequest" ShareSelected="SelectionItemsBar_ShareSelected" x:Name="selectionItemsBar" Visibility="Visible" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
 
-                    <ListView IsItemClickEnabled="True" ItemClick="songsList_ItemClick" Grid.Row="5" Padding="0,0,0,110" x:Name="listView" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <ListView IsItemClickEnabled="True" ItemClick="songsList_ItemClick" Grid.Row="4" x:Name="listView" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                         <!--<ListView.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition FromHorizontalOffset="-100" FromVerticalOffset="0" IsStaggeringEnabled="True" />
@@ -198,6 +209,41 @@
                         </ListView.ItemTemplate>
 
                     </ListView>
+
+                    <Grid x:Name="bioGrid" Visibility="Collapsed" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Margin="12,12,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" x:Uid="Bio" />
+                        <TextBlock x:Name="bioTB2" Margin="12,0,12,12" Text="{Binding ElementName=root, Path=Bio}" Tapped="BioTB_Tapped" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" MaxLines="6" Grid.Row="1">
+                            <TextBlock.ContextFlyout>
+                                <Flyout>
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="MinWidth" Value="200" />
+                                            <Setter Property="Padding" Value="0" />
+                                            <Setter Property="MinHeight" Value="200" />
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
+                                    <Grid HorizontalAlignment="Stretch" Margin="20">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Margin="0,0,0,12" Style="{ThemeResource SubtitleTextBlockStyle}" x:Uid="Bio" />
+                                        <TextBlock x:Name="bioFlyoutTB2" IsTextSelectionEnabled="True" FontSize="12" TextAlignment="Justify" TextTrimming="CharacterEllipsis" TextWrapping="WrapWholeWords" Grid.Row="1" />
+                                    </Grid>
+                                </Flyout>
+                            </TextBlock.ContextFlyout>
+                        </TextBlock>
+                        <Button Grid.Row="2" Style="{StaticResource InlineButtonStyle}" x:Uid="ReadMore" x:Name="readMore" Click="ReadMore_Click" HorizontalAlignment="Right" Margin="12,0,12,12" />
+                    </Grid>
+
                 </Grid>
             </ScrollViewer>
         </Grid>

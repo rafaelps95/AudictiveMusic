@@ -109,7 +109,7 @@ namespace AudictiveMusicUWP.Gui.UC
         private void AlbumCover_ImageOpened(object sender, RoutedEventArgs e)
         {
             Animation animation = new Animation();
-            animation.AddDoubleAnimation(1, 1200, sender as Image, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut),false, 200);
+            animation.AddDoubleAnimation(1, 1200, cover, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut),false, 200);
 
             animation.Begin();
         }

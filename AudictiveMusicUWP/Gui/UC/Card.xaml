@@ -7,68 +7,70 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    VerticalAlignment="Top">
 
-    <Border CornerRadius="8">
-        <Border.Background>
-            <SolidColorBrush Color="{ThemeResource SystemChromeMediumColor}" />
-        </Border.Background>
-        <Grid>
-            <Border CornerRadius="8" Opacity="0.6">
-                <Border.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <LinearGradientBrush.RelativeTransform>
-                            <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="-45"/>
-                        </LinearGradientBrush.RelativeTransform>
-                        <GradientStop x:Name="gradientStop1" />
-                        <GradientStop x:Name="gradientStop2"  Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
-            </Border>
-
-            <Grid Margin="15" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Text="" x:Name="textRow1" Foreground="White" FontSize="16" FontWeight="Bold" TextTrimming="CharacterEllipsis" />
-                <TextBlock Text="" x:Name="textRow2" Foreground="White" Grid.Row="1" FontSize="10" FontStyle="Italic" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
-
-                <Button Style="{StaticResource CircleButtonStyle}" Foreground="White" x:Name="dotsButton" Tapped="dotsButton_Tapped" FontSize="10" Height="30" Width="30" Content="" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0">
-
-                </Button>
-
-
-                <!--<Image Grid.Row="2" Stretch="UniformToFill" Source="https://musicshaker.fr/wp-content/uploads/2018/01/camila-1.png" />-->
-
-                <Border Grid.Row="2" CornerRadius="5" Margin="0,2,0,0" Grid.ColumnSpan="2">
+    <!-- <Border CornerRadius="5"> -->
+    <Grid>
+        <Grid x:Name="shadow" />
+        <Border CornerRadius="5" Background="{ThemeResource DefaultCardBackgroundBrush}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1">
+            <Grid>
+                <Border CornerRadius="5" Opacity="0.2">
                     <Border.Background>
-                        <ImageBrush x:Name="backgroundImage" Stretch="UniformToFill" />
-                    </Border.Background>
-
-                </Border>
-
-                <Button Style="{StaticResource CircleButtonStyle}" Foreground="White" x:Name="playButton" FontSize="20" Click="playButton_Click" Height="50" Width="50" Content="" Grid.Column="1" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0">
-                    <Button.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <LinearGradientBrush.RelativeTransform>
                                 <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="-45"/>
                             </LinearGradientBrush.RelativeTransform>
-                            <GradientStop Color="{Binding ElementName=gradientStop1, Path=Color}"/>
-                            <GradientStop Color="{Binding ElementName=gradientStop2, Path=Color}" Offset="0.5"/>
-                            <GradientStop Color="{Binding ElementName=gradientStop1, Path=Color}" Offset="1"/>
+                            <GradientStop x:Name="gradientStop1" />
+                            <GradientStop x:Name="gradientStop2"  Offset="1"/>
                         </LinearGradientBrush>
-                    </Button.Background>
-                </Button>
+                    </Border.Background>
+                </Border>
+
+                <Grid Margin="12" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--<Image Grid.Row="2" Stretch="UniformToFill" Source="https://musicshaker.fr/wp-content/uploads/2018/01/camila-1.png" />-->
+
+                    <Border Grid.Row="0" Height="120" Width="120" Margin="0,0,12,0" CornerRadius="5" VerticalAlignment="Top">
+                        <Border.Background>
+                            <ImageBrush x:Name="backgroundImage" Stretch="UniformToFill" />
+                        </Border.Background>
+
+                    </Border>
+
+                    <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
+                        <TextBlock Text="" x:Name="textRow1" FontSize="16" MaxLines="2" FontWeight="Bold" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="" x:Name="textRow2" Grid.Row="1" FontSize="10" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Orientation="Horizontal">
+                        <!--Background="{Binding AccentColor, Mode=TwoWay, Source={ThemeResource ApplicationAccentColor}}" Foreground="{Binding ForegroundColor, Mode=TwoWay, Source={ThemeResource ApplicationAccentColor}}"-->
+                        <Button  Style="{StaticResource ModernIconButtonStyle}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" x:Name="playButton" Click="playButton_Click" Content="" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                            <!--<Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="-45"/>
+                                    </LinearGradientBrush.RelativeTransform>
+                                    <GradientStop Color="{Binding ElementName=gradientStop1, Path=Color}"/>
+                                    <GradientStop Color="{Binding ElementName=gradientStop2, Path=Color}" Offset="0.5"/>
+                                    <GradientStop Color="{Binding ElementName=gradientStop1, Path=Color}" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>-->
+                        </Button>
+                        <Button Style="{StaticResource ModernIconButtonStyle}" x:Name="addButton" Click="AddButton_Click" Content="" Background="{ThemeResource DefaultButtonBackgroundBrush}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" />
+                        <Button Style="{StaticResource ModernIconButtonStyle}" x:Name="dotsButton" Click="DotsButton_Click" Content="" Background="{ThemeResource DefaultButtonBackgroundBrush}" BorderBrush="{ThemeResource DefaultPageBorderBrush}" BorderThickness="1" />
+                    </StackPanel>
+                </Grid>
 
             </Grid>
-        </Grid>
-    </Border>
+        </Border>
+    </Grid>
 </UserControl>

@@ -582,5 +582,10 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             NavigationHelper.Navigate(this, typeof(RecentlyAdded));
         }
+
+        private void ReloadSuggestionButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadRecommendation();
+        }
     }
 }

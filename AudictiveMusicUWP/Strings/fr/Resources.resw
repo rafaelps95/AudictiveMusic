@@ -970,7 +970,7 @@
     <value>Accueil</value>
   </data>
   <data name="SuggestionForYou.Text" xml:space="preserve">
-    <value>Une suggestion pour vous ...</value>
+    <value>Une suggestion pour vous</value>
   </data>
   <data name="AddToFavoritesCaption.Text" xml:space="preserve">
     <value>Avoir un accès facile aux chansons que vous aimez</value>
