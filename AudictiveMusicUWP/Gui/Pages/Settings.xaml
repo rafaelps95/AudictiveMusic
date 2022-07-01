@@ -45,7 +45,7 @@
                                 </TransitionCollection>
                             </StackPanel.ChildrenTransitions>
 
-                            <local:SettingsSection Margin="0,13,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="PersonalizationSection" x:Uid="PersonalizationMenuItem" Icon="" Title="Personalization">
+                            <local:SettingsSection Margin="0,13,0,5" IsShadowVisible="False" BackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" ExpandedBackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" Orientation="Vertical" x:Name="PersonalizationSection" x:Uid="PersonalizationMenuItem" Icon="" Title="Personalization">
                                 <local:SettingsItemDropDownList x:Name="AppThemeSettingsItem" x:Uid="AppThemeSettingsItem" Icon="" IconSize="16">
                                     <local:SettingsItemDropDownList.Items>
                                         <ListBoxItem x:Uid="AppThemeDark" />
@@ -55,23 +55,19 @@
 
                                 <local:SettingsItemSeparator />
 
-                                <local:SettingsItem x:Name="TransparencySettingsItem" x:Uid="TransparencySettingsItem" Icon="&#xE2AC;" IconSize="16">
-                                    <ToggleSwitch x:Name="TransparencyToggleSwitch" />
-                                </local:SettingsItem>
+                                <local:SettingsExpandableToggleItem x:Name="TransparencySettingsExpandableItem" Orientation="Vertical" Toggled="TransparencySettingsExpandableItem_Toggled" Icon="&#xE2AC;" IconSize="16" Title="Transparência" Subtitle="Efeitos de transparência">
+                                    <local:SettingsItem x:Name="BackgroundBlurSettingsItem" ContentType="ToggleSwitch" Toggled="BackgroundBlurSettingsItem_Toggled" Icon="&#xE7C4;" Text="Aplicar efeito acrílico na tela de fundo do aplicativo" Visibility="Collapsed" IconSize="16" />
 
-                                <local:SettingsItem x:Name="PerformanceSettingsItem" x:Uid="PerformanceSettingsItem" Visibility="Collapsed" Icon="&#xE9D9;" IconSize="16">
-                                    <ToggleSwitch x:Name="PerformanceToggleSwitch" />
-                                </local:SettingsItem>
+                                    <local:SettingsItem x:Name="PerformanceSettingsItem" x:Uid="PerformanceSettingsItem" ContentType="ToggleSwitch" Toggled="PerformanceSettingsItem_Toggled" Visibility="Collapsed" Icon="&#xE9D9;" IconSize="16" />
+                                </local:SettingsExpandableToggleItem>
 
                                 <local:SettingsItemSeparator Visibility="{Binding ElementName=LockScreenSettingsItem, Path=Visibility}" />
 
-                                <local:SettingsItem x:Name="LockScreenSettingsItem" x:Uid="LockScreenSettingsItem" Icon="" IconSize="16">
-                                    <ToggleSwitch x:Name="LockScreenToggleSwitch" />
-                                </local:SettingsItem>
+                                <local:SettingsItem x:Name="LockScreenSettingsItem" x:Uid="LockScreenSettingsItem" ContentType="ToggleSwitch" Toggled="LockScreenSettingsItem_Toggled" Icon="" IconSize="16" />
 
                                 <local:SettingsItemSeparator />
 
-                                <local:SettingsItemDropDownList x:Name="BackgroundPreferencesSettingsItem" x:Uid="BackgroundPreferencesSettingsItem" Icon="" IconSize="16">
+                                <local:SettingsItemDropDownList x:Name="BackgroundPreferencesSettingsItem" IsToggleVisible="False" x:Uid="BackgroundPreferencesSettingsItem" Icon="" IconSize="16">
                                     <local:SettingsItemDropDownList.Items>
                                         <ListBoxItem x:Uid="ThemeGeneralBackgroundAlbum" />
                                         <ListBoxItem x:Uid="ThemeGeneralBackgroundArtist" />
@@ -80,16 +76,16 @@
 
                                 <local:SettingsItemSeparator />
 
-                                <local:SettingsItemDropDownList x:Name="ColorSettingsItem" x:Uid="ColorSettingsItem" Icon="" IconSize="16">
+                                <local:SettingsItemDropDownList x:Name="ColorSettingsItem" IsToggleVisible="True" Toggled="ColorSettingsItem_Toggled" x:Uid="ColorSettingsItem" Icon="" IconSize="16">
                                     <local:SettingsItemDropDownList.Items>
                                         <ListBoxItem x:Uid="ThemeAccentColorAlbum" Content="Usar cor do álbum" />
                                         <ListBoxItem x:Uid="ThemeAccentColorSystem" Content="Usar cor de destaque (sistema)" />
                                         <ListBoxItem x:Uid="ThemeAccentColorCustom" Content="Usar cor personalizada" />
-                                        <ListBoxItem x:Uid="NoColor" Content="Não usar cor" />
+                                        <!--<ListBoxItem x:Uid="NoColor" Content="Não usar cor" />-->
                                     </local:SettingsItemDropDownList.Items>
                                 </local:SettingsItemDropDownList>
 
-                                <local:SettingsSection x:Name="CustomColorSettingsSection" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" x:Uid="CustomColorSettingsSection" SizeChanged="CustomColorSettingsSection_SizeChanged" Margin="-2,5" CurrentStateChanged="CustomColorSettingsSection_CurrentStateChanged" Icon="" IconSize="16" Visibility="Collapsed">
+                                <local:SettingsExpandableToggleItem x:Name="CustomColorSettingsSection" IsToggleVisible="False" x:Uid="CustomColorSettingsSection" SizeChanged="CustomColorSettingsSection_SizeChanged" CurrentStateChanged="CustomColorSettingsSection_CurrentStateChanged" Icon="" IconSize="16" Visibility="Collapsed">
                                     <GridView IsItemClickEnabled="True" ItemClick="colorsList_ItemClick" Padding="5,10" SelectionMode="None" x:Name="colorsList" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Disabled">
                                         <GridView.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -116,14 +112,14 @@
                                             </DataTemplate>
                                         </GridView.ItemTemplate>
                                     </GridView>
-                                </local:SettingsSection>
+                                </local:SettingsExpandableToggleItem>
 
                                 <local:SettingsItemSeparator />
 
                                 <local:SettingsItem x:Name="MoreThemesSettingsItem" x:Uid="MoreThemesSettingsItem" IsClickable="True" ItemClick="MoreThemesSettingsItem_ItemClick" />
                             </local:SettingsSection>
 
-                            <local:SettingsSection Margin="0,0,0,5" ExpandCompleted="DataManagementSection_ExpandCompleted" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="DataManagementSection" x:Uid="DataManagementMenuItem" Icon="" Title="Gerenciamento de dados">
+                            <local:SettingsSection Margin="0,0,0,5" IsShadowVisible="False" ExpandCompleted="DataManagementSection_ExpandCompleted" BackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" ExpandedBackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" Orientation="Vertical" x:Name="DataManagementSection" x:Uid="DataManagementMenuItem" Icon="" Title="Gerenciamento de dados">
                                 <local:SettingsItem x:Name="FindMusicSettingsItem" x:Uid="FindMusicSettingsItem" IsClickable="True" ItemClick="FindMusicSettingsItem_ItemClick" Icon="" IconSize="16" />
                                 <local:SettingsItemSeparator Visibility="{Binding ElementName=ChooseLibrarySettingsItem, Path=Visibility}" />
                                 <local:SettingsItem x:Name="ChooseLibrarySettingsItem" x:Uid="ChooseLibrarySettingsItem" Visibility="Collapsed" Icon="" IconSize="16" IsClickable="True" ItemClick="ChooseLibrarySettingsItem_ItemClick" />
@@ -161,28 +157,18 @@
 
                             </local:SettingsSection>
 
-                            <local:SettingsSection Margin="0,0,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="PermissionsSection" x:Uid="PermissionsMenuItem" Icon="" Title="Permissions">
-                                <local:SettingsItem x:Name="SendInfoSettingsItem" Icon="" x:Uid="SendInfoSettingsItem" IconSize="16">
-                                    <ToggleSwitch x:Name="SendInfoToggleSwitch" />
-                                </local:SettingsItem>
+                            <local:SettingsSection Margin="0,0,0,5" IsShadowVisible="False" BackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" ExpandedBackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" Orientation="Vertical" x:Name="PermissionsSection" x:Uid="PermissionsMenuItem" Icon="" Title="Permissions">
+                                <local:SettingsItem x:Name="SendInfoSettingsItem" Icon="" x:Uid="SendInfoSettingsItem" ContentType="ToggleSwitch" Toggled="SendInfoSettingsItem_Toggled" IconSize="16" />
                                 <local:SettingsItemSeparator />
-                                <local:SettingsItem x:Name="LimitedConnectionSettingsItem" x:Uid="LimitedConnectionSettingsItem" Icon="" IconSize="16">
-                                    <ToggleSwitch x:Name="LimitedConnectionToggleSwitch" />
-                                </local:SettingsItem>
+                                <local:SettingsItem x:Name="LimitedConnectionSettingsItem" x:Uid="LimitedConnectionSettingsItem" ContentType="ToggleSwitch" Toggled="LimitedConnectionSettingsItem_Toggled" Icon="" IconSize="16" />
                             </local:SettingsSection>
 
-                            <local:SettingsSection Margin="0,0,0,5" ExpandCompleted="PlaybackNotificationSection_ExpandCompleted" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="PlaybackNotificationSection" x:Uid="NotificationsMenuItem" Icon="" Title="Playback">
-                                <local:SettingsItem x:Name="WhatsNextSettingsItem" x:Uid="WhatsNextSettingsItem">
-                                    <ToggleSwitch Name="WhatsNextNotification" />
-                                </local:SettingsItem>
+                            <local:SettingsSection Margin="0,0,0,5" IsShadowVisible="False" ExpandCompleted="PlaybackNotificationSection_ExpandCompleted" BackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" ExpandedBackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" Orientation="Vertical" x:Name="PlaybackNotificationSection" x:Uid="NotificationsMenuItem" Icon="" Title="Playback">
+                                <local:SettingsItem x:Name="WhatsNextSettingsItem" x:Uid="WhatsNextSettingsItem" ContentType="ToggleSwitch" Toggled="WhatsNextSettingsItem_Toggled" />
                                 <local:SettingsItemSeparator />
-                                <local:SettingsItem x:Name="TapToResumeSettingsItem" x:Uid="TapToResumeSettingsItem">
-                                    <ToggleSwitch x:Name="TapToResumeSwitch" />
-                                </local:SettingsItem>
+                                <local:SettingsItem x:Name="TapToResumeSettingsItem" x:Uid="TapToResumeSettingsItem" ContentType="ToggleSwitch" Toggled="TapToResumeSettingsItem_Toggled" />
                                 <local:SettingsItemSeparator />
-                                <local:SettingsItem x:Name="SendScrobbleSettingsItem" x:Uid="SendScrobbleSettingsItem">
-                                    <ToggleSwitch x:Name="SendScrobbleToggleSwitch" />
-                                </local:SettingsItem>
+                                <local:SettingsItem x:Name="SendScrobbleSettingsItem" x:Uid="SendScrobbleSettingsItem" ContentType="ToggleSwitch" Toggled="SendScrobbleSettingsItem_Toggled" />
                                 <local:SettingsItem x:Name="PendingScrobblesSettingsItem" x:Uid="PendingScrobblesSettingsItem" IsClickable="True" ItemClick="PendingScrobblesSettingsItem_ItemClick" />
                                 <local:SettingsItemSeparator />
                                 <Grid Margin="25,12,0,12">
@@ -209,7 +195,7 @@
 
                             </local:SettingsSection>
 
-                            <local:SettingsSection Margin="0,0,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="FeedbackSection" x:Uid="FeedbackMenuItem" Icon="" Title="Feedback">
+                            <local:SettingsSection Margin="0,0,0,5" IsShadowVisible="False" BackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" ExpandedBackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" Orientation="Vertical" x:Name="FeedbackSection" x:Uid="FeedbackMenuItem" Icon="" Title="Feedback">
                                 <local:SettingsItem x:Name="RateAppSettingsItem" x:Uid="RateAppSettingsItem" ItemClick="RateAppSettingsItem_ItemClick" IsClickable="True" Icon="" IconSize="16" />
                                 <local:SettingsItemSeparator />
                                 <!--<local:SettingsItem x:Name="SupportSettingsItem" x:Uid="SupportSettingsItem" ItemClick="SupportSettingsItem_ItemClick" IsClickable="True" Icon="" IconSize="16" />
@@ -217,8 +203,8 @@
                                 <local:SettingsItem x:Name="DonateSettingsItem" x:Uid="DonateSettingsItem" ItemClick="DonateSettingsItem_ItemClick" IsClickable="True" Icon="" IconSize="16" />
                             </local:SettingsSection>
 
-                            <local:SettingsSection Margin="0,0,0,5" BackgroundBrush="{ThemeResource SettingsItemsBackgroundBrush}" Orientation="Vertical" x:Name="AboutSection" x:Uid="AppInfoMenuItem" Icon="" Title="About">
-                                <Grid x:Name="contentGrid" Margin="0,0,0,10" VerticalAlignment="Center">
+                            <local:SettingsSection Margin="0,0,0,5" IsShadowVisible="False" IsClickable="True" Click="AboutSection_Click" BackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" ExpandedBackgroundBrush="{ThemeResource SettingsItemsBackgroundLowBrush}" Orientation="Vertical" x:Name="AboutSection" x:Uid="AppInfoMenuItem" Icon="" Title="About">
+                                <!--<Grid x:Name="contentGrid" Margin="0,0,0,10" VerticalAlignment="Center">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -233,9 +219,9 @@
                                     </Grid.RowDefinitions>
 
                                     <Grid CornerRadius="5" Height="150" Width="150" Margin="20" HorizontalAlignment="Center">
-                                        <!--<Grid.Background>
+                                        --><!--<Grid.Background>
                             <SolidColorBrush x:Name="appColor" Color="#FFDC572E" />
-                        </Grid.Background>-->
+                        </Grid.Background>--><!--
                                         <Image Source="ms-appx:///Assets/Logos/Fluent/AboutPageLogo.png" />
                                     </Grid>
                                     <TextBlock Grid.Row="1" TextAlignment="Center" TextWrapping="Wrap" x:Name="appName" FontWeight="Bold" FontSize="26" Text="Audictive Music" />
@@ -247,7 +233,7 @@
                                     <TextBlock Grid.Row="7" TextAlignment="Center" TextWrapping="Wrap" Margin="0,10,0,-5" FontWeight="Medium" Text="Inflatable Last.fm C# API" />
                                     <HyperlinkButton Grid.Row="8" HorizontalAlignment="Center" NavigateUri="https://github.com/inflatablefriends/lastfm" x:Uid="MoreInfo" Content="Mais informações..." />
 
-                                </Grid>
+                                </Grid>-->
 
                             </local:SettingsSection>
                         </StackPanel>

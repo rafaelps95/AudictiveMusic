@@ -1,5 +1,6 @@
 ﻿using AudictiveMusicUWP.Gui.Util;
 using ClassLibrary.Helpers;
+using ClassLibrary.Helpers.Enumerators;
 using ClassLibrary.Themes;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             this.NavMode = e.NavigationMode;
 
             LoadThemes();
-            LoadThemeSettings(ApplicationSettings.NowPlayingTheme);
+            LoadThemeSettings(ThemeSettings.NowPlayingTheme);
         }
 
         private void LoadThemes()
@@ -77,7 +78,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                     neonOptions.Visibility = Visibility.Collapsed;
 
 
-                    ThemeBlurAmount.Value = Convert.ToDouble(ApplicationSettings.NowPlayingBlurAmount);
+                    ThemeBlurAmount.Value = Convert.ToDouble(ThemeSettings.NowPlayingBlurAmount);
 
                     ThemeBlurAmount.ValueChanged -= ThemeBlurAmount_ValueChanged;
                     ThemeBlurAmount.ValueChanged += ThemeBlurAmount_ValueChanged;
@@ -135,7 +136,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void ThemeBlurAmount_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            ApplicationSettings.NowPlayingBlurAmount = (float)e.NewValue;
+            ThemeSettings.NowPlayingBlurAmount = (float)e.NewValue;
         }
 
         private void themesList_ItemClick(object sender, ItemClickEventArgs e)

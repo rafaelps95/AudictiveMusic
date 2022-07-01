@@ -34,7 +34,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using static AudictiveMusicUWP.Gui.Pages.ThemeSelector;
-using static ClassLibrary.Helpers.Enumerators;
+using ClassLibrary.Helpers.Enumerators;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -104,31 +104,41 @@ namespace AudictiveMusicUWP.Gui.Pages
             Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated +=
        CoreDispatcher_AcceleratorKeyActivated;
 
-            ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
-            ApplicationSettings.ThemeChanged += ApplicationSettings_ThemeChanged;
-            ApplicationSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
-            ApplicationSettings.PerformanceModeToggled += ApplicationSettings_PerformanceModeToggled;
+            ThemeSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
+            ThemeSettings.ApplicationThemeChanged += ApplicationSettings_ApplicationThemeChanged;
+            ThemeSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
+            ThemeSettings.PerformanceModeToggled += ApplicationSettings_PerformanceModeToggled;
             PlaylistHelper.PlaylistChanged += PlaylistHelper_PlaylistChanged;
             PlaylistHelper.PlaylistPickerRequested += PlaylistHelper_PlaylistPickerRequested;
             StorageHelper.LibraryPickerRequested += StorageHelper_LibraryPickerRequested;
-            NavigationHelper.BackRequested += NavigationHelper_BackRequested;
-            NavigationHelper.NavigationRequested += NavigationHelper_NavigationRequested;
-            NavigationHelper.ClearRequested += NavigationHelper_ClearRequested;
+            NavigationService.BackRequested += NavigationHelper_BackRequested;
+            NavigationService.NavigationRequested += NavigationHelper_NavigationRequested;
+            NavigationService.ClearRequested += NavigationHelper_ClearRequested;
             LastFm.Current.LoginRequested += Current_LoginRequested;
             PageHelper.LayoutChangeRequested += PageHelper_LayoutChangeRequested;
             PageHelper.OffsetChangeRequested += PageHelper_OffsetChangeRequested;
+            PageHelper.DismissRequested += PageHelper_DismissRequested;
             //Window.Current.CoreWindow.CharacterReceived += CoreWindow_CharacterReceived;
             InAppNotificationHelper.NotificationReceived += InAppNotificationHelper_NotificationReceived;
             InAppNotificationHelper.NotificationDismissed += InAppNotificationHelper_NotificationDismissed;
             PlayerController.Current.SetDispatcher(this.Dispatcher);
         }
 
-        private void ApplicationSettings_PerformanceModeToggled(object sender, RoutedEventArgs e)
+        private void PageHelper_DismissRequested(object sender, RoutedEventArgs e)
+        {
+            if (searchUI != null)
+            {
+                if (searchUI.SearchMode == NewSearchUX.SearchPaneMode.Open)
+                    searchUI.SearchMode = NewSearchUX.SearchPaneMode.Closed;
+            }
+        }
+
+        private void ApplicationSettings_PerformanceModeToggled()
         {
             SetAcrylic();
         }
 
-        private void ApplicationSettings_TransparencyEffectToggled(object sender, RoutedEventArgs e)
+        private void ApplicationSettings_TransparencyEffectToggled()
         {
             SetAcrylic();
         }
@@ -172,9 +182,9 @@ namespace AudictiveMusicUWP.Gui.Pages
                 MainFrame.BackStack.Clear();
         }
 
-        private void ApplicationSettings_ThemeChanged(ThemeChangedEventArgs args)
+        private void ApplicationSettings_ApplicationThemeChanged()
         {
-            SetAppTheme(args.NewTheme);
+            SetAppTheme();
         }
 
         private void PlaylistHelper_PlaylistPickerRequested(object sender, List<string> list)
@@ -271,7 +281,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
                 Collection.LoadCollectionChanges();
 
-                SetAppTheme(ApplicationSettings.AppTheme);
+                SetAppTheme();
             }
             else
             {
@@ -288,13 +298,32 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         public void SetAcrylic()
         {
-            if (ApplicationSettings.IsPerformanceModeOn == false && ApplicationInfo.Current.IsMobile == false && ApplicationInfo.Current.IsTabletModeEnabled == false)
-                acrylic.AcrylicEnabled = ApplicationSettings.TransparencyEnabled;
+            if (ThemeSettings.IsPerformanceModeEnabled == false)
+            {
+                if (ApplicationInfo.Current.IsMobile == false && ApplicationInfo.Current.IsTabletModeEnabled == false)
+                    acrylic.AcrylicEnabled = ThemeSettings.IsTransparencyEnabled;
+                if (ThemeSettings.IsTransparencyEnabled)
+                {
+                    if (ThemeSettings.IsBackgroundAcrylicEnabled)
+                    {
+                        frameBackground.Opacity = 0.6;
+                    }
+                    else
+                    {
+                        frameBackground.Opacity = 1;
+                    }
+                }
+                else
+                    frameBackground.Opacity = 1;
+            }
             else
+            {
                 acrylic.AcrylicEnabled = false;
+                frameBackground.Opacity = 1;
+            }
 
-            footerAcrylic.AcrylicEnabled = ApplicationSettings.TransparencyEnabled;
 
+            footerAcrylic.AcrylicEnabled = ThemeSettings.IsTransparencyEnabled;
 
             //acrillic.Visibility = acrillicPageBG.Visibility = titleBarAcrillic.Visibility = transparencyEnabled ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -393,8 +422,8 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private async void UpdateThemeColor()
         {
-            Color newColor = ApplicationSettings.CurrentThemeColor;
-            Color foreground = ApplicationSettings.CurrentForegroundColor;
+            Color newColor = ThemeSettings.CurrentThemeColor;
+            Color foreground = ThemeSettings.CurrentForegroundColor;
             ApplicationAccentColor appAccentColor = Application.Current.Resources["ApplicationAccentColor"] as ApplicationAccentColor;
             appAccentColor.AccentColor = new SolidColorBrush(newColor);
             appAccentColor.ForegroundColor = new SolidColorBrush(foreground);
@@ -444,7 +473,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             base.OnNavigatedTo(e);
 
-            SetAppTheme(ApplicationSettings.AppTheme);
+            SetAppTheme();
             Collection.LoadCollectionChanges();
 
             Application.Current.Suspending += Current_Suspending;
@@ -461,9 +490,9 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             if (string.IsNullOrWhiteSpace(arguments) == false)
             {
-                if (NavigationHelper.ContainsAttribute(arguments, "action"))
+                if (NavigationService.ContainsAttribute(arguments, "action"))
                 {
-                    if (NavigationHelper.GetParameter(arguments, "action") == "resumePlayback")
+                    if (NavigationService.GetParameter(arguments, "action") == "resumePlayback")
                     {
                         if (this.IsAppOpened == false)
                             player.InitializePlayer();
@@ -472,19 +501,19 @@ namespace AudictiveMusicUWP.Gui.Pages
                         PlayPauseOrResume();
                         PlayerController.OpenPlayer(true);
                     }
-                    else if (NavigationHelper.GetParameter(arguments, "action") == "playEverything")
+                    else if (NavigationService.GetParameter(arguments, "action") == "playEverything")
                     {
                         if (this.IsAppOpened == false)
                             player.InitializePlayer();
                         PlayerController.ShuffleCollection();
                         PlayerController.OpenPlayer(true);
                     }
-                    else if (NavigationHelper.GetParameter(arguments, "action") == "navigate")
+                    else if (NavigationService.GetParameter(arguments, "action") == "navigate")
                     {
                         player.InitializePlayer();
 
-                        string target = NavigationHelper.GetParameter(arguments, "target");
-                        string path = NavigationHelper.GetParameter(arguments, "path");
+                        string target = NavigationService.GetParameter(arguments, "target");
+                        string path = NavigationService.GetParameter(arguments, "path");
 
                         if (string.IsNullOrEmpty(target) == false)
                         {
@@ -512,8 +541,9 @@ namespace AudictiveMusicUWP.Gui.Pages
             IsAppOpened = true;
         }
 
-        private async void SetAppTheme(PageTheme theme)
+        private async void SetAppTheme()
         {
+            PageTheme theme = ThemeSettings.AppTheme;
             switch (theme)
             {
                 case PageTheme.Dark:
@@ -526,9 +556,9 @@ namespace AudictiveMusicUWP.Gui.Pages
                     break;
             };
 
-            if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.NoColor)
+            if (ThemeSettings.ThemeColorPreference == ThemeColorSource.NoColor)
             {
-                ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentAppThemeColor(RequestedTheme == ElementTheme.Dark);
+                ThemeSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentAppThemeColor(RequestedTheme == ElementTheme.Dark);
             }
 
 
@@ -749,7 +779,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             playlistPicker = new PlaylistPicker();
 
             customPopupsArea.Children.Add(playlistPicker);
-
             List<Playlist> playlists = await CustomPlaylistsHelper.GetPlaylists();
             List<string> list = new List<string>();
 
@@ -787,6 +816,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             playlistPicker.Set(playlists, list);
 
             customPopupsArea.Visibility = Visibility.Visible;
+            playlistPicker.Focus(FocusState.Programmatic);
         }
 
         public void CreateSearchGrid()
@@ -795,6 +825,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                 return;
 
             searchUI = new NewSearchUX();
+            searchUI.TabIndex = 1;
             searchUI.UIDismissed += SearchUI_UIDismissed;
             searchUI.SearchBarSizeChanged += SearchUI_SearchBarSizeChanged;
             searchContainer.Children.Add(searchUI);
@@ -843,6 +874,8 @@ namespace AudictiveMusicUWP.Gui.Pages
             customPopupsArea.Children.Add(libraryPicker);
 
             customPopupsArea.Visibility = Visibility.Visible;
+            libraryPicker.Focus(FocusState.Programmatic);
+
 
             libraryPicker.LoadFolders();
         }
@@ -1175,6 +1208,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             customPopupsArea.Visibility = Visibility.Visible;
             customPopupsArea.Children.Add(lastFmLoginControl);
+            lastFmLoginControl.Focus(FocusState.Keyboard);
         }
 
         private void CreatePlayerTooltip(NextTooltip.Mode mode)
@@ -1271,11 +1305,15 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             if (mode == PlayerControl.DisplayMode.Compact)
             {
+                MainFrame.IsEnabled = true;
+                MainFrame.IsTabStop = true;
                 UpdateView(new Size(this.ActualWidth, this.ActualHeight));
                 Canvas.SetZIndex(navBar, 3);
             }
             else
             {
+                MainFrame.IsEnabled = false;
+                MainFrame.IsTabStop = false;
                 if (navBar.Orientation == Orientation.Vertical)
                     Canvas.SetZIndex(navBar, 5);
                 else
@@ -1326,6 +1364,11 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void Player_TooltipDismissed(object sender, RoutedEventArgs e)
         {
             RemovePlayerTooltip();
+        }
+
+        private void Player_ViewChanged_1(PlayerControl.DisplayMode mode)
+        {
+
         }
     }
 }

@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    IsTabStop="False"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
@@ -13,10 +14,10 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="BorderColor" Color="#E5E5E5" />
+                    <SolidColorBrush x:Key="BorderColor" Color="#B3E5E5E5" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="BorderColor" Color="#1D1D1D" />
+                    <SolidColorBrush x:Key="BorderColor" Color="#A01D1D1D" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 

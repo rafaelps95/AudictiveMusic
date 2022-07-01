@@ -401,7 +401,10 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void CreateAlbumPopup(Album album, object sender, Point point)
         {
-            PopupHelper.GetInstance(sender).ShowPopupMenu(album, true, point);
+            if (point == null)
+                PopupHelper.GetInstance(sender).ShowPopupMenu(album);
+            else
+                PopupHelper.GetInstance(sender).ShowPopupMenu(album, true, point);
         }
 
         private void playAlbumButton_Click(object sender, RoutedEventArgs e)
@@ -460,7 +463,7 @@ namespace AudictiveMusicUWP.Gui.UC
         private void albumsList_ItemClick(object sender, ItemClickEventArgs e)
         {
             ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
-            NavigationHelper.Navigate(this, typeof(AlbumPage), e.ClickedItem);
+            NavigationService.Navigate(this, typeof(AlbumPage), e.ClickedItem);
         }
 
         private void AlbumCover_ImageOpened(object sender, RoutedEventArgs e)
@@ -520,7 +523,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void artistsList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(ArtistPage), e.ClickedItem);
+            NavigationService.Navigate(this, typeof(ArtistPage), e.ClickedItem);
         }
 
         private void CircleImage_ImageFailed(object sender, RoutedEventArgs e)
@@ -733,6 +736,12 @@ namespace AudictiveMusicUWP.Gui.UC
             Song clickedSong = e.ClickedItem as Song;
 
             PlayerController.Play(clickedSong);
+        }
+
+        private void Root_LostFocus(object sender, RoutedEventArgs e)
+        {
+            //SearchMode = SearchPaneMode.Closed;
+            //UIDismissed?.Invoke(this);
         }
     }
 }

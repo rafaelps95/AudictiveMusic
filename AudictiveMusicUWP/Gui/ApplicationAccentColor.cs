@@ -13,7 +13,7 @@ namespace AudictiveMusicUWP.Gui
 {
     public class ApplicationAccentColor : INotifyPropertyChanged
     {
-        private SolidColorBrush accentColor = new SolidColorBrush(ApplicationSettings.CurrentThemeColor);
+        private SolidColorBrush accentColor = new SolidColorBrush(ThemeSettings.CurrentThemeColor);
 
         public SolidColorBrush AccentColor
         {
@@ -30,7 +30,7 @@ namespace AudictiveMusicUWP.Gui
             }
         }
 
-        private SolidColorBrush accentColorLowBrush = new SolidColorBrush(ApplicationSettings.CurrentThemeColor);
+        private SolidColorBrush accentColorLowBrush = new SolidColorBrush(ThemeSettings.CurrentThemeColor);
 
         public SolidColorBrush AccentColorLowBrush
         {
@@ -38,7 +38,7 @@ namespace AudictiveMusicUWP.Gui
             private set { accentColorLowBrush = value; OnPropertyChanged(); }
         }
 
-        private SolidColorBrush accentColorMediumBrush = new SolidColorBrush(ApplicationSettings.CurrentThemeColor);
+        private SolidColorBrush accentColorMediumBrush = new SolidColorBrush(ThemeSettings.CurrentThemeColor);
 
         public SolidColorBrush AccentColorMediumBrush
         {
@@ -48,7 +48,7 @@ namespace AudictiveMusicUWP.Gui
 
         #region Dark Accent Color
 
-        private SolidColorBrush accentColorDark10PercentBrush = new SolidColorBrush(ApplicationSettings.CurrentThemeColor);
+        private SolidColorBrush accentColorDark10PercentBrush = new SolidColorBrush(ThemeSettings.CurrentThemeColor);
 
         public SolidColorBrush AccentColorDark10PercentBrush
         {
@@ -57,7 +57,7 @@ namespace AudictiveMusicUWP.Gui
         }
 
 
-        private SolidColorBrush accentColorDark30PercentBrush = new SolidColorBrush(ApplicationSettings.CurrentThemeColor);
+        private SolidColorBrush accentColorDark30PercentBrush = new SolidColorBrush(ThemeSettings.CurrentThemeColor);
 
         public SolidColorBrush AccentColorDark30PercentBrush
         {
@@ -66,7 +66,7 @@ namespace AudictiveMusicUWP.Gui
         }
 
 
-        private SolidColorBrush accentColorDark50PercentBrush = new SolidColorBrush(ApplicationSettings.CurrentThemeColor);
+        private SolidColorBrush accentColorDark50PercentBrush = new SolidColorBrush(ThemeSettings.CurrentThemeColor);
 
         public SolidColorBrush AccentColorDark50PercentBrush
         {

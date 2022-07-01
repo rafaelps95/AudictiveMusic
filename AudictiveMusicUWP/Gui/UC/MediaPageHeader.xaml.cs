@@ -5,6 +5,7 @@ using BackgroundAudioShared.Messages;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
+using ClassLibrary.Helpers.Enumerators;
 using IF.Lastfm.Core.Objects;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
@@ -118,19 +119,19 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void MediaPageHeader_Loaded(object sender, RoutedEventArgs e)
         {
-            switch (ApplicationSettings.NowPlayingTheme)
+            switch (ThemeSettings.NowPlayingTheme)
             {
-                case ClassLibrary.Themes.Theme.Clean:
+                case Theme.Clean:
 
 
                     break;
-                case ClassLibrary.Themes.Theme.Blur:
+                case Theme.Blur:
                     SetBlur();
                     break;
-                case ClassLibrary.Themes.Theme.Modern:
+                case Theme.Modern:
                     SetModernStyle();
                     break;
-                case ClassLibrary.Themes.Theme.Material:
+                case Theme.Material:
                     SetModernStyle();
                     break;
             }
@@ -570,21 +571,21 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 LastArtist artist = result.Content;
 
-                NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
+                NavigationService.Navigate(this, typeof(LastFmProfilePage), artist);
             }
         }
 
         private void audictiveButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(ArtistPage), new Artist() { Name = this.LastART.Name });
+            NavigationService.Navigate(this, typeof(ArtistPage), new Artist() { Name = this.LastART.Name });
         }
 
         private void lastFmTagsList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(LastFmListPage), e.ClickedItem);
+            NavigationService.Navigate(this, typeof(LastFmListPage), e.ClickedItem);
         }
 
-        private async void webServiceButton_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void WebServiceButton_Click(object sender, RoutedEventArgs e)
         {
             if (webServiceButton.Service == WebServiceButton.WebService.LastFm)
             {
@@ -602,13 +603,13 @@ namespace AudictiveMusicUWP.Gui.UC
                     {
                         LastArtist artist = result.Content;
 
-                        NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
+                        NavigationService.Navigate(this, typeof(LastFmProfilePage), artist);
                     }
                 }
             }
             else if (webServiceButton.Service == WebServiceButton.WebService.LocalFiles)
             {
-                NavigationHelper.Navigate(this, typeof(ArtistPage), new Artist() { Name = this.LastART.Name });
+                NavigationService.Navigate(this, typeof(ArtistPage), new Artist() { Name = this.LastART.Name });
             }
         }
     }

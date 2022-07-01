@@ -146,8 +146,8 @@ namespace AudictiveMusicUWP.Gui.UC
             this.Loaded += NextTooltip_Loaded;
             this.InitializeComponent();
 
-            ApplicationSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
-            ApplicationSettings.PerformanceModeToggled += ApplicationSettings_PerformanceModeToggled;
+            ThemeSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
+            ThemeSettings.PerformanceModeToggled += ApplicationSettings_PerformanceModeToggled;
         }
 
         private void NextTooltip_Loaded(object sender, RoutedEventArgs e)
@@ -155,19 +155,19 @@ namespace AudictiveMusicUWP.Gui.UC
             SetAcrylic();
         }
 
-        private void ApplicationSettings_PerformanceModeToggled(object sender, RoutedEventArgs e)
+        private void ApplicationSettings_PerformanceModeToggled()
         {
             SetAcrylic();
         }
 
-        private void ApplicationSettings_TransparencyEffectToggled(object sender, RoutedEventArgs e)
+        private void ApplicationSettings_TransparencyEffectToggled()
         {
             SetAcrylic();
         }
 
         private void SetAcrylic()
         {
-            acrylic.AcrylicEnabled = ApplicationSettings.TransparencyEnabled;
+            acrylic.AcrylicEnabled = ThemeSettings.IsTransparencyEnabled;
         }
 
         private void image_ImageFailed(object sender, ExceptionRoutedEventArgs e)

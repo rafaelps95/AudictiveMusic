@@ -1,4 +1,5 @@
 ﻿using ClassLibrary.Helpers;
+using ClassLibrary.Helpers.Enumerators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,12 +80,12 @@ namespace ClassLibrary.Themes
         {
             get
             {
-                return ApplicationSettings.NowPlayingTheme == this.Theme;
+                return ThemeSettings.NowPlayingTheme == this.Theme;
             }
             set
             {
                 if (value == true)
-                    ApplicationSettings.NowPlayingTheme = this.Theme;
+                    ThemeSettings.NowPlayingTheme = this.Theme;
             }
         }
         public Theme Theme { get => (Theme)Enum.Parse(typeof(Theme), this.Name); }

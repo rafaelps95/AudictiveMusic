@@ -197,7 +197,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (item.IsFolder)
             {
                 StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
-                NavigationHelper.Navigate(this, typeof(FolderPage), folder);
+                NavigationService.Navigate(this, typeof(FolderPage), folder);
             }
             else
             {

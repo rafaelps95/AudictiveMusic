@@ -133,7 +133,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 Name = Album.Artist
             };
 
-            NavigationHelper.Navigate(this, typeof(ArtistPage), art);
+            NavigationService.Navigate(this, typeof(ArtistPage), art);
         }
 
         private void addButton_Click(object sender, RoutedEventArgs e)

@@ -30,6 +30,8 @@ namespace AudictiveMusicUWP.Gui.UC
             this.InitializeComponent();
         }
 
+        private Point buttonPointerPosition = new Point();
+
         public double ItemLength
         {
             get
@@ -137,11 +139,6 @@ namespace AudictiveMusicUWP.Gui.UC
             }
         }
 
-        private void action_Click(object sender, TappedRoutedEventArgs e)
-        {
-            MenuTriggered?.Invoke(this, e.GetPosition(this));
-        }
-
         private void shareButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -172,6 +169,17 @@ namespace AudictiveMusicUWP.Gui.UC
                     .GetOrCreateEventRegistrationTokenTable(ref m_LongPressedTokenTable)
                     .RemoveEventHandler(value);
             }
+        }
+
+        private void action_Click(object sender, RoutedEventArgs e)
+        {
+            MenuTriggered?.Invoke(this, buttonPointerPosition);
+        }
+
+        private void Button_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            buttonPointerPosition.X = e.GetCurrentPoint(button).Position.X;
+            buttonPointerPosition.Y = e.GetCurrentPoint(button).Position.Y;
         }
     }
 }

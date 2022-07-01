@@ -20,12 +20,28 @@ using Windows.UI.Xaml.Navigation;
 
 namespace AudictiveMusicUWP.Gui.UC
 {
-    [ContentProperty(Name = "Children")]
+    public enum SettingsItemContentType
+    {
+        None,
+        CheckBox,
+        ToggleSwitch
+    }
+
     public sealed partial class SettingsItem : UserControl
     {
         public delegate void SettingsItemClickEventArgs(object sender, RoutedEventArgs e);
 
+        public event RoutedEventHandler Checked;
+        public event RoutedEventHandler Unchecked;
+        public event RoutedEventHandler Toggled;
         public event SettingsItemClickEventArgs ItemClick;
+
+        private ToggleSwitch _toggleSwitch = null;
+        private CheckBox _checkBox = null;
+
+        private bool _clicked = false;
+        private bool _ignoreToggleEvent = false;
+        private bool _ignoreCheckEvent = false;
 
         public SolidColorBrush BackgroundBrush
         {
@@ -38,42 +54,133 @@ namespace AudictiveMusicUWP.Gui.UC
             DependencyProperty.Register("BackgroundBrush", typeof(SolidColorBrush), typeof(SettingsItem), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
 
 
+
+
+        public bool? IsChecked
+        {
+            get { return (bool?)GetValue(IsCheckedProperty); }
+            set
+            {
+                SetValue(IsCheckedProperty, value);
+
+                if (this.ContentType == SettingsItemContentType.CheckBox)
+                {
+                    _ignoreCheckEvent = true;
+                    _checkBox.IsChecked = value;
+                }
+            }
+        }
+
+        // Using a DependencyProperty as the backing store for IsChecked.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsCheckedProperty =
+            DependencyProperty.Register("IsChecked", typeof(bool?), typeof(SettingsItem), new PropertyMetadata(false));
+
+
+
+        public bool IsOn
+        {
+            get { return (bool)GetValue(IsOnProperty); }
+            set
+            {
+                SetValue(IsOnProperty, value);
+
+                if (this.ContentType == SettingsItemContentType.ToggleSwitch)
+                {
+                    if (_toggleSwitch != null)
+                    {
+                        _ignoreToggleEvent = true;
+                        _toggleSwitch.IsOn = value;
+                        _ignoreToggleEvent = false;
+                    }
+                }
+            }
+        }
+
+        // Using a DependencyProperty as the backing store for IsOn.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsOnProperty =
+            DependencyProperty.Register("IsOn", typeof(bool), typeof(SettingsItem), new PropertyMetadata(false));
+
+
+
+
+        public SettingsItemContentType ContentType
+        {
+            get { return (SettingsItemContentType)GetValue(ContentTypeProperty); }
+            set
+            {
+                SetValue(ContentTypeProperty, value);
+                if (this.IsClickable == false)
+                    SetContent();
+            }
+        }
+
+        // Using a DependencyProperty as the backing store for ContentType. This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ContentTypeProperty =
+            DependencyProperty.Register("ContentType", typeof(SettingsItemContentType), typeof(SettingsItem), new PropertyMetadata(SettingsItemContentType.None));
+
+        private void SetContent()
+        {
+            switch (this.ContentType)
+            {
+                case SettingsItemContentType.CheckBox:
+                    _checkBox = new CheckBox();
+                    _checkBox.IsTabStop = false;
+                    Item.Children.Clear();
+                    Item.Children.Add(_checkBox);
+                    _checkBox.IsChecked = this.IsChecked;
+                    _checkBox.Checked += _checkBox_Checked;
+                    _checkBox.Unchecked += _checkBox_Unchecked;
+                    break;
+                case SettingsItemContentType.ToggleSwitch:
+                    _toggleSwitch = new ToggleSwitch();
+                    _toggleSwitch.IsTabStop = false;
+                    Item.Children.Clear();
+                    Item.Children.Add(_toggleSwitch);
+                    _toggleSwitch.IsOn = this.IsOn;
+                    _toggleSwitch.Toggled += _toggleSwitch_Toggled;
+
+                    break;
+                case SettingsItemContentType.None:
+
+                    break;
+            }
+        }
+
+        private void _checkBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (_ignoreCheckEvent)
+            {
+                _ignoreCheckEvent = false;
+                return;
+            }
+
+            if (this.ContentType == SettingsItemContentType.CheckBox)
+                Unchecked?.Invoke(this, e);
+        }
+
         public SettingsItem()
         {
             this.Loaded += SettingsItem_Loaded;
             this.GotFocus += SettingsItem_GotFocus;
             this.LostFocus += SettingsItem_LostFocus;
             this.InitializeComponent();
-            Children = Item.Children;
         }
 
         private void SettingsItem_LostFocus(object sender, RoutedEventArgs e)
         {
-            focusRectangle.Visibility = Visibility.Collapsed;
+            //focusRectangle.Visibility = Visibility.Collapsed;
         }
 
         private void SettingsItem_GotFocus(object sender, RoutedEventArgs e)
         {
-            focusRectangle.Visibility = Visibility.Visible;
+            if (this.FocusState == FocusState.Keyboard || this.FocusState == FocusState.Programmatic)
+                actionButton.Focus(FocusState.Keyboard);
         }
 
         private void SettingsItem_Loaded(object sender, RoutedEventArgs e)
         {
-            UIElement elem = Item.Children[0];
 
-            if (elem as ToggleSwitch != null)
-                ((ToggleSwitch)elem).Style = this.Resources["ToggleSwitchStyle"] as Style;
-
-            if (elem as Button != null)
-                ((Button)elem).Style = this.Resources["ButtonStyle"] as Style;
-
-            if (elem as CheckBox != null)
-                ((CheckBox)elem).Style = this.Resources["CheckBoxStyle"] as Style;
-
-            if (elem as ComboBox != null)
-                ((ComboBox)elem).Style = this.Resources["ComboBoxStyle"] as Style;
-
-            actionButton.Visibility = this.IsClickable ? Visibility.Visible : Visibility.Collapsed;
+            //actionButton.Visibility = this.IsClickable ? Visibility.Visible : Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(this.Icon))
                 icon.Visibility = Visibility.Collapsed;
 
@@ -154,24 +261,6 @@ namespace AudictiveMusicUWP.Gui.UC
         public static readonly DependencyProperty AdditionalInfoProperty =
             DependencyProperty.Register("AdditionalInfo", typeof(string), typeof(SettingsItem), new PropertyMetadata(string.Empty));
 
-
-
-        public static readonly DependencyProperty ChildrenProperty = DependencyProperty.Register(
-            "Children",
-            typeof(UIElementCollection),
-            typeof(SettingsItem),
-            null);
-
-        public UIElementCollection Children
-        {
-            get { return (UIElementCollection)GetValue(ChildrenProperty); }
-            private set
-            {
-                SetValue(ChildrenProperty, value);
-            }
-        }
-
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged(string info)
@@ -180,14 +269,62 @@ namespace AudictiveMusicUWP.Gui.UC
                 PropertyChanged(this, new PropertyChangedEventArgs(info));
         }
 
-        public void Add(FrameworkElement elem)
-        {
-            Item.Children.Add(elem);
-        }
-
         private void ActionButton_Click(object sender, RoutedEventArgs e)
         {
-            ItemClick?.Invoke(this, e);
+            if (this.IsClickable)
+                ItemClick?.Invoke(this, e);
+            else
+            {
+                if (this.ContentType == SettingsItemContentType.CheckBox)
+                {
+                    if (_checkBox != null)
+                    {
+                        _ignoreCheckEvent = false;
+                        _clicked = true;
+                        if (_checkBox.IsChecked == true)
+                            this.IsChecked = false;
+                        else
+                            this.IsChecked = true;
+                    }
+                }
+                else if (this.ContentType == SettingsItemContentType.ToggleSwitch)
+                {
+                    if (_toggleSwitch != null)
+                    {
+                        _ignoreToggleEvent = false;
+                        _clicked = true;
+                        if (_toggleSwitch.IsOn)
+                            this.IsOn = false;
+                        else
+                            this.IsOn = true;
+                    }
+                }
+            }
+        }
+
+        private void _checkBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_ignoreCheckEvent && _clicked == false)
+            {
+                _ignoreCheckEvent = false;
+                return;
+            }
+
+            this.IsChecked = _checkBox.IsChecked;
+            _clicked = false;
+            Checked?.Invoke(this, e);
+        }
+
+        private void _toggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (_ignoreToggleEvent && _clicked == false)
+            {
+                _ignoreToggleEvent = false;
+                return;
+            }
+            this.IsOn = _toggleSwitch.IsOn;
+            _clicked = false;
+            Toggled?.Invoke(this, e);
         }
     }
 }

@@ -9,37 +9,15 @@ using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
-using static ClassLibrary.Helpers.Enumerators;
+using ClassLibrary.Helpers.Enumerators;
 
 namespace ClassLibrary.Helpers
 {
-    public class ThemeChangedEventArgs
-    {
-        public PageTheme NewTheme { get; set; }
-        public ThemeChangedEventArgs(PageTheme theme)
-        {
-            NewTheme = theme;
-        }
-
-    }
-
     /// <summary>
     /// Collection of string constants used in the entire solution. This file is shared for all projects
     /// </summary>
     public static class ApplicationSettings
     {
-        public delegate void ThemeChangedEventHandler(ThemeChangedEventArgs args);
-
-        public delegate void RoutedEventArgs();
-        public static event RoutedEventArgs BlurLevelChanged;
-        public static event RoutedEventArgs NowPlayingThemeChanged;
-        public static event RoutedEventArgs CurrentThemeColorChanged;
-        public static event RoutedEventArgs ThemeBackgroundPreferenceChanged;
-        public static event ThemeChangedEventHandler ThemeChanged;
-        public static event RoutedEventHandler TransparencyEffectToggled;
-        public static event RoutedEventHandler PerformanceModeToggled;
-
-
         public static void LoadServiceSettings()
         {
             var resources = ResourceLoader.GetForCurrentView("Keys");
@@ -358,29 +336,6 @@ namespace ClassLibrary.Helpers
             }
         }
 
-
-        public static Theme NowPlayingTheme
-        {
-            get
-            {
-                object value = ReadSettingsValue("NowPlayingTheme");
-                if (value == null)
-                    return Theme.Modern;
-                else
-                {
-                    Theme t = (Theme)Enum.Parse(typeof(Theme), value.ToString());
-                    return t;
-                }
-            }
-            set
-            {
-                SaveSettingsValue("NowPlayingTheme", value.ToString());
-
-                NowPlayingThemeChanged?.Invoke();
-            }
-        }
-
-
         public static bool ThemesUserAware
         {
             get
@@ -410,147 +365,6 @@ namespace ClassLibrary.Helpers
             set
             {
                 SaveSettingsValue("PlaylistReorderUserAware", value, SettingsContainerType.RoamingSettings);
-            }
-        }
-
-        /// <summary>
-        /// Retorna 0 para capa do álbum e 1 para imagem do artista
-        /// </summary>
-        public static int ThemeBackgroundPreference
-        {
-            get
-            {
-                object value = ReadSettingsValue("ThemeBackgroundPreference");
-                if (value == null)
-                    return 1;
-                else
-                    return (int)value;
-            }
-            set
-            {
-                SaveSettingsValue("ThemeBackgroundPreference", value);
-
-                ThemeBackgroundPreferenceChanged?.Invoke();
-            }
-        }
-
-
-        /// <summary>
-        /// Retorna 0 se usa a cor do álbum, 1 de usa a cor do sistema e 2 se usa cor personalizada
-        /// </summary>
-        public static int ThemeColorPreference
-        {
-            get
-            {
-                object value = ReadSettingsValue("ThemeColorPreference");
-                if (value == null)
-                    return 3;
-                else
-                    return (int)value;
-            }
-            set
-            {
-                SaveSettingsValue("ThemeColorPreference", value);
-
-                NowPlayingThemeChanged?.Invoke();
-            }
-        }
-
-        public static Color CurrentThemeColor
-        {
-            get
-            {
-                object value = ReadSettingsValue("CurrentThemeColor");
-                if (value == null)
-                    return ApplicationInfo.Current.CurrentAppThemeColor(AppTheme == PageTheme.Dark);
-                else
-                    return ImageHelper.GetColorFromHex(value.ToString());
-            }
-            set
-            {
-                if (value.IsDarkColor())
-                    CurrentForegroundColor = Colors.White;
-                else
-                    CurrentForegroundColor = Colors.Black;
-
-
-                SaveSettingsValue("CurrentThemeColor", ImageHelper.GetHexFromColor(value));
-
-                CurrentThemeColorChanged?.Invoke();
-            }
-        }
-
-        public static Color CurrentForegroundColor
-        {
-            get
-            {
-                object value = ReadSettingsValue("CurrentForegroundColor");
-                if (value == null)
-                {
-                    if (CurrentThemeColor.IsDarkColor())
-                        return Colors.White;
-                    else
-                        return Colors.Black;
-                }
-                else
-                    return ImageHelper.GetColorFromHex(value.ToString());
-            }
-            set
-            {
-                SaveSettingsValue("CurrentForegroundColor", ImageHelper.GetHexFromColor(value));
-            }
-        }
-
-        public static Color CustomThemeColor
-        {
-            get
-            {
-                object value = ReadSettingsValue("CustomThemeColor");
-                if (value == null)
-                    return ImageHelper.GetColorFromHex("#FFDC572E");
-                else
-                    return ImageHelper.GetColorFromHex(value.ToString());
-            }
-            set
-            {
-                SaveSettingsValue("CustomThemeColor", ImageHelper.GetHexFromColor(value));
-
-                CurrentThemeColor = value;
-            }
-        }
-
-
-        public static float NowPlayingBlurAmount
-        {
-            get
-            {
-                object value = ReadSettingsValue("NowPlayingBlurAmount");
-                if (value == null)
-                    return 10;
-                else
-                    return (float)value;
-            }
-            set
-            {
-                SaveSettingsValue("NowPlayingBlurAmount", value);
-
-                BlurLevelChanged?.Invoke();
-            }
-        }
-
-        public static bool NowPlayingGrayscale
-        {
-            get
-            {
-                object value = ReadSettingsValue("NowPlayingGrayscale");
-                if (value == null)
-                    return true;
-                else
-                    return (bool)value;
-            }
-            set
-            {
-                SaveSettingsValue("NowPlayingGrayscale", value);
             }
         }
 
@@ -635,22 +449,6 @@ namespace ClassLibrary.Helpers
             }
         }
 
-        public static PageTheme AppTheme
-        {
-            get
-            {
-                object value = ReadSettingsValue("AppTheme");
-                if (value == null)
-                    return PageTheme.Dark;
-                else
-                    return (PageTheme)value;
-            }
-            set
-            {
-                SaveSettingsValue("AppTheme", (int)value);
-                ThemeChanged?.Invoke(new ThemeChangedEventArgs(value));
-            }
-        }
 
         public static bool NextSongInActionCenterEnabled
         {
@@ -701,39 +499,6 @@ namespace ClassLibrary.Helpers
             }
         }
 
-        public static bool TransparencyEnabled
-        {
-            get
-            {
-                object value = ReadSettingsValue("TransparencyEnabled");
-                if (value == null)
-                    return true;
-                else
-                    return (bool)value;
-            }
-            set
-            {
-                SaveSettingsValue("TransparencyEnabled", value);
-                TransparencyEffectToggled?.Invoke(null, new Windows.UI.Xaml.RoutedEventArgs());
-            }
-        }
-
-        public static bool IsPerformanceModeOn
-        {
-            get
-            {
-                object value = ReadSettingsValue("PerformanceModeEnabled");
-                if (value == null)
-                    return false;
-                else
-                    return (bool)value;
-            }
-            set
-            {
-                SaveSettingsValue("PerformanceModeEnabled", value);
-                PerformanceModeToggled?.Invoke(null, new Windows.UI.Xaml.RoutedEventArgs());
-            }
-        }
 
 
         /// <summary>

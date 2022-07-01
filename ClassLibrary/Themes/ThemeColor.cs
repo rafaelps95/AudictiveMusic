@@ -23,12 +23,12 @@ namespace ClassLibrary.Themes
         {
             get
             {
-                return ApplicationSettings.CustomThemeColor == this.Color;
+                return ThemeSettings.CustomThemeColor == this.Color;
             }
             set
             {
                 if (value == true)
-                    ApplicationSettings.CustomThemeColor = this.Color;
+                    ThemeSettings.CustomThemeColor = this.Color;
 
                 OnPropertyChanged(this, "IsSelected");
             }

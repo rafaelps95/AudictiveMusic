@@ -124,13 +124,42 @@ namespace AudictiveMusicUWP.Gui.Util
 
         #region DEFAULT ANIMATIONS
 
-        public static Animation BeginFadeAnimation(DependencyObject target, double duration = 300)
+        private Animation FadeIn(DependencyObject target, double duration, double to)
+        {
+           AddDoubleAnimation(to, duration, target, "Opacity");
+            return this;
+        }
+
+        private Animation FadeOut(DependencyObject target, double duration)
+        {
+            AddDoubleAnimation(0, duration, target, "Opacity");
+            return this;
+        }
+
+        public static Animation BeginBasicFadeInAnimation(DependencyObject target, double duration = 300, double to = 1.0)
         {
             Animation animation = new Animation();
-            animation.AddDoubleAnimation(0, 1, duration, target, "Opacity");
+            animation.FadeIn(target, duration, to);
             animation.Begin();
-
             return animation;
+        }
+
+        public Animation AddFadeInAnimation(DependencyObject target, double duration = 300, double to = 1.0)
+        {
+            return FadeIn(target, duration, to);
+        }
+
+        public static Animation BeginBasicFadeOutAnimation(DependencyObject target, double duration = 300)
+        {
+            Animation animation = new Animation();
+            animation.FadeOut(target, duration);
+            animation.Begin();
+            return animation;
+        }
+
+        public void AddFadeOutAnimation(DependencyObject target, double duration = 300)
+        {
+            FadeOut(target, duration);
         }
 
         #endregion

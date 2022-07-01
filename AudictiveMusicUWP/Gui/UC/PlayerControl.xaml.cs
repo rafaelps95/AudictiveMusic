@@ -6,6 +6,7 @@ using ClassLibrary;
 using ClassLibrary.Control;
 using ClassLibrary.Entities;
 using ClassLibrary.Helpers;
+using ClassLibrary.Helpers.Enumerators;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Graphics.Canvas.UI.Composition;
@@ -177,9 +178,6 @@ namespace AudictiveMusicUWP.Gui.UC
             this.SizeChanged += PlayerControl_SizeChanged;
             this.InitializeComponent();
             this.mode = DisplayMode.Compact;
-
-            touch3D.ActionRequested += touch3D_ActionRequested;
-            touch3D.VisibilityChanged += Touch3D_VisibilityChanged;
             forcePreviousSkip = false;
             IsPlaylistLoaded = false;
             IsPlaylistOpened = false;
@@ -190,10 +188,10 @@ namespace AudictiveMusicUWP.Gui.UC
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
 
             Application.Current.Resuming += Current_Resuming;
-            ApplicationSettings.BlurLevelChanged += ApplicationSettings_BlurLevelChanged;
-            ApplicationSettings.NowPlayingThemeChanged += ApplicationSettings_NowPlayingThemeChanged;
-            ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
-            ApplicationSettings.ThemeBackgroundPreferenceChanged += ApplicationSettings_ThemeBackgroundPreferenceChanged;
+            ThemeSettings.BlurLevelChanged += ApplicationSettings_BlurLevelChanged;
+            ThemeSettings.NowPlayingThemeChanged += ApplicationSettings_NowPlayingThemeChanged;
+            ThemeSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
+            ThemeSettings.ThemeBackgroundPreferenceChanged += ApplicationSettings_ThemeBackgroundPreferenceChanged;
             PlayerController.FullPlayerRequested += PlayerController_FullPlayerRequested;
             Ctr_Song.FavoritesChanged += Ctr_Song_FavoritesChanged;
         }
@@ -279,7 +277,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void ApplicationSettings_CurrentThemeColorChanged()
         {
-            UpdateThemeColor(ApplicationSettings.CurrentThemeColor);
+            UpdateThemeColor(ThemeSettings.CurrentThemeColor);
         }
 
         private void ApplicationSettings_NowPlayingThemeChanged()
@@ -311,7 +309,7 @@ namespace AudictiveMusicUWP.Gui.UC
                     Name = e.Argument,
                 };
 
-                NavigationHelper.Navigate(this, typeof(ArtistPage), artist);
+                NavigationService.Navigate(this, typeof(ArtistPage), artist);
             }
             else if (e.Action == Touch3DEventArgs.Type.LikeSong)
             {
@@ -474,10 +472,11 @@ namespace AudictiveMusicUWP.Gui.UC
                 compactView.IsHitTestVisible = false;
                 fullView.IsHitTestVisible = true;
                 fullView.Opacity = 1;
+                musicSlider.IsEnabled = albumCover.IsEnabled = true;
                 compactView.Opacity = 0;
                 fullViewTransform.TranslateY = 0;
                 Animation.RunAnimation(this.Resources["fadeInBlur"]);
-
+                this.Focus(FocusState.Keyboard);
                 return;
             }
 
@@ -487,8 +486,11 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 fullView.IsHitTestVisible = false;
                 acrylic.Opacity = 0;
-
+                albumCover.IsEnabled = nextSong.IsEnabled = optionsButton.IsEnabled = musicSlider.IsEnabled = closeButton.IsEnabled = false;
                 HidePlaylist();
+
+                compactBarExpandButton.IsTabStop = compactPreviousButton.IsTabStop = compactPlayPauseButton.IsTabStop = compactNextButton.IsTabStop = true;
+                fullPlayPauseButton.IsTabStop = playlistButton.IsTabStop = repeatToggleButton.IsTabStop = shuffleButton.IsTabStop = playlistButton.IsTabStop = false;
 
                 animation.AddDoubleAnimation(0, 150, fullView, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
                 animation.AddDoubleAnimation(1, 150, compactView, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
@@ -502,9 +504,12 @@ namespace AudictiveMusicUWP.Gui.UC
             }
             else
             {
+
                 compactView.IsHitTestVisible = false;
                 fullView.IsHitTestVisible = true;
-
+                albumCover.IsEnabled = nextSong.IsEnabled = optionsButton.IsEnabled = musicSlider.IsEnabled = closeButton.IsEnabled = true;
+                compactBarExpandButton.IsTabStop = compactPreviousButton.IsTabStop = compactPlayPauseButton.IsTabStop = compactNextButton.IsTabStop = false;
+                fullPlayPauseButton.IsTabStop = playlistButton.IsTabStop = repeatToggleButton.IsTabStop = shuffleButton.IsTabStop = playlistButton.IsTabStop = true;
                 animation.AddDoubleAnimation(1, 150, fullView, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
                 animation.AddDoubleAnimation(0, 150, compactView, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
                 animation.AddDoubleAnimation(0, 150, fullViewTransform, "TranslateY", Animation.GenerateEasingFunction(EasingFunctionType.CircleEase, EasingMode.EaseOut));
@@ -522,7 +527,7 @@ namespace AudictiveMusicUWP.Gui.UC
                     Canvas.SetZIndex(notice, 5);
                     notice.Dismissed += (s) =>
                     {
-                        NavigationHelper.Navigate(this, typeof(ThemeSelector));
+                        NavigationService.Navigate(this, typeof(ThemeSelector));
                         ApplicationSettings.ThemesUserAware = true;
                     };
                     notice.Show(ApplicationInfo.Current.Resources.GetString("ThemesMessage"), ApplicationInfo.Current.Resources.GetString("SetUp/Text"));
@@ -591,20 +596,20 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.None)
             {
-                previousButton.IsEnabled = nextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = nextSong.IsEnabled = false;
-                PlayPauseButton.Content = "\uF5B0";
+                fullPreviousButton.IsEnabled = compactPreviousButton.IsEnabled = fullNextButton.IsEnabled = compactNextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = albumCover.IsEnabled = nextSong.IsEnabled = false;
+                fullPlayPauseButton.Content = compactPlayPauseButton.Content = "\uF5B0";
             }
             else
             {
-                previousButton.IsEnabled = nextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = nextSong.IsEnabled = true;
+                fullPreviousButton.IsEnabled = compactPreviousButton.IsEnabled = fullNextButton.IsEnabled = compactNextButton.IsEnabled = playlistButton.IsEnabled = repeatToggleButton.IsEnabled = shuffleButton.IsEnabled = albumCover.IsEnabled = nextSong.IsEnabled = true;
 
                 if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.Playing)
                 {
-                    PlayPauseButton.Content = "\uF8AE";
+                    fullPlayPauseButton.Content = compactPlayPauseButton.Content = "\uF8AE";
                 }
                 else if (BackgroundMediaPlayer.Current.PlaybackSession.PlaybackState == MediaPlaybackState.Paused)
                 {
-                    PlayPauseButton.Content = "\uF5B0";
+                    fullPlayPauseButton.Content = compactPlayPauseButton.Content = "\uF5B0";
                 }
             }
         }
@@ -659,7 +664,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             this.Mode = DisplayMode.Compact;
 
-            ApplicationSettings.CurrentThemeColor = Color.FromArgb(255, 77, 77, 77);
+            ThemeSettings.CurrentThemeColor = Color.FromArgb(255, 77, 77, 77);
         }
 
         private async Task<bool> LoadPlaylist(List<string> list)
@@ -727,7 +732,7 @@ namespace AudictiveMusicUWP.Gui.UC
                     albumCover.CurrentSong = ApplicationSettings.CurrentSong;
                     albumCover.FallbackUri = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
 
-                    if (ApplicationSettings.ThemeBackgroundPreference == 0)
+                    if (ThemeSettings.ThemeBackgroundPreference == ThemeBackgroundSource.AlbumCover)
                     {
                         if (CurrentAlbumID != ApplicationSettings.CurrentSong.AlbumID)
                         {
@@ -745,12 +750,12 @@ namespace AudictiveMusicUWP.Gui.UC
                     CurrentAlbumID = ApplicationSettings.CurrentSong.AlbumID;
                     CurrentArtist = ApplicationSettings.CurrentSong.Artist;
 
-                    if (ApplicationSettings.ThemeColorPreference == 0)
-                        ApplicationSettings.CurrentThemeColor = ImageHelper.GetColorFromHex(ApplicationSettings.CurrentSong.HexColor);
-                    else if (ApplicationSettings.ThemeColorPreference == 1)
-                        ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentSystemAccentColor;
-                    else if (ApplicationSettings.ThemeColorPreference == 2)
-                        ApplicationSettings.CurrentThemeColor = ApplicationSettings.CustomThemeColor;
+                    if (ThemeSettings.ThemeColorPreference == ThemeColorSource.AlbumColor)
+                        ThemeSettings.CurrentThemeColor = ImageHelper.GetColorFromHex(ApplicationSettings.CurrentSong.HexColor);
+                    else if (ThemeSettings.ThemeColorPreference == ThemeColorSource.AccentColor)
+                        ThemeSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentSystemAccentColor;
+                    else if (ThemeSettings.ThemeColorPreference == ThemeColorSource.CustomColor)
+                        ThemeSettings.CurrentThemeColor = ThemeSettings.CustomThemeColor;
 
                     ToolTip toolTip = new ToolTip();
                     toolTip.Content = ApplicationSettings.CurrentSong.Name + " " + ApplicationInfo.Current.Resources.GetString("By") + ApplicationSettings.CurrentSong.Artist;
@@ -776,7 +781,7 @@ namespace AudictiveMusicUWP.Gui.UC
             gradientStop1.Color = gradientStop3.Color = darkerColor;
             gradientStop2.Color = color.ChangeColorBrightness(-0.1f);
 
-            if (ApplicationSettings.NowPlayingTheme == ClassLibrary.Themes.Theme.Material)
+            if (ThemeSettings.NowPlayingTheme == Theme.Material)
             {
                 //Color c = ImageHelper.GetColorFromHex("#FFDC572E");
                 Color opposite = color.GetOppositeColor();
@@ -815,7 +820,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
                     backgroundBitmapImage.UriSource = null;
 
-                    if (ApplicationSettings.ThemeBackgroundPreference == 0)
+                    if (ThemeSettings.ThemeBackgroundPreference == ThemeBackgroundSource.AlbumCover)
                         backgroundBitmapImage.UriSource = new Uri("ms-appdata:///local/Covers/cover_" + ApplicationSettings.CurrentSong.AlbumID + ".jpg");
                     else
                         backgroundBitmapImage.UriSource = new Uri("ms-appdata:///local/Artists/artist_" + StringHelper.RemoveSpecialChar(song.Artist) + ".jpg");
@@ -853,23 +858,23 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void SetBackgroundStyle()
         {
-            switch (ApplicationSettings.NowPlayingTheme)
+            switch (ThemeSettings.NowPlayingTheme)
             {
-                case ClassLibrary.Themes.Theme.Clean:
+                case Theme.Clean:
 
                     modernBG.Visibility = Visibility.Collapsed;
                     acrylic.Visibility = Visibility.Collapsed;
                     materialBG.Visibility = Visibility.Collapsed;
 
                     break;
-                case ClassLibrary.Themes.Theme.Blur:
+                case Theme.Blur:
                     SetBlur();
                     break;
-                case ClassLibrary.Themes.Theme.Modern:
+                case Theme.Modern:
                     materialBG.Visibility = Visibility.Collapsed;
                     SetModernStyle();
                     break;
-                case ClassLibrary.Themes.Theme.Material:
+                case Theme.Material:
                     materialBG.Visibility = Visibility.Visible;
                     SetModernStyle();
                     break;
@@ -882,7 +887,7 @@ namespace AudictiveMusicUWP.Gui.UC
             acrylic.Visibility = Visibility.Visible;
             materialBG.Visibility = Visibility.Collapsed;
 
-            acrylic.AcrylicIntensity = ApplicationSettings.NowPlayingBlurAmount;
+            acrylic.AcrylicIntensity = ThemeSettings.NowPlayingBlurAmount;
             acrylic.AcrylicEnabled = true;
         }
 
@@ -1113,7 +1118,6 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             playlist.Opacity = 1;
             playlistRightBorderOverlay.Opacity = 0;
-
             #region open playlist animation
 
             Animation animation = new Animation();
@@ -1125,6 +1129,8 @@ namespace AudictiveMusicUWP.Gui.UC
             animation.Completed += (s, a) =>
             {
                 playlist.IsHitTestVisible = true;
+                playlist.IsTabStop = true;
+                playlist.Focus(FocusState.Programmatic);
 
                 if (IsPlaylistLoaded)
                     playlist.ScrollToSelectedIndex();
@@ -1165,6 +1171,8 @@ namespace AudictiveMusicUWP.Gui.UC
 
             dismissArea.IsHitTestVisible = false;
             IsPlaylistOpened = false;
+            playlist.IsTabStop = false;
+            this.Focus(FocusState.Keyboard);
 
             Animation animation = new Animation();
             animation.AddDoubleAnimation(playlist.ActualWidth,
@@ -1182,8 +1190,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void albumCover_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (touch3D.IsTouch3DOpened)
-                touch3D.Hide();
+
         }
 
         private async void albumCover_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1205,15 +1212,13 @@ namespace AudictiveMusicUWP.Gui.UC
             };
             ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
 
-            NavigationHelper.Navigate(this, typeof(AlbumPage), album);
+            NavigationService.Navigate(this, typeof(AlbumPage), album);
 
         }
 
         private void player_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             this.IsManipulating = false;
-            if (touch3D.IsTouch3DOpened)
-                return;
 
             _isManipulatingX = null;
             if (fullViewTransform.TranslateY >= 60)
@@ -1238,7 +1243,7 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             this.IsManipulating = true;
 
-            if (e.IsInertial || touch3D.IsTouch3DOpened)
+            if (e.IsInertial)
             {
                 e.Complete();
             }
@@ -1384,7 +1389,7 @@ namespace AudictiveMusicUWP.Gui.UC
             {
                 Name = ApplicationSettings.CurrentSong.Artist,
             };
-            NavigationHelper.Navigate(this, typeof(ArtistPage), art);
+            NavigationService.Navigate(this, typeof(ArtistPage), art);
         }
 
         private void optionsButton_Click(object sender, RoutedEventArgs e)
@@ -1398,7 +1403,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             mfi.Click += (s, a) =>
             {
-                NavigationHelper.Navigate(this, typeof(ThemeSelector));
+                NavigationService.Navigate(this, typeof(ThemeSelector));
             };
 
             mf.Items.Add(mfi);
@@ -1410,7 +1415,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             mfi2.Click += (s,a) =>
             {
-                NavigationHelper.Navigate(this, typeof(Settings), "path=timer");
+                NavigationService.Navigate(this, typeof(Settings), "path=timer");
             };
 
             mf.Items.Add(mfi2);
@@ -1422,7 +1427,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             mfi3.Click += (s, a) =>
             {
-                NavigationHelper.Navigate(this, typeof(Settings), "path=scrobble");
+                NavigationService.Navigate(this, typeof(Settings), "path=scrobble");
             };
 
             mf.Items.Add(mfi3);
@@ -1524,7 +1529,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 Name = song.Artist,
             };
 
-            NavigationHelper.Navigate(this, typeof(ArtistPage), artist);
+            NavigationService.Navigate(this, typeof(ArtistPage), artist);
         }
 
         private void AlbumCover_AddRequested(object sender, RoutedEventArgs e)
@@ -1548,7 +1553,7 @@ namespace AudictiveMusicUWP.Gui.UC
             };
             ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
 
-            NavigationHelper.Navigate(this, typeof(AlbumPage), album);
+            NavigationService.Navigate(this, typeof(AlbumPage), album);
         }
 
         private void AlbumCover_FavoriteStateToggled(object sender, RoutedEventArgs e)

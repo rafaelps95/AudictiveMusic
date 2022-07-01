@@ -121,7 +121,7 @@ namespace AudictiveMusicUWP.Gui.Pages.LFM
             if (result.Success)
             {
                 LastUser user = result.Content;
-                NavigationHelper.Navigate(this, typeof(LastFmProfilePage), user);
+                NavigationService.Navigate(this, typeof(LastFmProfilePage), user);
             }
         }
 

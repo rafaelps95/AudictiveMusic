@@ -102,7 +102,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void FavoritesButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(Favorites));
+            NavigationService.Navigate(this, typeof(Favorites));
         }
     }
 }

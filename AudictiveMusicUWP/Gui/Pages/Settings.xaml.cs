@@ -28,7 +28,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using static AudictiveMusicUWP.Gui.Pages.ThemeSelector;
 using static AudictiveMusicUWP.Gui.UC.SettingsSection;
-using static ClassLibrary.Helpers.Enumerators;
+using ClassLibrary.Helpers.Enumerators;
 
 // O modelo de item de Página em Branco está documentado em https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -114,7 +114,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (string.IsNullOrWhiteSpace(arguments) == false)
             {
                 this.NavigationArguments = arguments;
-                this.NavigationPath = NavigationHelper.GetParameter(this.NavigationArguments, "path");
+                this.NavigationPath = NavigationService.GetParameter(this.NavigationArguments, "path");
             }
             else
             {
@@ -127,13 +127,6 @@ namespace AudictiveMusicUWP.Gui.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-
-            LockScreenToggleSwitch.Toggled -= LockScreenToggleSwitch_Toggled;
-            LimitedConnectionToggleSwitch.Toggled -= CelullarDownloadToggleSwitch_Toggled;
-            WhatsNextNotification.Toggled -= WhatsNextNotification_Toggled;
-            TapToResumeSwitch.Toggled -= TapToResumeSwitch_Toggled;
-            TransparencyToggleSwitch.Toggled -= TransparencyToggleSwitch_Toggled;
-            PerformanceToggleSwitch.Toggled -= PerformanceToggleSwitch_Toggled;
         }
 
         private void LoadSettings()
@@ -153,111 +146,106 @@ namespace AudictiveMusicUWP.Gui.Pages
                 ChooseLibrarySettingsItem.Visibility = Visibility.Visible;
             }
 
-            PageTheme theme = ApplicationSettings.AppTheme;
+            PageTheme theme = ThemeSettings.AppTheme;
 
             // REPLACES THE LEGACY 'DEFAULT' (FOLLOW SYSTEM THEME) SETTING IN CASE THE USER IS UPDATING FROM AN OLD VERSION
             if ((int)theme == 2)
             {
-                theme = ApplicationSettings.AppTheme = PageTheme.Dark;
+                theme = ThemeSettings.AppTheme = PageTheme.Dark;
             }
 
             AppThemeSettingsItem.SelectedIndex = (int)theme;
             UpdateDropDownItemAdditionalInfo(AppThemeSettingsItem);
-            BackgroundPreferencesSettingsItem.SelectedIndex = ApplicationSettings.ThemeBackgroundPreference;
+            BackgroundPreferencesSettingsItem.SelectedIndex = (int)ThemeSettings.ThemeBackgroundPreference;
             UpdateDropDownItemAdditionalInfo(BackgroundPreferencesSettingsItem);
-            ColorSettingsItem.SelectedIndex = ApplicationSettings.ThemeColorPreference;
+            if (ThemeSettings.ThemeColorPreference != ThemeColorSource.NoColor)
+            {
+                ColorSettingsItem.IsOn = true;
+                ColorSettingsItem.SelectedIndex = (int)ThemeSettings.ThemeColorPreference;
+            }
+            else
+            {
+                ColorSettingsItem.IsOn = false;
+                ColorSettingsItem.SelectedIndex = -1;
+            }
+
             UpdateDropDownItemAdditionalInfo(ColorSettingsItem);
-            CustomColorSettingsSection.Visibility = ApplicationSettings.ThemeColorPreference == 2 ? Visibility.Visible : Visibility.Collapsed;
+            CustomColorSettingsSection.Visibility = ThemeSettings.ThemeColorPreference == ThemeColorSource.CustomColor ? Visibility.Visible : Visibility.Collapsed;
 
-            TransparencyToggleSwitch.IsOn = ApplicationSettings.TransparencyEnabled;
-            PerformanceSettingsItem.Visibility = ApplicationSettings.TransparencyEnabled ? Visibility.Visible : Visibility.Collapsed;
-            PerformanceToggleSwitch.IsOn = ApplicationSettings.IsPerformanceModeOn;
-            SendInfoToggleSwitch.IsOn = ApplicationSettings.DownloadEnabled;
+            TransparencySettingsExpandableItem.IsOn = ThemeSettings.IsTransparencyEnabled;
+            BackgroundBlurSettingsItem.Visibility = PerformanceSettingsItem.Visibility = ThemeSettings.IsTransparencyEnabled ? Visibility.Visible : Visibility.Collapsed;
+            BackgroundBlurSettingsItem.IsOn = ThemeSettings.IsBackgroundAcrylicEnabled;
+            PerformanceSettingsItem.IsOn = ThemeSettings.IsPerformanceModeEnabled;
+            SendInfoSettingsItem.IsOn = ApplicationSettings.DownloadEnabled;
 
-            LimitedConnectionToggleSwitch.IsEnabled = ApplicationSettings.DownloadEnabled;
+            LimitedConnectionSettingsItem.IsEnabled = ApplicationSettings.DownloadEnabled;
 
-            LimitedConnectionToggleSwitch.IsOn = ApplicationSettings.CellularDownloadEnabled;
+            LimitedConnectionSettingsItem.IsOn = ApplicationSettings.CellularDownloadEnabled;
 
-            LockScreenToggleSwitch.IsOn = ApplicationSettings.LockscreenEnabled;
-            WhatsNextNotification.IsOn = ApplicationSettings.NextSongInActionCenterEnabled;
-            TapToResumeSwitch.IsOn = ApplicationSettings.TapToResumeNotificationEnabled;
+            LockScreenSettingsItem.IsOn = ApplicationSettings.LockscreenEnabled;
+            WhatsNextSettingsItem.IsOn = ApplicationSettings.NextSongInActionCenterEnabled;
+            TapToResumeSettingsItem.IsOn = ApplicationSettings.TapToResumeNotificationEnabled;
 
-            SendScrobbleToggleSwitch.IsEnabled = LastFm.Current.IsAuthenticated;
+            SendScrobbleSettingsItem.IsEnabled = LastFm.Current.IsAuthenticated;
             PendingScrobblesSettingsItem.Visibility = LastFm.Current.IsAuthenticated ? Visibility.Visible : Visibility.Collapsed;
-            SendScrobbleToggleSwitch.IsOn = ApplicationSettings.IsScrobbleEnabled;
+            SendScrobbleSettingsItem.IsOn = ApplicationSettings.IsScrobbleEnabled;
 
             LoadTimerSettings();
 
             AppThemeSettingsItem.SelectionChanged += AppThemeSettingsItem_SelectionChanged;
-            TransparencyToggleSwitch.Toggled += TransparencyToggleSwitch_Toggled;
-            PerformanceToggleSwitch.Toggled += PerformanceToggleSwitch_Toggled;
             BackgroundPreferencesSettingsItem.SelectionChanged += BackgroundPreferencesSettingsItem_SelectionChanged;
             ColorSettingsItem.SelectionChanged += ColorSettingsItem_SelectionChanged;   
-            LockScreenToggleSwitch.Toggled += LockScreenToggleSwitch_Toggled;
-            SendInfoToggleSwitch.Toggled += SendInfoToggleSwitch_Toggled;
-            LimitedConnectionToggleSwitch.Toggled += CelullarDownloadToggleSwitch_Toggled;
-            WhatsNextNotification.Toggled += WhatsNextNotification_Toggled;
-            TapToResumeSwitch.Toggled += TapToResumeSwitch_Toggled;
-            SendScrobbleToggleSwitch.Toggled += SendScrobble_Toggled;
             TimerBox.TextChanged += TimerBox_TextChanged;
 
-            try
-            {
-                Package package = Package.Current;
-                PackageId packageId = package.Id;
-                PackageVersion version = packageId.Version;
-                appName.Text = package.DisplayName;
-                appVersion.Text = string.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build);
-            }
-            catch
-            {
+            //try
+            //{
+            //    Package package = Package.Current;
+            //    PackageId packageId = package.Id;
+            //    PackageVersion version = packageId.Version;
+            //    appName.Text = package.DisplayName;
+            //    appVersion.Text = string.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build);
+            //}
+            //catch
+            //{
 
-            }
-        }
-
-        private void TransparencyToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            ApplicationSettings.TransparencyEnabled = TransparencyToggleSwitch.IsOn;
-
-            PerformanceSettingsItem.Visibility = ApplicationSettings.TransparencyEnabled ? Visibility.Visible : Visibility.Collapsed;
+            //}
         }
 
         private void PerformanceToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            ApplicationSettings.IsPerformanceModeOn = PerformanceToggleSwitch.IsOn;
         }
 
         private void ColorSettingsItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ApplicationSettings.ThemeColorPreference = ColorSettingsItem.SelectedIndex;
+            ThemeSettings.ThemeColorPreference = (ThemeColorSource)ColorSettingsItem.SelectedIndex;
             UpdateDropDownItemAdditionalInfo(ColorSettingsItem);
 
-            if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.AlbumColor)
+            if (ThemeSettings.ThemeColorPreference == ThemeColorSource.AlbumColor)
             {
-                ApplicationSettings.CurrentThemeColor = ImageHelper.GetColorFromHex(ApplicationSettings.CurrentSong.HexColor);
+                ThemeSettings.CurrentThemeColor = ImageHelper.GetColorFromHex(ApplicationSettings.CurrentSong.HexColor);
             }
-            else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.AccentColor)
+            else if (ThemeSettings.ThemeColorPreference == ThemeColorSource.AccentColor)
             {
-                ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentSystemAccentColor;
+                ThemeSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentSystemAccentColor;
             }
-            else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.CustomColor)
+            else if (ThemeSettings.ThemeColorPreference == ThemeColorSource.CustomColor)
             {
-                ApplicationSettings.CurrentThemeColor = ApplicationSettings.CustomThemeColor;
+                ThemeSettings.CurrentThemeColor = ThemeSettings.CustomThemeColor;
                 SetSelectedColor();
             }
-            else if (ApplicationSettings.ThemeColorPreference == (int)ThemeColorSource.NoColor)
-            {
-                ApplicationSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentAppThemeColor(ApplicationSettings.AppTheme == PageTheme.Dark);
-            }
 
-            CustomColorSettingsSection.Visibility = ApplicationSettings.ThemeColorPreference == 2 ? Visibility.Visible : Visibility.Collapsed;
+            CustomColorSettingsSection.Visibility = ThemeSettings.ThemeColorPreference == ThemeColorSource.CustomColor ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void BackgroundBlurToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
         }
 
         private void SetSelectedColor()
         {
             foreach (ThemeColor tc in ColorsList)
             {
-                tc.IsSelected = tc.Color == ApplicationSettings.CurrentThemeColor;
+                tc.IsSelected = tc.Color == ThemeSettings.CurrentThemeColor;
             }
         }
 
@@ -337,96 +325,10 @@ namespace AudictiveMusicUWP.Gui.Pages
             //}
         }
 
-        #region EVENTS
-
-
-        private void LightRadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ApplicationSettings.AppTheme = PageTheme.Light;
-        }
-
-        private void DarkRadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void LockScreenToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            ApplicationSettings.LockscreenEnabled = LockScreenToggleSwitch.IsOn;
-        }
-
-        private void CelullarDownloadToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            ApplicationSettings.CellularDownloadEnabled = LimitedConnectionToggleSwitch.IsOn;
-        }
-
-        private void SendInfoToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            ApplicationSettings.DownloadEnabled = SendInfoToggleSwitch.IsOn;
-            LimitedConnectionToggleSwitch.IsEnabled = SendInfoToggleSwitch.IsOn;
-        }
-
-        private void WhatsNextNotification_Toggled(object sender, RoutedEventArgs e)
-        {
-            ApplicationSettings.NextSongInActionCenterEnabled = WhatsNextNotification.IsOn;
-        }
-
-        private void TapToResumeSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            ApplicationSettings.TapToResumeNotificationEnabled = TapToResumeSwitch.IsOn;
-        }
-
-        private void SendScrobble_Toggled(object sender, RoutedEventArgs e)
-        {
-            ApplicationSettings.IsScrobbleEnabled = SendScrobbleToggleSwitch.IsOn;
-        }
-
-
-
-        #endregion
 
         private async void WindowsColorSettings_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("ms-settings:personalization-colors", UriKind.RelativeOrAbsolute), new LauncherOptions() { DesiredRemainingView = Windows.UI.ViewManagement.ViewSizePreference.UseHalf });
-        }
-
-        private void About_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(About));
-        }
-
-        private void SettingsGroup_Click(object sender, EventArgs e)
-        {
-            SettingsGroup sg = sender as SettingsGroup;
-            if (sg.ReferencesTo == SettingsPageContent.AppInfo)
-            {
-                Frame.Navigate(typeof(About));
-                return;
-            }
-            this.CurrentView = sg.ReferencesTo;
-        }
-
-        private void SettingsGroup_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            foreach (SettingsGroup sg in content.Children.OfType<SettingsGroup>())
-            {
-                if (sg != sender as SettingsGroup)
-                {
-                    Canvas.SetZIndex(sg, 3);
-                }
-                else
-                {
-                    Canvas.SetZIndex(sg, 1);
-                }
-            }
-        }
-
-        private void SettingsGroup_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            foreach (SettingsGroup sg in content.Children.OfType<SettingsGroup>())
-            {
-                Canvas.SetZIndex(sg, 1);
-            }
         }
 
         private async void LoadStorageInfo()
@@ -513,12 +415,12 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void Themes_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(ThemeSelector));
+            NavigationService.Navigate(this, typeof(ThemeSelector));
         }
 
         private void MoreThemesSettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(ThemeSelector));
+            NavigationService.Navigate(this, typeof(ThemeSelector));
         }
 
         private async void RateAppSettingsItem_ItemClick(object sender, RoutedEventArgs e)
@@ -615,8 +517,8 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
 
             inAppNotification.PrimaryButtonClicked += (s, a) =>
             {
-                NavigationHelper.Navigate(this, typeof(PreparingCollection), null, true);
-                NavigationHelper.ClearBackstack(this, true);
+                NavigationService.Navigate(this, typeof(PreparingCollection), null, true);
+                NavigationService.ClearBackstack(this, true);
             };
 
             InAppNotificationHelper.ShowNotification(inAppNotification);
@@ -629,22 +531,38 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
 
         private void BackgroundPreferencesSettingsItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ApplicationSettings.ThemeBackgroundPreference = BackgroundPreferencesSettingsItem.SelectedIndex;
+            ThemeSettings.ThemeBackgroundPreference = (ThemeBackgroundSource)BackgroundPreferencesSettingsItem.SelectedIndex;
             UpdateDropDownItemAdditionalInfo(BackgroundPreferencesSettingsItem);
         }
 
         private void UpdateDropDownItemAdditionalInfo(SettingsItemDropDownList dropDownList)
         {
-            ListBoxItem item = dropDownList.Items[dropDownList.SelectedIndex] as ListBoxItem;
-            if (item != null)
+            if (dropDownList.IsToggleVisible)
             {
-                dropDownList.AdditionalInfo = item.Content.ToString();
+                if (dropDownList.IsOn)
+                {
+                    ListBoxItem item = dropDownList.Items[dropDownList.SelectedIndex] as ListBoxItem;
+                    if (item != null)
+                    {
+                        dropDownList.AdditionalInfo = item.Content.ToString();
+                    }
+                }
+                else
+                    dropDownList.AdditionalInfo = "Não";
+            }
+            else
+            {
+                ListBoxItem item = dropDownList.Items[dropDownList.SelectedIndex] as ListBoxItem;
+                if (item != null)
+                {
+                    dropDownList.AdditionalInfo = item.Content.ToString();
+                }
             }
         }
 
         private void AppThemeSettingsItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ApplicationSettings.AppTheme = (PageTheme)AppThemeSettingsItem.SelectedIndex;
+            ThemeSettings.AppTheme = (PageTheme)AppThemeSettingsItem.SelectedIndex;
 
             UpdateDropDownItemAdditionalInfo(AppThemeSettingsItem);
         }
@@ -673,7 +591,7 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
             var color = e.ClickedItem as ThemeColor;
             color.IsSelected = true;
 
-            ApplicationSettings.CurrentThemeColor = color.Color;
+            ThemeSettings.CurrentThemeColor = color.Color;
 
             SetSelectedColor();
         }
@@ -682,7 +600,7 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
         {
             PrepareColorsList();
 
-            if (CustomColorSettingsSection.CurrentState == State.Expanded)
+            if (CustomColorSettingsSection.CurrentState == SettingsExpandableToggleItem.State.Expanded)
             {
                 if (colorsList.ItemsSource == null)
                 {
@@ -730,7 +648,132 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
 
         private void PendingScrobblesSettingsItem_ItemClick(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(PendingScrobbles));
+            NavigationService.Navigate(this, typeof(PendingScrobbles));
+        }
+
+        private void TransparencySettingsExpandableItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            ThemeSettings.IsTransparencyEnabled = TransparencySettingsExpandableItem.IsOn;
+            BackgroundBlurSettingsItem.Visibility = PerformanceSettingsItem.Visibility = ThemeSettings.IsTransparencyEnabled ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void ColorSettingsItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (ColorSettingsItem.IsOn)
+            {
+                if (ApplicationSettings.CurrentSong == null)
+                {
+                    ThemeSettings.ThemeColorPreference = ThemeColorSource.CustomColor;
+                }
+                else
+                {
+                    ColorSettingsItem.SelectedIndex = 0;
+                    ThemeSettings.ThemeColorPreference = ThemeColorSource.AlbumColor;
+                    ThemeSettings.CurrentThemeColor = ImageHelper.GetColorFromHex(ApplicationSettings.CurrentSong.HexColor);
+                }
+                ColorSettingsItem.CurrentState = SettingsItemDropDownList.State.Expanded;
+            }
+            else
+            {
+                CustomColorSettingsSection.Visibility = Visibility.Collapsed;
+                ThemeSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentAppThemeColor(ThemeSettings.AppTheme == PageTheme.Dark);
+                ThemeSettings.ThemeColorPreference = ThemeColorSource.NoColor;
+            }
+
+            UpdateDropDownItemAdditionalInfo(ColorSettingsItem);            
+        }
+
+        private void AboutSection_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(this, typeof(About));
+        }
+
+
+
+        #region EVENTS
+
+
+        private void LightRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ThemeSettings.AppTheme = PageTheme.Light;
+        }
+
+        private void DarkRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void LockScreenToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void CelullarDownloadToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void SendInfoToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void WhatsNextNotification_Toggled(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void TapToResumeSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void SendScrobble_Toggled(object sender, RoutedEventArgs e)
+        {
+        }
+
+
+
+        #endregion
+
+
+
+
+        private void BackgroundBlurSettingsItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            ThemeSettings.IsBackgroundAcrylicEnabled = BackgroundBlurSettingsItem.IsOn;
+        }
+
+        private void PerformanceSettingsItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            ThemeSettings.IsPerformanceModeEnabled = PerformanceSettingsItem.IsOn;
+        }
+
+        private void LockScreenSettingsItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationSettings.LockscreenEnabled = LockScreenSettingsItem.IsOn;
+        }
+
+        private void SendInfoSettingsItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationSettings.DownloadEnabled = SendInfoSettingsItem.IsOn;
+            LimitedConnectionSettingsItem.IsEnabled = SendInfoSettingsItem.IsOn;
+        }
+
+        private void LimitedConnectionSettingsItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationSettings.CellularDownloadEnabled = LimitedConnectionSettingsItem.IsOn;
+        }
+
+        private void WhatsNextSettingsItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationSettings.NextSongInActionCenterEnabled = WhatsNextSettingsItem.IsOn;
+        }
+
+        private void TapToResumeSettingsItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationSettings.TapToResumeNotificationEnabled = TapToResumeSettingsItem.IsOn;
+        }
+
+        private void SendScrobbleSettingsItem_Toggled(object sender, RoutedEventArgs e)
+        {
+            ApplicationSettings.IsScrobbleEnabled = SendScrobbleSettingsItem.IsOn;
         }
     }
 }

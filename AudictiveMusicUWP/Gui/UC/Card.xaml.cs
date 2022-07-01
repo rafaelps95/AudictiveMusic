@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using RPSToolkit;
+using ClassLibrary.Helpers.Enumerators;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -19,7 +20,7 @@ namespace AudictiveMusicUWP.Gui.UC
 {
     public sealed partial class Card : UserControl
     {
-        private Enumerators.MediaItemType ContextMode;
+        private MediaItemType ContextMode;
         private MediaItem _mediaItem;
 
         public Card()
@@ -41,7 +42,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (context.GetType() == typeof(Song))
             {
-                this.ContextMode = Enumerators.MediaItemType.Song;
+                this.ContextMode = MediaItemType.Song;
                 Song song = context as Song;
                 textRow1.Text = song.Name;
                 textRow2.Text = song.Artist;
@@ -65,19 +66,19 @@ namespace AudictiveMusicUWP.Gui.UC
             }
             else if (context.GetType() == typeof(Album))
             {
-                this.ContextMode = Enumerators.MediaItemType.Album;
+                this.ContextMode = MediaItemType.Album;
 
             }
             else if (context.GetType() == typeof(Artist))
             {
-                this.ContextMode = Enumerators.MediaItemType.Artist;
+                this.ContextMode = MediaItemType.Artist;
 
             }
         }
 
         private void Bmp_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            if (this.ContextMode == Enumerators.MediaItemType.Song || this.ContextMode == Enumerators.MediaItemType.Album)
+            if (this.ContextMode == MediaItemType.Song || this.ContextMode == MediaItemType.Album)
                 ((BitmapImage)sender).UriSource = new Uri("ms-appx:///Assets/cover-error.png", UriKind.Absolute);
         }
 
@@ -88,17 +89,17 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.ContextMode == Enumerators.MediaItemType.Song)
+            if (this.ContextMode == MediaItemType.Song)
             {
                 Song song = this.DataContext as Song;
 
                 PlayerController.Play(song);
             }
-            else if (this.ContextMode == Enumerators.MediaItemType.Album)
+            else if (this.ContextMode == MediaItemType.Album)
             {
 
             }
-            else if (this.ContextMode == Enumerators.MediaItemType.Artist)
+            else if (this.ContextMode == MediaItemType.Artist)
             {
 
             }
@@ -107,16 +108,16 @@ namespace AudictiveMusicUWP.Gui.UC
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             List<string> list = new List<string>();
-            if (this.ContextMode == Enumerators.MediaItemType.Song)
+            if (this.ContextMode == MediaItemType.Song)
             {
                 Song song = this.DataContext as Song;
                 list.Add(song.SongURI);
             }
-            else if (this.ContextMode == Enumerators.MediaItemType.Album)
+            else if (this.ContextMode == MediaItemType.Album)
             {
 
             }
-            else if (this.ContextMode == Enumerators.MediaItemType.Artist)
+            else if (this.ContextMode == MediaItemType.Artist)
             {
 
             }

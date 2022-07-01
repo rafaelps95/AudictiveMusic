@@ -1,4 +1,5 @@
 ﻿using AudictiveMusicUWP.Gui.Pages;
+using ClassLibrary;
 using ClassLibrary.Db;
 using ClassLibrary.Helpers;
 using System;
@@ -111,6 +112,8 @@ namespace AudictiveMusicUWP
 
         private async void OnLaunchedOrActivated(string arguments)
         {
+            InitializeSettings();
+
             Frame rootFrame = await SetMainFrame();
 
             ApplicationSettings.AppState = BackgroundAudioShared.AppState.Active;
@@ -186,6 +189,11 @@ namespace AudictiveMusicUWP
             Window.Current.Activate();
 
             ApplicationData.Current.LocalSettings.Values["AppVersion"] = ApplicationInfo.Current.AppVersion;
+        }
+
+        private void InitializeSettings()
+        {
+            //ApplicationSettings.ThemeColorPreference = (int)ThemeColorSource.AlbumColor;
         }
 
         private async Task<Frame> SetMainFrame()

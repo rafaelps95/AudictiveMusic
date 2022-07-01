@@ -24,6 +24,7 @@ namespace AudictiveMusicUWP.Gui.UC
 {
     public sealed partial class SettingsItemDropDownList : UserControl
     {
+        public event RoutedEventHandler Toggled;
         public delegate void SettingsItemSelectionChangedEventArgs(object sender, SelectionChangedEventArgs e);
 
         public event SettingsItemSelectionChangedEventArgs SelectionChanged;
@@ -37,6 +38,60 @@ namespace AudictiveMusicUWP.Gui.UC
         //// Using a DependencyProperty as the backing store for Items.  This enables animation, styling, binding, etc...
         //public static readonly DependencyProperty ItemsProperty =
         //    DependencyProperty.Register("Items", typeof(ItemCollection), typeof(SettingsItemDropDownList), null);
+
+
+
+        public bool IsToggleVisible
+        {
+            get { return (bool)GetValue(IsToggleVisibleProperty); }
+            set { SetValue(IsToggleVisibleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsToggleVisible.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsToggleVisibleProperty =
+            DependencyProperty.Register("IsToggleVisible", typeof(bool), typeof(SettingsItemDropDownList), new PropertyMetadata(false));
+
+        private bool ignoreToggleEvent = false;
+
+        public bool IsOn
+        {
+            get { return (bool)GetValue(IsOnProperty); }
+            set
+            {
+                ignoreToggleEvent = true;
+                toggle.IsOn = value;
+                ignoreToggleEvent = false;
+
+                SetValue(IsOnProperty, value);
+
+                if (IsToggleVisible)
+                {
+                    if (!value)
+                    {
+                        CurrentState = State.Collapsed;
+                        arrow.Opacity = 0.4;
+                        listBox.SelectionChanged -= ListBox_SelectionChanged;
+                        listBox.SelectedItem = null;
+                        listBox.SelectionChanged += ListBox_SelectionChanged;
+                    }
+                    else
+                        arrow.Opacity = 1;
+
+                    button.IsEnabled = value;
+                }
+                else
+                {
+                    button.IsEnabled = true;
+                    arrow.Opacity = 1;
+                }
+
+            }
+        }
+
+        // Using a DependencyProperty as the backing store for IsOn.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsOnProperty =
+            DependencyProperty.Register("IsOn", typeof(bool), typeof(SettingsItemDropDownList), new PropertyMetadata(false));
+
 
 
         public int SelectedIndex
@@ -185,9 +240,22 @@ namespace AudictiveMusicUWP.Gui.UC
         {
             this.Loaded += SettingsItemDropDownList_Loaded;
             this.InitializeComponent();
+            this.GotFocus += SettingsItemDropDownList_GotFocus;
+            this.LostFocus += SettingsItemDropDownList_LostFocus;
             this.SizeChanged += SettingsItemDropDownList_SizeChanged;
             Panel.Height = 0;
             fakeState = new State();
+        }
+
+        private void SettingsItemDropDownList_LostFocus(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void SettingsItemDropDownList_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (this.FocusState == FocusState.Keyboard || this.FocusState == FocusState.Programmatic)
+                button.Focus(FocusState.Keyboard);
         }
 
         private void SettingsItemDropDownList_Loaded(object sender, RoutedEventArgs e)
@@ -195,7 +263,7 @@ namespace AudictiveMusicUWP.Gui.UC
             UpdateTextLayout();
 
 
-            listBox.SelectionChanged += ListBox_SelectionChanged;
+            //listBox.SelectionChanged += ListBox_SelectionChanged;
         }
 
         private void UpdateTextLayout()
@@ -293,6 +361,15 @@ namespace AudictiveMusicUWP.Gui.UC
                 CurrentState = State.Expanded;
             else
                 CurrentState = State.Collapsed;
+        }
+
+        private void Toggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (ignoreToggleEvent)
+                return;
+
+            this.IsOn = toggle.IsOn;
+            Toggled?.Invoke(this, e);
         }
     }
 }

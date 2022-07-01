@@ -14,7 +14,7 @@ using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using static ClassLibrary.Helpers.Enumerators;
+using ClassLibrary.Helpers.Enumerators;
 
 namespace AudictiveMusicUWP.Gui.Util
 {
@@ -203,7 +203,7 @@ namespace AudictiveMusicUWP.Gui.Util
                     Artist artist = new Artist();
                     artist.Name = artistName;
 
-                    NavigationHelper.Navigate(_sender, typeof(ArtistPage), artist);
+                    NavigationService.Navigate(_sender, typeof(ArtistPage), artist);
                 };
 
                 menu.Items.Add(item7);
@@ -228,7 +228,7 @@ namespace AudictiveMusicUWP.Gui.Util
                             HexColor = song.HexColor
                         };
 
-                        NavigationHelper.Navigate(_sender, typeof(AlbumPage), album);
+                        NavigationService.Navigate(_sender, typeof(AlbumPage), album);
                     };
 
                     menu.Items.Add(item8);
@@ -253,7 +253,7 @@ namespace AudictiveMusicUWP.Gui.Util
                         {
                             LastArtist artist = result.Content;
 
-                            NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
+                            NavigationService.Navigate(this, typeof(LastFmProfilePage), artist);
                         }
                     };
 
@@ -300,7 +300,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi.Click += (s, a) =>
                     {
-                        NavigationHelper.Navigate(_sender, typeof(LastFmProfilePage), user);
+                        NavigationService.Navigate(_sender, typeof(LastFmProfilePage), user);
                     };
 
                     mf.Items.Add(mfi);
@@ -312,7 +312,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi2.Click += (s, a) =>
                     {
-                        NavigationHelper.Navigate(_sender, typeof(Settings), "path=scrobble");
+                        NavigationService.Navigate(_sender, typeof(Settings), "path=scrobble");
                     };
 
                     mf.Items.Add(mfi2);
@@ -338,7 +338,7 @@ namespace AudictiveMusicUWP.Gui.Util
 
                     mfi.Click += (s, a) =>
                     {
-                        NavigationHelper.Navigate(_sender, typeof(LastFmProfilePage), user);
+                        NavigationService.Navigate(_sender, typeof(LastFmProfilePage), user);
                     };
 
                     mf.Items.Add(mfi);

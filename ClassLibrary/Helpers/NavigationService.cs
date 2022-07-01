@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace ClassLibrary.Helpers
 {
-    public class NavigationHelper
+    public class NavigationService
     {
         public delegate void NavigationRequestedHandler(object sender, Type targetPage, object parameter, bool mainFrame, NavigationTransitionInfo navigationTransitionInfo);
         public static event NavigationRequestedHandler NavigationRequested;

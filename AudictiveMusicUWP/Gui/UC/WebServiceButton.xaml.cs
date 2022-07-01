@@ -21,6 +21,8 @@ namespace AudictiveMusicUWP.Gui.UC
 {
     public sealed partial class WebServiceButton : UserControl
     {
+        public event RoutedEventHandler Click;
+
         public enum WebService
         {
             LocalFiles,
@@ -52,14 +54,21 @@ namespace AudictiveMusicUWP.Gui.UC
             if (service == WebService.LastFm)
             {
                 bmp.UriSource = new Uri("ms-appx:///Assets/lastfm_circlelogo.png");
+                //background.Opacity = 1;
             }
             else if (service == WebService.Spotify)
             {
                 bmp.UriSource = new Uri("ms-appx:///Assets/spotify_circlelogo.png");
+                //background.Opacity = 1;
             }
             else if (service == WebService.LocalFiles)
             {
                 bmp.UriSource = new Uri("ms-appx:///Assets/localmediabutton.png");
+                //background.Opacity = 1;
+            }
+            else
+            {
+                //background.Opacity = 0.5;
             }
         }
 
@@ -76,7 +85,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void SetText(string value)
         {
-            textTB.Text = value;
+            button.Content = value;
         }
 
         public ImageSource Source
@@ -102,9 +111,15 @@ namespace AudictiveMusicUWP.Gui.UC
 
         public WebServiceButton()
         {
+            this.Loaded += WebServiceButton_Loaded;
             this.InitializeComponent();
 
             SetService(Service);
+        }
+
+        private void WebServiceButton_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            SetService(this.Service);
         }
 
         public void SetImageSource(Uri uri)
@@ -117,19 +132,9 @@ namespace AudictiveMusicUWP.Gui.UC
             image.RemoveSource();
         }
 
-        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-
-        }
-
-        private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            overlay.Visibility = Visibility.Visible;
-        }
-
-        private void Grid_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            overlay.Visibility = Visibility.Collapsed;
+            Click?.Invoke(this, e);
         }
     }
 }

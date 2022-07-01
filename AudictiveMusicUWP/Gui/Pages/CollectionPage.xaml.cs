@@ -71,17 +71,17 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 if (string.IsNullOrWhiteSpace(arguments) == false)
                 {
-                    if (NavigationHelper.ContainsAttribute(arguments, "page"))
+                    if (NavigationService.ContainsAttribute(arguments, "page"))
                     {
-                        if (NavigationHelper.GetParameter(arguments, "page") == "artists")
+                        if (NavigationService.GetParameter(arguments, "page") == "artists")
                         {
                             frame.Navigate(typeof(Artists));
                         }
-                        else if (NavigationHelper.GetParameter(arguments, "page") == "albums")
+                        else if (NavigationService.GetParameter(arguments, "page") == "albums")
                         {
                             frame.Navigate(typeof(Albums));
                         }
-                        else if (NavigationHelper.GetParameter(arguments, "page") == "songs")
+                        else if (NavigationService.GetParameter(arguments, "page") == "songs")
                         {
                             frame.Navigate(typeof(Songs));
                         }
@@ -280,7 +280,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void foldersButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(FolderPage), null);
+            NavigationService.Navigate(this, typeof(FolderPage), null);
         }
     }
 }

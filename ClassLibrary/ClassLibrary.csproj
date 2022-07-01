@@ -133,6 +133,7 @@
     <Compile Include="Entities\PendingScrobble.cs" />
     <Compile Include="Entities\Playlist.cs" />
     <Compile Include="Entities\Song.cs" />
+    <Compile Include="Helpers\ThemeSettings.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\ApplicationInfo.cs" />
     <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
@@ -143,7 +144,7 @@
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\LastFm.cs" />
-    <Compile Include="Helpers\NavigationHelper.cs" />
+    <Compile Include="Helpers\NavigationService.cs" />
     <Compile Include="Helpers\PlaylistHelper.cs" />
     <Compile Include="Helpers\ShuffleHelper.cs" />
     <Compile Include="Helpers\Spotify.cs" />

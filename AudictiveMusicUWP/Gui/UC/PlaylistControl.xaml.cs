@@ -73,9 +73,9 @@ namespace AudictiveMusicUWP.Gui.UC
             MusicPlaylist.ItemsSource = PlaylistList;
             CurrentTrackIndex = -1;
             editMode = EditMode.Disabled;
-            ApplicationSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
-            ApplicationSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
-            ApplicationSettings.PerformanceModeToggled += ApplicationSettings_PerformanceModeToggled;
+            ThemeSettings.CurrentThemeColorChanged += ApplicationSettings_CurrentThemeColorChanged;
+            ThemeSettings.TransparencyEffectToggled += ApplicationSettings_TransparencyEffectToggled;
+            ThemeSettings.PerformanceModeToggled += ApplicationSettings_PerformanceModeToggled;
             //if (ApplicationInfo.Current.IsMobile == false)
             //_compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
         }
@@ -101,20 +101,20 @@ namespace AudictiveMusicUWP.Gui.UC
             SetAcrylic();
         }
 
-        private void ApplicationSettings_PerformanceModeToggled(object sender, RoutedEventArgs e)
+        private void ApplicationSettings_PerformanceModeToggled()
         {
             SetAcrylic();
         }
 
-        private void ApplicationSettings_TransparencyEffectToggled(object sender, RoutedEventArgs e)
+        private void ApplicationSettings_TransparencyEffectToggled()
         {
             SetAcrylic();
         }
 
         private void SetAcrylic()
         {
-            if (ApplicationSettings.IsPerformanceModeOn == false)
-                acrylic.AcrylicEnabled = ApplicationSettings.TransparencyEnabled;
+            if (ThemeSettings.IsPerformanceModeEnabled == false)
+                acrylic.AcrylicEnabled = ThemeSettings.IsTransparencyEnabled;
             else
                 acrylic.AcrylicEnabled = false;
         }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using static ClassLibrary.Helpers.Enumerators;
+using ClassLibrary.Helpers.Enumerators;
 
 namespace AudictiveMusicUWP.Gui.Util
 {

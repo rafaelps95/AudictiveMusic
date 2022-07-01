@@ -84,7 +84,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             if (string.IsNullOrWhiteSpace(args) == false)
             {
-                if (NavigationHelper.GetParameter(args, "action") == "resizeImages")
+                if (NavigationService.GetParameter(args, "action") == "resizeImages")
                 {
                     StorageFolder artistsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Artists", CreationCollisionOption.OpenIfExists);
                     //StorageFolder albumsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Covers", CreationCollisionOption.OpenIfExists);

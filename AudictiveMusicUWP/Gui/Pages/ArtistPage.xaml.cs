@@ -267,7 +267,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                     bioHeaderGrid.Visibility = Visibility.Collapsed;
                     bioGrid.Visibility = Visibility.Visible;
                 }
-                Animation.BeginFadeAnimation(bioHeaderGrid);
+                Animation.BeginBasicFadeInAnimation(bioHeaderGrid);
             }
 
             //StorageFile imgFile = null;
@@ -424,7 +424,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         private void albumsList_ItemClick(object sender, ItemClickEventArgs e)
         {
             ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
-            NavigationHelper.Navigate(this, typeof(AlbumPage), e.ClickedItem);
+            NavigationService.Navigate(this, typeof(AlbumPage), e.ClickedItem);
         }
 
         private void AlbumCover_ImageOpened(object sender, RoutedEventArgs e)
@@ -462,7 +462,7 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void artistsList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(ArtistPage), e.ClickedItem);
+            NavigationService.Navigate(this, typeof(ArtistPage), e.ClickedItem);
         }
 
         private void Album_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -477,7 +477,10 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateAlbumPopup(Album album, object sender, Point point)
         {
-            PopupHelper.GetInstance(sender).ShowPopupMenu(album, true, point);
+            if (point == null)
+                PopupHelper.GetInstance(sender).ShowPopupMenu(album);
+            else
+                PopupHelper.GetInstance(sender).ShowPopupMenu(album, true, point);
         }
 
         private void artistBackgroundBitmap_ImageOpened(object sender, RoutedEventArgs e)
@@ -746,16 +749,16 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void HeaderBackground_ImageOpened(object sender, RoutedEventArgs e)
         {
-            if (ApplicationSettings.TransparencyEnabled == false)
+            if (ThemeSettings.IsTransparencyEnabled == false)
                 headerBackgroundGrid.Opacity = 0.4;
-            else if (ApplicationSettings.IsPerformanceModeOn)
+            else if (ThemeSettings.IsPerformanceModeEnabled)
                 headerBackgroundGrid.Opacity = 0.4;
 
-            Animation.BeginFadeAnimation(headerBackground).Completed += async (s, a) =>
+            Animation.BeginBasicFadeInAnimation(headerBackground).Completed += async (s, a) =>
             {
-                if (ApplicationSettings.TransparencyEnabled)
+                if (ThemeSettings.IsTransparencyEnabled)
                 {
-                    if (ApplicationSettings.IsPerformanceModeOn == false)
+                    if (ThemeSettings.IsPerformanceModeEnabled == false)
                     {
                         await Task.Delay(50);
                         acrylic.Opacity = 0;
@@ -763,7 +766,7 @@ namespace AudictiveMusicUWP.Gui.Pages
                         acrylic.AcrylicOpacity = 1;
                         acrylic.AcrylicBackgroundSource = RPSToolkit.AcrylicType.Backdrop;
 
-                        Animation.BeginFadeAnimation(acrylic);
+                        Animation.BeginBasicFadeInAnimation(acrylic);
                     }
                 }
             };
@@ -813,7 +816,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 LastArtist artist = result.Content;
 
-                NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
+                NavigationService.Navigate(this, typeof(LastFmProfilePage), artist);
             }
         }
 
@@ -840,7 +843,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 LastArtist artist = result.Content;
 
-                NavigationHelper.Navigate(this, typeof(LastFmProfilePage), artist);
+                NavigationService.Navigate(this, typeof(LastFmProfilePage), artist);
             }
         }
 

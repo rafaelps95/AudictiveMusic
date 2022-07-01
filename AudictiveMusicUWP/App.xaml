@@ -13,6 +13,7 @@
                     <SolidColorBrush x:Key="DefaultButtonBackgroundBrush" Color="#88F2F2F2" />
                     <SolidColorBrush x:Key="DefaultCardBackgroundBrush" Color="#E2E2E2" />
                     <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#FBFBFB" />
+                    <SolidColorBrush x:Key="SettingsItemsBackgroundLowBrush" Color="#77FBFBFB" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemBackgroundBrush" Color="#FFB6B6B6" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemPointerOverBackgroundBrush" Color="#FFC5C5C5" />
                     <SolidColorBrush x:Key="ScrollBarThumbBackground" Color="#8B8988" />
@@ -28,6 +29,7 @@
                     <SolidColorBrush x:Key="DefaultButtonBackgroundBrush" Color="#88303030" />
                     <SolidColorBrush x:Key="DefaultCardBackgroundBrush" Color="#404040" />
                     <SolidColorBrush x:Key="SettingsItemsBackgroundBrush" Color="#2D2D2D" />
+                    <SolidColorBrush x:Key="SettingsItemsBackgroundLowBrush" Color="#772D2D2D" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemBackgroundBrush" Color="#FF353535" />
                     <SolidColorBrush x:Key="PlaylistSelectedItemPointerOverBackgroundBrush" Color="#FF474747" />
                     <SolidColorBrush x:Key="ScrollBarThumbBackground" Color="#A29E9F" />
@@ -2292,6 +2294,9 @@
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentElement">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlForegroundDisabled}"/>
                                                 </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundElement">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="0.4"/>
+                                                </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="PlaceholderTextContentPresenter">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlPlaceholderForegroundDisabled}"/>
                                                 </ObjectAnimationUsingKeyFrames>
@@ -2305,6 +2310,9 @@
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="BorderElement">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBackgroundPointerOver}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundElement">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="0.4"/>
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="PlaceholderTextContentPresenter">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlPlaceholderForegroundPointerOver}"/>
@@ -2321,6 +2329,9 @@
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="BorderElement">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBorderBrushFocused}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundElement">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="PlaceholderTextContentPresenter">
                                                     <DiscreteObjectKeyFrame KeyTime="0">
@@ -2350,8 +2361,8 @@
                                         <VisualState x:Name="ButtonCollapsed"/>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="1" CornerRadius="5" Grid.ColumnSpan="3" />
-                                <Border x:Name="BackgroundElement" Background="{ThemeResource ApplicationForegroundThemeBrush}" BorderThickness="0" CornerRadius="5" Grid.ColumnSpan="3" Opacity="0.1" />
+                                <Border x:Name="BackgroundElement" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.5" CornerRadius="5" Grid.ColumnSpan="3" />
+                                <Border x:Name="Overlay" Background="Transparent" BorderThickness="0" CornerRadius="5" Grid.ColumnSpan="3" Opacity="0.1" />
                                 <Border x:Name="BorderElement" BorderBrush="{ThemeResource ApplicationForegroundThemeBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" Grid.ColumnSpan="3" Opacity="0.1" />
                                 <TextBlock Text="" Opacity="0.7" Margin="5,0,0,0" VerticalAlignment="Center" FontSize="{TemplateBinding FontSize}" FontFamily="{ThemeResource IconFont}">
                                     <TextBlock.Projection>
@@ -2436,7 +2447,7 @@
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="5"/>
+                                <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Opacity="0.5" CornerRadius="5"/>
                                 <Border x:Name="BackgroundElement" Background="{ThemeResource ApplicationForegroundThemeBrush}" BorderThickness="0" CornerRadius="5" Opacity="0.1" />
                                 <Border x:Name="BorderElement" BorderBrush="{ThemeResource ApplicationForegroundThemeBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" Opacity="0.1" />
 

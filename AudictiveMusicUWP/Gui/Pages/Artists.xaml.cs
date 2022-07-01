@@ -185,7 +185,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 message = ApplicationInfo.Current.Resources.GetString("EmptyLibraryDesktopTip");
                 inAppNotification.PrimaryButtonContent = ApplicationInfo.Current.Resources.GetString("SettingsString");
-                inAppNotification.PrimaryButtonClicked += (s, a) => { NavigationHelper.Navigate(this, typeof(Settings), "path=dataManagement"); };
+                inAppNotification.PrimaryButtonClicked += (s, a) => { NavigationService.Navigate(this, typeof(Settings), "path=dataManagement"); };
             }
             else
             {
@@ -233,7 +233,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (listView.SelectionMode == ListViewSelectionMode.None)
             {
                 //ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("OpenArtistConnectedAnimation", (UIElement)listView.ContainerFromItem(e.ClickedItem));
-                NavigationHelper.Navigate(this, typeof(ArtistPage), e.ClickedItem);
+                NavigationService.Navigate(this, typeof(ArtistPage), e.ClickedItem);
             }
         }
 

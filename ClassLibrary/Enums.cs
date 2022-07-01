@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    public enum ThemeColorSource
-    {
-        AlbumColor = 0,
-        AccentColor = 1,
-        CustomColor = 2,
-        NoColor = 3
-    }
+
+
 }

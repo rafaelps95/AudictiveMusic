@@ -95,7 +95,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void blur_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            NavigationHelper.Back(this);
+            NavigationService.Back(this);
         }
 
         private void playlistsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -142,7 +142,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (result == true)
             {
-                NavigationHelper.Back(this);
+                NavigationService.Back(this);
             }
             else
             {
@@ -175,7 +175,7 @@ namespace AudictiveMusicUWP.Gui.UC
                 Ctr_Song.Current.SetFavoriteState(s, true);
             }
 
-            NavigationHelper.Back(this);
+            NavigationService.Back(this);
         }
     }
 }

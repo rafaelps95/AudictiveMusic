@@ -229,7 +229,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (listView.SelectionMode == ListViewSelectionMode.None)
             {
                 ApplicationData.Current.LocalSettings.Values["UseTransition"] = true;
-                NavigationHelper.Navigate(this, typeof(AlbumPage), e.ClickedItem);
+                NavigationService.Navigate(this, typeof(AlbumPage), e.ClickedItem);
             }
         }
 
@@ -271,7 +271,10 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateAlbumPopup(Album album, object sender, Point point)
         {
-            PopupHelper.GetInstance(sender).ShowPopupMenu(album, true, point);
+            if (point == null)
+                PopupHelper.GetInstance(sender).ShowPopupMenu(album);
+            else
+                PopupHelper.GetInstance(sender).ShowPopupMenu(album, true, point);
         }
 
         private void playAlbumButton_Click(object sender, RoutedEventArgs e)

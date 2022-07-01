@@ -67,12 +67,12 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void blur_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            NavigationHelper.Back(this);
+            NavigationService.Back(this);
         }
 
         private void doneButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Back(this);
+            NavigationService.Back(this);
         }
 
         private async void removeButton_Click(object sender, RoutedEventArgs e)

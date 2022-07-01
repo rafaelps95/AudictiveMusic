@@ -20,14 +20,52 @@ using Windows.UI.Xaml.Shapes;
 namespace AudictiveMusicUWP.Gui.UC
 {
     [ContentProperty(Name = "Children")]
-    public sealed partial class SettingsSection : UserControl, INotifyPropertyChanged
+    public sealed partial class SettingsExpandableToggleItem : UserControl, INotifyPropertyChanged
     {
+        public event RoutedEventHandler Toggled;
         public delegate void StateChangedEventArgs(object sender, RoutedEventArgs e);
         public event StateChangedEventArgs CurrentStateChanged;
         public delegate void AnimationCompletedEventArgs(object sender);
         public event AnimationCompletedEventArgs ExpandCompleted;
         public event AnimationCompletedEventArgs CollapseCompleted;
-        public event RoutedEventHandler Click;
+
+
+        private bool ignoreToggleEvent = false;
+
+        public bool IsOn
+        {
+            get { return (bool)GetValue(IsOnProperty); }
+            set
+            {
+                ignoreToggleEvent = true;
+                SetValue(IsOnProperty, value);
+                if (!value)
+                {
+                    CurrentState = State.Collapsed;
+                    arrow.Opacity = 0.4;
+                }
+                else
+                    arrow.Opacity = 1;
+
+                button.IsEnabled = value;
+                toggle.IsOn = value;
+                ignoreToggleEvent = false;
+            }
+        }
+
+        public bool IsToggleVisible
+        {
+            get { return (bool)GetValue(IsToggleVisibleProperty); }
+            set { SetValue(IsToggleVisibleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsToggleVisible.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsToggleVisibleProperty =
+            DependencyProperty.Register("IsToggleVisible", typeof(bool), typeof(SettingsExpandableToggleItem), new PropertyMetadata(true));
+
+        // Using a DependencyProperty as the backing store for IsOn.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsOnProperty =
+            DependencyProperty.Register("IsOn", typeof(bool), typeof(SettingsExpandableToggleItem), new PropertyMetadata(false));
 
         public SolidColorBrush ExpandedBackgroundBrush
         {
@@ -37,7 +75,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         // Using a DependencyProperty as the backing store for BackgroundBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ExpandedBackgroundBrushProperty =
-            DependencyProperty.Register("ExpandedBackgroundBrush", typeof(SolidColorBrush), typeof(SettingsSection), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+            DependencyProperty.Register("ExpandedBackgroundBrush", typeof(SolidColorBrush), typeof(SettingsExpandableToggleItem), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
 
 
 
@@ -49,42 +87,7 @@ namespace AudictiveMusicUWP.Gui.UC
 
         // Using a DependencyProperty as the backing store for BackgroundBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BackgroundBrushProperty =
-            DependencyProperty.Register("BackgroundBrush", typeof(SolidColorBrush), typeof(SettingsSection), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
-
-
-
-
-        public bool IsClickable
-        {
-            get { return (bool)GetValue(IsClickableProperty); }
-            set { SetValue(IsClickableProperty, value);
-                if (value)
-                {
-                    ArrowIconRotation.Angle = -90;
-                }
-                else
-                {
-                    ArrowIconRotation.Angle = 0;
-                }
-            }
-        }
-
-        // Using a DependencyProperty as the backing store for IsClickable.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsClickableProperty =
-            DependencyProperty.Register("IsClickable", typeof(bool), typeof(SettingsSection), new PropertyMetadata(false));
-
-
-
-
-        public bool IsShadowVisible
-        {
-            get { return (bool)GetValue(IsShadowVisibleProperty); }
-            set { SetValue(IsShadowVisibleProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for IsShadowVisible.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsShadowVisibleProperty =
-            DependencyProperty.Register("IsShadowVisible", typeof(bool), typeof(SettingsSection), new PropertyMetadata(true));
+            DependencyProperty.Register("BackgroundBrush", typeof(SolidColorBrush), typeof(SettingsExpandableToggleItem), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
 
 
 
@@ -117,14 +120,14 @@ namespace AudictiveMusicUWP.Gui.UC
         public static readonly DependencyProperty orientationProperty =
             DependencyProperty.Register("Orientation",
                 typeof(PanelOrientation),
-                typeof(SettingsSection),
+                typeof(SettingsExpandableToggleItem),
                 new PropertyMetadata(PanelOrientation.Vertical));
 
 
         public static readonly DependencyProperty appsettingsproperty =
             DependencyProperty.Register("AppSettings",
                 typeof(string),
-                typeof(SettingsSection),
+                typeof(SettingsExpandableToggleItem),
                 new PropertyMetadata(""));
 
         public enum State
@@ -133,25 +136,20 @@ namespace AudictiveMusicUWP.Gui.UC
             Expanded
         }
 
-
+        private State fakeState;
 
         public State CurrentState
         {
-            get { return (State)GetValue(CurrentStateProperty); }
+            get
+            {
+                return fakeState;
+            }
             set
             {
-                SetValue(CurrentStateProperty, value);
-                if (this.IsClickable)
-                    return;
-
+                fakeState = value;
                 ChangeView(value);
             }
         }
-
-        // Using a DependencyProperty as the backing store for CurrentState.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CurrentStateProperty =
-            DependencyProperty.Register("CurrentState", typeof(State), typeof(SettingsSection), new PropertyMetadata(State.Collapsed));
-
 
         private double PanelActualHeight
         {
@@ -159,42 +157,39 @@ namespace AudictiveMusicUWP.Gui.UC
             set;
         }
 
-        public SettingsSection()
+        public SettingsExpandableToggleItem()
         {
-            this.Loaded += SettingsSection_Loaded;
+            this.Loaded += SettingsExpandableItem_Loaded;
             this.InitializeComponent();
-            this.GotFocus += SettingsSection_GotFocus;
-            this.LostFocus += SettingsSection_LostFocus;
-            this.SizeChanged += SettingsSection_SizeChanged;
+            this.SizeChanged += SettingsExpandableItem_SizeChanged;
+            this.GotFocus += SettingsExpandableToggleItem_GotFocus;
+            this.LostFocus += SettingsExpandableToggleItem_LostFocus;
             //Panel.Height = 0;
+            CurrentState = new State();
             Children = Items.Children;
             Orientation = new PanelOrientation();
             fakeOrientation = new PanelOrientation();
+            fakeState = new State();
             //CurrentState = State.Collapsed;
         }
 
-        private void SettingsSection_LostFocus(object sender, RoutedEventArgs e)
+        private void SettingsExpandableToggleItem_LostFocus(object sender, RoutedEventArgs e)
         {
             
         }
 
-        private void SettingsSection_GotFocus(object sender, RoutedEventArgs e)
+        private void SettingsExpandableToggleItem_GotFocus(object sender, RoutedEventArgs e)
         {
             if (this.FocusState == FocusState.Keyboard || this.FocusState == FocusState.Programmatic)
-            {
-                if (this.CurrentState == State.Collapsed)
-                    expandButton.Focus(FocusState.Keyboard);
-                else
-                    collapseButton.Focus(FocusState.Keyboard);
-            }
+                button.Focus(FocusState.Keyboard);
         }
 
-        private void SettingsSection_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void SettingsExpandableItem_SizeChanged(object sender, SizeChangedEventArgs e)
         {
 
         }
 
-        private void SettingsSection_Loaded(object sender, RoutedEventArgs e)
+        private void SettingsExpandableItem_Loaded(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(this.Subtitle))
             {
@@ -210,18 +205,15 @@ namespace AudictiveMusicUWP.Gui.UC
                 title.Margin = new Thickness(10, 15, 10, 0);
                 title.VerticalAlignment = VerticalAlignment.Bottom;
             }
+        }
 
-            if (this.IsClickable)
-                ArrowIconRotation.Angle = -90;
-            else
-            {
-                if (this.CurrentState == State.Collapsed)
-                    ArrowIconRotation.Angle = 0;
-                else
-                    ArrowIconRotation.Angle = 180;
-            }
+        private void Toggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (ignoreToggleEvent)
+                return;
 
-            shadowBorder.ApplyShadow();
+            this.IsOn = toggle.IsOn;
+            Toggled?.Invoke(this, e);
         }
 
         public void ChangeView(State state)
@@ -235,25 +227,13 @@ namespace AudictiveMusicUWP.Gui.UC
 
             if (CurrentState == State.Collapsed)
             {
-                ClosedBorder.Visibility = Visibility.Visible;
-                ExpandedBorder.Visibility = Visibility.Collapsed;
                 Panel.IsHitTestVisible = false;
-
-                expandButton.Visibility = Visibility.Visible;
-                if (collapseButton.FocusState == FocusState.Keyboard)
-                {
-                    expandButton.Focus(FocusState.Keyboard);
-                }
-
-                collapseButton.Visibility = Visibility.Collapsed;
-                HeaderBorder.CornerRadius = new CornerRadius(5);
 
                 Animation animation = new Animation();
                 animation.AddFadeOutAnimation(Panel, 200);
                 //animation.AddDoubleAnimation(0, 200, Panel, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true);
                 animation.AddDoubleAnimation(0, 200, ArrowIconRotation, "Angle", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true);
                 //animation.AddDoubleAnimation(0, 200, shadowBorder, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true);
-                animation.AddFadeOutAnimation(shadowBorder, 100);
                 animation.Completed += (snd, args) =>
                 {
                     Panel.Visibility = Visibility.Collapsed;
@@ -264,24 +244,13 @@ namespace AudictiveMusicUWP.Gui.UC
             }
             else if (CurrentState == State.Expanded)
             {
-                ClosedBorder.Visibility = Visibility.Collapsed;
-                ExpandedBorder.Visibility = Visibility.Visible;
                 Panel.Visibility = Visibility.Visible;
-                HeaderBorder.CornerRadius = new CornerRadius(5, 5, 0, 0);
-
-                collapseButton.Visibility = Visibility.Visible;
-                if (expandButton.FocusState == FocusState.Keyboard)
-                {
-                    collapseButton.Focus(FocusState.Keyboard);
-                }
-                expandButton.Visibility = Visibility.Collapsed;
                 Panel.IsHitTestVisible = true;
 
                 Animation animation = new Animation();
                 animation.AddFadeInAnimation(Panel, 200);
                 //animation.AddDoubleAnimation(1, 200, Panel, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true);
                 animation.AddDoubleAnimation(180, 200, ArrowIconRotation, "Angle", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true);
-                animation.AddFadeInAnimation(shadowBorder, 200);
                 //animation.AddDoubleAnimation(1, 200, shadowBorder, "Opacity", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true);
                 animation.Completed += (snd, args) =>
                 {
@@ -301,7 +270,7 @@ namespace AudictiveMusicUWP.Gui.UC
         }
 
         public static readonly DependencyProperty IconProperty =
-            DependencyProperty.Register("Icon", typeof(string), typeof(SettingsSection), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register("Icon", typeof(string), typeof(SettingsExpandableToggleItem), new PropertyMetadata(string.Empty));
 
         public int IconSize
         {
@@ -313,14 +282,14 @@ namespace AudictiveMusicUWP.Gui.UC
         }
 
         public static readonly DependencyProperty IconSizeProperty =
-            DependencyProperty.Register("IconSize", typeof(int), typeof(SettingsSection), new PropertyMetadata(30));
+            DependencyProperty.Register("IconSize", typeof(int), typeof(SettingsExpandableToggleItem), new PropertyMetadata(30));
 
 
         public static readonly DependencyProperty titleProperty =
             DependencyProperty.Register("Title",
                 typeof(string),
-                typeof(SettingsSection),
-                new PropertyMetadata(0));
+                typeof(SettingsExpandableToggleItem),
+                new PropertyMetadata(string.Empty));
 
         public string Title
         {
@@ -340,13 +309,13 @@ namespace AudictiveMusicUWP.Gui.UC
         }
 
         public static readonly DependencyProperty SubtitleProperty =
-            DependencyProperty.Register("Subtitle", typeof(string), typeof(SettingsSection), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register("Subtitle", typeof(string), typeof(SettingsExpandableToggleItem), new PropertyMetadata(string.Empty));
 
 
         public static readonly DependencyProperty ChildrenProperty = DependencyProperty.Register(
             "Children",
             typeof(UIElementCollection),
-            typeof(SettingsSection),
+            typeof(SettingsExpandableToggleItem),
             null);
 
         public UIElementCollection Children
@@ -378,13 +347,6 @@ namespace AudictiveMusicUWP.Gui.UC
 
         private void ChangeState_Click(object sender, RoutedEventArgs e)
         {
-            if (this.IsClickable)
-            {
-                Click?.Invoke(this, e);
-
-                return;
-            }
-
             if (CurrentState == State.Collapsed)
                 CurrentState = State.Expanded;
             else

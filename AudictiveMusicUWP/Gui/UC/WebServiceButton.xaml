@@ -8,16 +8,73 @@
     mc:Ignorable="d"
     x:Name="root">
 
-    <Grid HorizontalAlignment="Left" Tapped="Grid_Tapped" Height="30" PointerEntered="Grid_PointerEntered" PointerExited="Grid_PointerExited">
-        <Border BorderThickness="0" CornerRadius="15" Opacity="1" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" />
-        <Grid>
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="FocusVisualMargin" Value="-3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Margin="0">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Border" Storyboard.TargetProperty="Opacity" Duration="0:0:0.1" To="0" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Border" Storyboard.TargetProperty="Opacity" Duration="0:0:0.1" To="0.2" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Border" Storyboard.TargetProperty="Opacity" Duration="0:0:0.1" To="0.3" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Icon">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="Background" Opacity="0.5" CornerRadius="15" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+
+                            <Border x:Name="Border" Opacity="0" CornerRadius="15" Background="{ThemeResource ApplicationForegroundThemeBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                            <ContentPresenter x:Name="Icon" Margin="8,0,38,0" Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Stretch" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid HorizontalAlignment="Left" Height="30">
+        <Button x:Name="button" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontSize="12" Click="Button_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <!--<Border x:Name="background" BorderThickness="0" CornerRadius="15" Opacity="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" />-->
+        <Grid IsHitTestVisible="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="30" />
             </Grid.ColumnDefinitions>
-            <Border BorderThickness="0" Grid.ColumnSpan="2" CornerRadius="15" x:Name="overlay" Visibility="Collapsed" Opacity="0.1" Background="{ThemeResource ApplicationForegroundThemeBrush}">
-            </Border>
-            <TextBlock x:Name="textTB" FontSize="12" Margin="8,0,8,0" VerticalAlignment="Center" />
+            <!--<Border BorderThickness="0" Grid.ColumnSpan="2" CornerRadius="15" x:Name="overlay" Visibility="Collapsed" Opacity="0.1" Background="{ThemeResource ApplicationForegroundThemeBrush}">
+            </Border>-->
+            <!--<TextBlock x:Name="textTB" FontSize="12" Margin="8,0,8,0" VerticalAlignment="Center" />-->
             <local:CircleImage Grid.Column="1" x:Name="image" />
             <Image x:Name="serviceLogo" Grid.Column="1" />
         </Grid>

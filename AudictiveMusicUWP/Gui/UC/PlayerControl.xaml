@@ -527,13 +527,13 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <local:NextTooltip x:Name="nextSong" Visibility="Collapsed" ShowAcrylicBackground="False" Click="nextButton_Click" RequestedTheme="Dark" />
+                <local:NextTooltip x:Name="nextSong" IsEnabled="False" Visibility="Collapsed" ShowAcrylicBackground="False" Click="nextButton_Click" RequestedTheme="Dark" />
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button x:Name="optionsButton" Background="#55222222" Click="optionsButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="">
+                    <Button x:Name="optionsButton" IsEnabled="False" Background="#55222222" Click="optionsButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="">
 
                     </Button>
-                    <Button x:Name="closeButton" Background="#55222222" Click="closeButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="" />
+                    <Button x:Name="closeButton" IsEnabled="False" Background="#55222222" Click="closeButton_Click" RequestedTheme="Dark" Style="{StaticResource ModernIconButtonStyle}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Content="" />
                 </StackPanel>
             </Grid>
             <Grid RequestedTheme="Dark" x:Name="PlayerControlsContainer" MaxWidth="500">
@@ -553,7 +553,7 @@
 
                 <!--<Rectangle Width="1" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Stretch" Grid.RowSpan="6" />-->
                 <StackPanel Orientation="Horizontal" Visibility="Visible" x:Name="albumContainer" Grid.Row="0" VerticalAlignment="Bottom">
-                    <local:AlbumCover x:Name="albumCover" AddRequested="AlbumCover_AddRequested" ArtistRequested="AlbumCover_ArtistRequested" Click="AlbumCover_Click" FavoriteStateToggled="AlbumCover_FavoriteStateToggled" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" />
+                    <local:AlbumCover x:Name="albumCover" IsTabStop="False" AddRequested="AlbumCover_AddRequested" ArtistRequested="AlbumCover_ArtistRequested" Click="AlbumCover_Click" FavoriteStateToggled="AlbumCover_FavoriteStateToggled" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" />
                     <!--<Border x:Name="albumCover" Width="{Binding ElementName=albumCover, Path=Height}" PointerEntered="albumCover_PointerEntered" PointerReleased="albumCover_PointerReleased" Holding="albumCover_Holding" IsDoubleTapEnabled="True" DoubleTapped="albumCover_DoubleTapped" Tapped="albumCover_Tapped" ManipulationMode="All" ManipulationDelta="player_ManipulationDelta" ManipulationCompleted="player_ManipulationCompleted" CornerRadius="10">
                         <Border.Background>
                             <ImageBrush>
@@ -572,9 +572,9 @@
                     </Border>-->
                     <Grid Height="{Binding ElementName=albumCover, Path=CoverSize}" VerticalAlignment="Bottom">
                         <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-                            <Button x:Name="playlistButton" IsEnabled="False" Click="playlistButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5"/>
-                            <ToggleButton x:Name="repeatToggleButton" IsEnabled="False" IsThreeState="True" IsTextScaleFactorEnabled="False" Click="Repeat_Click" FontFamily="{ThemeResource IconFont}" Content="" Style="{StaticResource ModernIconToggleButtonStyle}" Foreground="White" FontSize="18" Margin="0,5" />
-                            <Button x:Name="shuffleButton" IsEnabled="False" Click="shuffleButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5" />
+                            <Button x:Name="playlistButton" IsTabStop="False" IsEnabled="False" Click="playlistButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5"/>
+                            <ToggleButton x:Name="repeatToggleButton" IsTabStop="False" IsEnabled="False" IsThreeState="True" IsTextScaleFactorEnabled="False" Click="Repeat_Click" FontFamily="{ThemeResource IconFont}" Content="" Style="{StaticResource ModernIconToggleButtonStyle}" Foreground="White" FontSize="18" Margin="0,5" />
+                            <Button x:Name="shuffleButton" IsTabStop="False" IsEnabled="False" Click="shuffleButton_Click" IsTextScaleFactorEnabled="False" Style="{StaticResource ModernIconButtonStyle}" FontSize="18" Content="" Foreground="White" Margin="0,5" />
 
                         </StackPanel>
                     </Grid>
@@ -585,8 +585,8 @@
                 <!--<TextBlock x:Name="AlbumName" IsHitTestVisible="False" Visibility="Collapsed" Text="" TextTrimming="CharacterEllipsis" />-->
 
                 <StackPanel Orientation="Horizontal" x:Name="MusicControlButtonsPanel">
-                    <Button x:Name="previousButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" Foreground="White" Click="previousButton_Click" Content="&#xE622;" Style="{StaticResource ModernIconButtonStyle}" />
-                    <Button Content="{Binding ElementName=PlayPauseButton, Path=Content}" Margin="10,0" Foreground="White" Height="50" Width="50" FontSize="20" Click="playPauseButton_Click" Style="{StaticResource CircleButtonStyle}">
+                    <Button x:Name="fullPreviousButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" Foreground="White" Click="previousButton_Click" Content="&#xE622;" Style="{StaticResource ModernIconButtonStyle}" />
+                    <Button x:Name="fullPlayPauseButton" Margin="10,0" Foreground="White" Height="50" Width="50" FontSize="20" Click="playPauseButton_Click" Style="{StaticResource CircleButtonStyle}">
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <LinearGradientBrush.RelativeTransform>
@@ -598,7 +598,7 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="nextButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" Foreground="White" Click="nextButton_Click" Content="&#xE623;" Style="{StaticResource ModernIconButtonStyle}" />
+                    <Button x:Name="fullNextButton" VerticalAlignment="Center" IsEnabled="False" Margin="10,0" Foreground="White" Click="nextButton_Click" Content="&#xE623;" Style="{StaticResource ModernIconButtonStyle}" />
                 </StackPanel>
 
                 <Slider x:Name="musicSlider" IsThumbToolTipEnabled="False" Foreground="White" Style="{StaticResource ProgressSliderStyle}" />
@@ -608,7 +608,7 @@
 
             </Grid>
 
-            <local:PlaylistControl x:Name="playlist" IsHitTestVisible="False" MaxWidth="500" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Canvas.ZIndex="6">
+            <local:PlaylistControl x:Name="playlist" IsTabStop="False" IsHitTestVisible="False" MaxWidth="500" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Canvas.ZIndex="6">
                 <local:PlaylistControl.RenderTransform>
                     <TranslateTransform x:Name="playlistTranslate" />
                 </local:PlaylistControl.RenderTransform>
@@ -617,16 +617,10 @@
             <Grid x:Name="playlistRightBorderOverlay" Background="#7F000000" Canvas.ZIndex="6" Opacity="0" Width="40" IsHitTestVisible="False" HorizontalAlignment="Right" VerticalAlignment="Stretch">
                 <TextBlock Text="&#xE016;" FontFamily="{ThemeResource IconFont}" Foreground="White" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Grid>
-
-            <local:Touch3D x:Name="touch3D" IsHitTestVisible="False" Canvas.ZIndex="15" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-
             <!--<Rectangle Opacity="0" Fill="Black" Canvas.ZIndex="14" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsHitTestVisible="False" x:Name="touch3DOverlay" PointerReleased="touch3DOverlay_PointerReleased" />-->
         </Grid>
 
         <Grid x:Name="compactView" Loaded="compactView_Loaded" Grid.Row="1" VerticalAlignment="Bottom" RequestedTheme="Default" Canvas.ZIndex="3" Height="60">
-
-            
-
             <ProgressBar Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="0,0,0,0" Height="4" Background="Transparent" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Name="MusicProgress" Opacity="0.3" Padding="0" />
             <Grid x:Name="compactViewContent" Height="60" VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
@@ -688,9 +682,9 @@
                 </Grid>
 
                 <StackPanel Margin="0,0,0,0" Grid.Column="1" Orientation="Horizontal" Visibility="Visible" VerticalAlignment="Center" HorizontalAlignment="Right" Name="CompactControlButtons">
-                    <Button IsEnabled="{Binding ElementName=previousButton, Path=IsEnabled}" Style="{StaticResource ModernIconButtonStyle}" PointerEntered="previousButton_PointerEntered" Holding="previousButton_Holding" PointerPressed="previousButton_PointerEntered" PointerCaptureLost="previousButton_PointerExited" PointerExited="previousButton_PointerExited" PointerReleased="previousButton_PointerExited" Background="Transparent" Click="previousButton_Click" Content="&#xE622;" />
-                    <Button Style="{StaticResource ModernIconButtonStyle}" Background="Transparent" Click="playPauseButton_Click" Name="PlayPauseButton" Content="&#xF5B0;" />
-                    <Button IsEnabled="{Binding ElementName=nextButton, Path=IsEnabled}" Style="{StaticResource ModernIconButtonStyle}" PointerEntered="nextButton_PointerEntered" Holding="nextButton_Holding" PointerPressed="nextButton_PointerEntered" PointerCaptureLost="nextButton_PointerExited" PointerExited="nextButton_PointerExited" PointerReleased="nextButton_PointerExited" Background="Transparent" Click="nextButton_Click" Content="&#xE623;" />
+                    <Button x:Name="compactPreviousButton" Style="{StaticResource ModernIconButtonStyle}" PointerEntered="previousButton_PointerEntered" Holding="previousButton_Holding" PointerPressed="previousButton_PointerEntered" PointerCaptureLost="previousButton_PointerExited" PointerExited="previousButton_PointerExited" PointerReleased="previousButton_PointerExited" Background="Transparent" Click="previousButton_Click" Content="&#xE622;" />
+                    <Button x:Name="compactPlayPauseButton" Style="{StaticResource ModernIconButtonStyle}" Background="Transparent" Click="playPauseButton_Click" Content="&#xF5B0;" />
+                    <Button x:Name="compactNextButton" Style="{StaticResource ModernIconButtonStyle}" PointerEntered="nextButton_PointerEntered" Holding="nextButton_Holding" PointerPressed="nextButton_PointerEntered" PointerCaptureLost="nextButton_PointerExited" PointerExited="nextButton_PointerExited" PointerReleased="nextButton_PointerExited" Background="Transparent" Click="nextButton_Click" Content="&#xE623;" />
                 </StackPanel>
             </Grid>
         </Grid>

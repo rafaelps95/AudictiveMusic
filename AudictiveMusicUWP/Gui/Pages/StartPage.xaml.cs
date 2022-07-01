@@ -51,6 +51,8 @@ namespace AudictiveMusicUWP.Gui.Pages
             set;
         }
 
+        private bool _shadowVisible = false;
+
         Compositor _compositor;
         SpriteVisual _sprite;
         CompositionEffectBrush _brush;
@@ -385,22 +387,22 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void collectionButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(CollectionPage), "page=artists");
+            NavigationService.Navigate(this, typeof(CollectionPage), "page=artists");
         }
 
         private void favoritesButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(Favorites));
+            NavigationService.Navigate(this, typeof(Favorites));
         }
 
         private void foldersButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(FolderPage));
+            NavigationService.Navigate(this, typeof(FolderPage));
         }
 
         private void settingsButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(Settings), "path=menu");
+            NavigationService.Navigate(this, typeof(Settings), "path=menu");
         }
 
         private void lastFmLoginButton_Click(object sender, RoutedEventArgs e)
@@ -412,7 +414,7 @@ namespace AudictiveMusicUWP.Gui.Pages
         {
             LastUser user = await LastFm.Current.GetUserInfo(ApplicationSettings.LastFmSessionUsername);
 
-            NavigationHelper.Navigate(this, typeof(LastFmProfilePage), user);
+            NavigationService.Navigate(this, typeof(LastFmProfilePage), user);
         }
 
         private async void lastFmUserButton_Click(object sender, RoutedEventArgs e)
@@ -440,27 +442,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             LoadRecentScrobbles();
         }
 
-        private async void lastFmButton_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            LastUser user;
-            //LastTrack track = new LastTrack();
-            //track.Images.Medium
-            if (ApplicationInfo.Current.HasInternetConnection)
-            {
-                if (LastFm.Current.Client.Auth.Authenticated)
-                    user = await LastFm.Current.GetUserInfo(ApplicationSettings.LastFmSessionUsername);
-                else
-                    user = new LastUser();
-
-                PopupHelper.GetInstance(sender).ShowLastFmPopupMenu(user);
-            }
-            else
-            {
-
-            }
-
-        }
-
         private void FavoritesList_ItemClick(object sender, ItemClickEventArgs e)
         {
             Song clickedSong = e.ClickedItem as Song;
@@ -481,13 +462,16 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void CreateSongPopup(Song song, object sender, Point point)
         {
-            PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
+            if (point == null)
+                PopupHelper.GetInstance(sender).ShowPopupMenu(song);
+            else
+                PopupHelper.GetInstance(sender).ShowPopupMenu(song, true, point);
 
         }
 
         private void openFavoritesPageButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(Favorites));
+            NavigationService.Navigate(this, typeof(Favorites));
         }
 
         private void leftBorder_Click(object sender, RoutedEventArgs e)
@@ -570,22 +554,69 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void ScrobbleSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(Settings), "path=scrobble");
+            NavigationService.Navigate(this, typeof(Settings), "path=scrobble");
         }
 
         private void PendingScrobblesButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(PendingScrobbles));
+            NavigationService.Navigate(this, typeof(PendingScrobbles));
         }
 
         private void RecentsButton_Click(object sender, RoutedEventArgs e)
         {
-            NavigationHelper.Navigate(this, typeof(RecentlyAdded));
+            NavigationService.Navigate(this, typeof(RecentlyAdded));
         }
 
         private void ReloadSuggestionButton_Click(object sender, RoutedEventArgs e)
         {
             LoadRecommendation();
+        }
+
+        private void ScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            if (e.NextView.VerticalOffset > 0)
+            {
+                if (!_shadowVisible)
+                {
+                    _shadowVisible = true;
+                    Animation.BeginBasicFadeInAnimation(fakeShadow, 300, 0.5);
+                }
+            }
+            else
+            {
+                if (_shadowVisible)
+                {
+                    _shadowVisible = false;
+                    Animation.BeginBasicFadeOutAnimation(fakeShadow);
+                }
+            }
+        }
+
+        private async void LastFmButton_Click(object sender, RoutedEventArgs e)
+        {
+            LastUser user;
+            //LastTrack track = new LastTrack();
+            //track.Images.Medium
+            if (ApplicationInfo.Current.HasInternetConnection)
+            {
+                if (LastFm.Current.Client.Auth.Authenticated)
+                    user = await LastFm.Current.GetUserInfo(ApplicationSettings.LastFmSessionUsername);
+                else
+                    user = new LastUser();
+
+                PopupHelper.GetInstance(sender).ShowLastFmPopupMenu(user);
+            }
+            else
+            {
+
+            }
+
+        }
+
+        private void LastFmButton_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (lastFmButton.FocusState == FocusState.Keyboard)
+                PageHelper.DismissSearchUI();
         }
     }
 }
