@@ -13,9 +13,6 @@ using ClassLibrary.Helpers.Enumerators;
 
 namespace ClassLibrary.Helpers
 {
-    /// <summary>
-    /// Collection of string constants used in the entire solution. This file is shared for all projects
-    /// </summary>
     public static class ApplicationSettings
     {
         public static void LoadServiceSettings()

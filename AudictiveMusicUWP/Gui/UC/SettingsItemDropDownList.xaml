@@ -463,7 +463,7 @@
                 <ScaleTransform ScaleY="1" ScaleX="1" x:Name="PanelScale" />
             </Border.RenderTransform>
             <Grid x:Name="ListContainer">
-                <ListBox Name="listBox" SelectionChanged="ListBox_SelectionChanged" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Background="Transparent" VerticalAlignment="Top" Padding="0,0,0,5">
+                <ListBox Name="listBox" SelectionChanged="ListBox_SelectionChanged" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" Background="Transparent" VerticalAlignment="Top" Padding="0,0,0,-2">
 
                 </ListBox>
             </Grid>

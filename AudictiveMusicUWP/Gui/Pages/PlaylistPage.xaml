@@ -28,8 +28,15 @@
                 <TextBlock x:Name="pageTitle" VerticalAlignment="Center" Margin="12,0" FontWeight="Bold" FontSize="25" TextTrimming="CharacterEllipsis" />
 
             </Grid>
-
-            <ListView Grid.Row="1" Grid.ColumnSpan="2" Padding="0,0,0,110" x:Name="SongsList" SelectionChanged="SongsList_SelectionChanged" CanReorderItems="True" AllowDrop="True" CanDragItems="True" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
+            <Grid x:Name="fakeShadow" Opacity="0" Canvas.ZIndex="2" Grid.Row="1" Grid.ColumnSpan="2" Height="5" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" >
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black" Offset="0"/>
+                        <GradientStop Color="#00000000" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+            </Grid>
+            <ListView Grid.Row="1" Loaded="SongsList_Loaded" Grid.ColumnSpan="2" Padding="0,0,0,110" x:Name="SongsList" SelectionChanged="SongsList_SelectionChanged" CanReorderItems="True" AllowDrop="True" CanDragItems="True" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
                 <ListView.ItemContainerTransitions>
                     <TransitionCollection>
                         <RepositionThemeTransition />

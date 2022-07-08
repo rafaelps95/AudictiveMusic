@@ -270,7 +270,7 @@ namespace AudictiveMusicUWP.Gui.Util
             }
         }
 
-        public void ShowLastFmPopupMenu(LastUser user)
+        public void ShowLastFmMenu(string username)
         {
             MenuFlyout mf = new MenuFlyout();
 
@@ -291,16 +291,21 @@ namespace AudictiveMusicUWP.Gui.Util
             }
             else
             {
-                if (user.Name.ToLower() == ApplicationSettings.LastFmSessionUsername.ToLower())
+                if (username.ToLower() == ApplicationSettings.LastFmSessionUsername.ToLower())
                 {
                     MenuFlyoutItem mfi = new MenuFlyoutItem()
                     {
                         Text = ApplicationInfo.Current.Resources.GetString("OpenProfile"),
                     };
 
-                    mfi.Click += (s, a) =>
+                    mfi.Click += async (s, a) =>
                     {
-                        NavigationService.Navigate(_sender, typeof(LastFmProfilePage), user);
+                        LastUser user = null;
+                        if (LastFm.Current.Client.Auth.Authenticated)
+                            user = await LastFm.Current.GetUserInfo(username);
+
+                        if (user != null)
+                            NavigationService.Navigate(_sender, typeof(LastFmProfilePage), user);
                     };
 
                     mf.Items.Add(mfi);
@@ -336,9 +341,14 @@ namespace AudictiveMusicUWP.Gui.Util
                         Text = ApplicationInfo.Current.Resources.GetString("VisitProfile"),
                     };
 
-                    mfi.Click += (s, a) =>
+                    mfi.Click += async (s, a) =>
                     {
-                        NavigationService.Navigate(_sender, typeof(LastFmProfilePage), user);
+                        LastUser user = null;
+                        if (LastFm.Current.Client.Auth.Authenticated)
+                            user = await LastFm.Current.GetUserInfo(username);
+
+                        if (user != null)
+                            NavigationService.Navigate(_sender, typeof(LastFmProfilePage), user);
                     };
 
                     mf.Items.Add(mfi);

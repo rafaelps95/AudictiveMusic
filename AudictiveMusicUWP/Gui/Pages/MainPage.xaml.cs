@@ -255,7 +255,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             {
                 args.Handled = true;
                 if (searchUI == null)
-                    CreateSearchGrid();
+                    CreateSearchGrid(true);
                 searchContainer.Visibility = Visibility.Visible;
                 OpenSearchPane();
                 return;
@@ -278,6 +278,10 @@ namespace AudictiveMusicUWP.Gui.Pages
 
                 Debug.WriteLine("Evento activated ocorreu");
 
+                if (ThemeSettings.ThemeColorPreference == ClassLibrary.Helpers.Enumerators.ThemeColorSource.AccentColor)
+                {
+                    ThemeSettings.CurrentThemeColor = ApplicationInfo.Current.CurrentSystemAccentColor;
+                }
 
                 Collection.LoadCollectionChanges();
 
@@ -288,6 +292,8 @@ namespace AudictiveMusicUWP.Gui.Pages
                 if (ApplicationInfo.Current.IsMobile == false)
                     titleBar.Opacity = 0.7;
             }
+
+
         }
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -365,9 +371,10 @@ namespace AudictiveMusicUWP.Gui.Pages
 
         private void UpdateView(Size newSize)
         {
+            footerAcrylic.Height = footerBehindBackground.Height = ApplicationInfo.Current.FooterHeight;
+
             if (ApplicationInfo.Current.IsWideView == false)
             {
-                footerAcrylic.Height = ApplicationInfo.Current.FooterHeight;
                 player.SetCompactViewMargin(new Thickness(0, 0, 0, 50));
 
                 if (ApplicationInfo.Current.IsMobile == false)
@@ -393,7 +400,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
             else
             {
-                footerAcrylic.Height = 60;
                 player.SetCompactViewMargin(new Thickness(0, 0, 0, 0));
                 navBar.Orientation = Orientation.Vertical;
                 navBar.Height = double.NaN;
@@ -431,7 +437,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             if (newColor.IsDarkColor())
             {
                 navBar.RequestedTheme = ElementTheme.Dark;
-
+                acrylic.AcrylicBrightness = footerAcrylic.AcrylicBrightness = 0.4;
                 if (ApplicationInfo.Current.IsMobile == false)
                 {
                     if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
@@ -442,6 +448,16 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
             else
             {
+                acrylic.AcrylicBrightness = newColor.GetBrightness();
+                if (newColor.GetBrightness() > 0.7)
+                {
+                    acrylic.AcrylicBrightness = 1;
+                }
+                else
+                {
+                    acrylic.AcrylicBrightness = footerAcrylic.AcrylicBrightness = 0.4;
+                }
+
                 navBar.RequestedTheme = ElementTheme.Light;
 
                 if (ApplicationInfo.Current.IsMobile == false)
@@ -460,6 +476,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             Animation animation = new Animation();
             animation.AddColorAnimation(newColor, 395, acrylic, "AcrylicTint", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true, 100);
             animation.AddColorAnimation(newColor, 395, footerAcrylic, "AcrylicTint", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true, 100);
+            animation.AddColorAnimation(newColor, 395, footerBehindColor, "Color", Animation.GenerateEasingFunction(EasingFunctionType.SineEase, EasingMode.EaseInOut), true, 100);
 
             animation.Begin();
         }
@@ -619,28 +636,32 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             if (MainFrame.SourcePageType == typeof(StartPage))
             {
-                CreateSearchGrid();
+                CreateSearchGrid(false);
                 navBar.SyncNavigationState(NavigationBar.NavigationView.Home);
             }
-
-            else if (MainFrame.SourcePageType == typeof(CollectionPage)
-                || MainFrame.SourcePageType == typeof(ArtistPage)
-                || MainFrame.SourcePageType == typeof(AlbumPage)
-                || MainFrame.SourcePageType == typeof(FolderPage))
-            {
-                navBar.SyncNavigationState(NavigationBar.NavigationView.Collection);
-            }
-
-            else if (MainFrame.SourcePageType == typeof(Playlists)
-                || MainFrame.SourcePageType == typeof(PlaylistPage)
-                || MainFrame.SourcePageType == typeof(Favorites))
-            {
-                navBar.SyncNavigationState(NavigationBar.NavigationView.Playlists);
-            }
-
             else
             {
-                navBar.SyncNavigationState(NavigationBar.NavigationView.Unknown);
+                RemoveSearchUI();
+
+                if (MainFrame.SourcePageType == typeof(CollectionPage)
+                    || MainFrame.SourcePageType == typeof(ArtistPage)
+                    || MainFrame.SourcePageType == typeof(AlbumPage)
+                    || MainFrame.SourcePageType == typeof(FolderPage))
+                {
+                    navBar.SyncNavigationState(NavigationBar.NavigationView.Collection);
+                }
+
+                else if (MainFrame.SourcePageType == typeof(Playlists)
+                    || MainFrame.SourcePageType == typeof(PlaylistPage)
+                    || MainFrame.SourcePageType == typeof(Favorites))
+                {
+                    navBar.SyncNavigationState(NavigationBar.NavigationView.Playlists);
+                }
+
+                else
+                {
+                    navBar.SyncNavigationState(NavigationBar.NavigationView.Unknown);
+                }
             }
         }
 
@@ -819,7 +840,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             playlistPicker.Focus(FocusState.Programmatic);
         }
 
-        public void CreateSearchGrid()
+        public void CreateSearchGrid(bool searchRequested)
         {
             if (searchUI != null)
                 return;
@@ -830,15 +851,22 @@ namespace AudictiveMusicUWP.Gui.Pages
             searchUI.SearchBarSizeChanged += SearchUI_SearchBarSizeChanged;
             searchContainer.Children.Add(searchUI);
 
-            searchContainer.Visibility = Visibility.Visible;
             if (MainFrame.SourcePageType == typeof(StartPage))
             {
+                searchContainer.Visibility = Visibility.Visible;
                 searchUI.SetSearchBarPlacement(NewSearchUX.SearchPlacement.Right);
                 searchUI.SetOffset(searchUIOffset);
             }
             else
             {
-                searchUI.SetSearchBarPlacement(NewSearchUX.SearchPlacement.Center);
+                if (searchRequested)
+                {
+                    searchContainer.Visibility = Visibility.Visible;
+                    searchUI.SetSearchBarPlacement(NewSearchUX.SearchPlacement.Center);
+                }
+                else
+                    searchContainer.Visibility = Visibility.Collapsed;
+
             }
 
             //if (searchGrid != null)
@@ -1334,7 +1362,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             else if (target == NavigationBar.NavigationView.Search)
             {
                 if (searchUI == null)
-                    CreateSearchGrid();
+                    CreateSearchGrid(true);
 
                 OpenSearchPane();
             }

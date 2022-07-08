@@ -417,26 +417,6 @@ namespace AudictiveMusicUWP.Gui.Pages
             NavigationService.Navigate(this, typeof(LastFmProfilePage), user);
         }
 
-        private async void lastFmUserButton_Click(object sender, RoutedEventArgs e)
-        {
-            LastUser user;
-            //LastTrack track = new LastTrack();
-            //track.Images.Medium
-            if (ApplicationInfo.Current.HasInternetConnection)
-            {
-                if (LastFm.Current.Client.Auth.Authenticated)
-                    user = await LastFm.Current.GetUserInfo(ApplicationSettings.LastFmSessionUsername);
-                else
-                    user = new LastUser();
-
-                PopupHelper.GetInstance(sender).ShowLastFmPopupMenu(user);
-            }
-            else
-            {
-
-            }
-        }
-
         private void reloadScrobblesButton_Click(object sender, RoutedEventArgs e)
         {
             LoadRecentScrobbles();
@@ -592,19 +572,12 @@ namespace AudictiveMusicUWP.Gui.Pages
             }
         }
 
-        private async void LastFmButton_Click(object sender, RoutedEventArgs e)
+        private void LastFmButton_Click(object sender, RoutedEventArgs e)
         {
-            LastUser user;
-            //LastTrack track = new LastTrack();
-            //track.Images.Medium
             if (ApplicationInfo.Current.HasInternetConnection)
             {
                 if (LastFm.Current.Client.Auth.Authenticated)
-                    user = await LastFm.Current.GetUserInfo(ApplicationSettings.LastFmSessionUsername);
-                else
-                    user = new LastUser();
-
-                PopupHelper.GetInstance(sender).ShowLastFmPopupMenu(user);
+                    PopupHelper.GetInstance(sender).ShowLastFmMenu(ApplicationSettings.LastFmSessionUsername);
             }
             else
             {

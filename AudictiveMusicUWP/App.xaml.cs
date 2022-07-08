@@ -193,6 +193,8 @@ namespace AudictiveMusicUWP
 
         private void InitializeSettings()
         {
+            ThemeSettings.CurrentThemeColor = ThemeSettings.CurrentThemeColor;
+
             //ApplicationSettings.ThemeColorPreference = (int)ThemeColorSource.AlbumColor;
         }
 

@@ -1191,11 +1191,11 @@
   <data name="LoadMore.Content" xml:space="preserve">
     <value>Montre plus</value>
   </data>
-  <data name="NoColor.Content" xml:space="preserve">
+  <data name="NoColor" xml:space="preserve">
     <value>Sans couleur</value>
   </data>
   <data name="CustomColorSettingsSection.Title" xml:space="preserve">
-    <value>Couleur personnalisée</value>
+    <value>Choisir la couleur</value>
   </data>
   <data name="MoreThemesSettingsItem.Text" xml:space="preserve">
     <value>Plus d'options de thème</value>
@@ -1235,5 +1235,11 @@
   </data>
   <data name="PendingScrobblesSubtitle.Text" xml:space="preserve">
     <value>Cette liste sera automatiquement envoyée à Last.fm une fois votre appareil connecté à Internet</value>
+  </data>
+  <data name="BackgroundBlurSettingsItem.AdditionalInfo" xml:space="preserve">
+    <value>L'effet acrylique n'est pas disponible sur les appareils mobiles et seule la couleur d'accent sera appliquée</value>
+  </data>
+  <data name="BackgroundBlurSettingsItem.Text" xml:space="preserve">
+    <value>Rendre l'arrière-plan de l'application transparent</value>
   </data>
 </root>

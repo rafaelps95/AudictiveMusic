@@ -68,21 +68,6 @@ namespace ClassLibrary.Helpers
         {
             get => Resources.GetString("Language");
         }
-        public bool ColorEnabled
-        {
-            get
-            {
-                if (ApplicationData.Current.LocalSettings.Values.ContainsKey("UpdateMenuColor"))
-                {
-                    return (bool)ApplicationData.Current.LocalSettings.Values["UpdateMenuColor"];
-                }
-                else
-                {
-                    ApplicationData.Current.LocalSettings.Values["UpdateMenuColor"] = true;
-                    return true;
-                }
-            }
-        }
 
         /// <summary>
         /// If possible, vibrate the device
@@ -95,21 +80,6 @@ namespace ClassLibrary.Helpers
 
             VibrationDevice v = VibrationDevice.GetDefault();
             v.Vibrate(TimeSpan.FromMilliseconds(duration));
-        }
-
-        public bool IsTransparencyEnabled
-        {
-            get
-            {
-                if (ApplicationData.Current.LocalSettings.Values.ContainsKey("EnableTransparency"))
-                {
-                    return (bool)ApplicationData.Current.LocalSettings.Values["EnableTransparency"];
-                }
-                else
-                {
-                    return true;
-                }
-            }
         }
 
         public bool IsWideView
@@ -287,44 +257,6 @@ namespace ClassLibrary.Helpers
             SurfaceHub,
             Other
         }
-
-        //public static Type GetStartupPageType()
-        //{
-        //    if (ApplicationData.Current.LocalSettings.Values.ContainsKey("StartupPage"))
-        //    {
-        //        string page = ApplicationData.Current.LocalSettings.Values["StartupPage"].ToString();
-
-        //        if (page == "Artists")
-        //        {
-        //            return typeof(Artists);
-        //        }
-        //        else if (page == "Albums")
-        //        {
-        //            return typeof(Albums);
-        //        }
-        //        else if (page == "Songs")
-        //        {
-        //            return typeof(Songs);
-        //        }
-        //        else if (page == "Playlists")
-        //        {
-        //            return typeof(Playlists);
-        //        }
-        //        //else if (page == "Favorites")
-        //        //{
-        //        //    return typeof(Favorites);
-        //        //}
-        //        else
-        //        {
-        //            return typeof(Artists);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        ApplicationData.Current.LocalSettings.Values["StartupPage"] = "Artists";
-        //        return typeof(Artists);
-        //    }
-        //}
 
         public async Task<StorageFile> GetCoverFile(string albumID)
         {

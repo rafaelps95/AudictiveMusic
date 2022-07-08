@@ -22,6 +22,7 @@ namespace AudictiveMusicUWP.Gui.Pages
     /// </summary>
     public sealed partial class PlaylistPage : Page
     {
+        private bool _shadowVisible = false;
 
         private Playlist playlist
         {
@@ -233,6 +234,32 @@ namespace AudictiveMusicUWP.Gui.Pages
 
             }
 
+        }
+
+        private void SongsList_Loaded(object sender, RoutedEventArgs e)
+        {
+            ScrollViewer scrollViewer = SongsList.GetScrollViewer();
+            scrollViewer.ViewChanging += ScrollViewer_ViewChanging;
+        }
+
+        private void ScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            if (e.NextView.VerticalOffset > 0)
+            {
+                if (!_shadowVisible)
+                {
+                    _shadowVisible = true;
+                    Animation.BeginBasicFadeInAnimation(fakeShadow, 300, 0.5);
+                }
+            }
+            else
+            {
+                if (_shadowVisible)
+                {
+                    _shadowVisible = false;
+                    Animation.BeginBasicFadeOutAnimation(fakeShadow);
+                }
+            }
         }
     }
 }

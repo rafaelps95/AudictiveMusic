@@ -28,10 +28,17 @@
                 <TextBlock x:Name="pageTitle" VerticalAlignment="Center" Margin="12,0" Text="Songs" FontWeight="Bold" FontSize="16" TextTrimming="CharacterEllipsis" ToolTipService.ToolTip="{Binding ElementName=pageTitle, Path=Text}" />
                 <Button Grid.Row="0" Grid.Column="1" Content="" x:Name="refreshButton" Click="refreshButton_Click" Style="{StaticResource ModernIconButtonStyle}" VerticalAlignment="Center" />
             </Grid>
-
+            <Grid x:Name="fakeShadow" Opacity="0" Canvas.ZIndex="2" Grid.Row="1" Height="5" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" >
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black" Offset="0"/>
+                        <GradientStop Color="#00000000" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+            </Grid>
             <local:SelectedItemsBar Canvas.ZIndex="2" Grid.Row="1" Grid.ColumnSpan="2" SelectionModeChanged="SelectionItemsBar_SelectionModeChanged" PlaySelected="SelectionItemsBar_PlaySelected" AddSelected="SelectionItemsBar_AddSelected" ClearRequest="SelectionItemsBar_ClearRequest" SelectAllRequest="SelectionItemsBar_SelectAllRequest" ShareSelected="SelectionItemsBar_ShareSelected" x:Name="selectionItemsBar" Visibility="Visible" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
 
-            <ListView Grid.Row="1" Grid.RowSpan="2" IsItemClickEnabled="True" ContainerContentChanging="listView_ContainerContentChanging" ItemClick="listView_ItemClick" Padding="0,0,0,115" x:Name="listView" SelectionMode="None" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
+            <ListView Grid.Row="1" Loaded="ListView_Loaded" Grid.RowSpan="2" IsItemClickEnabled="True" ContainerContentChanging="listView_ContainerContentChanging" ItemClick="listView_ItemClick" Padding="0,0,0,115" x:Name="listView" SelectionMode="None" IsMultiSelectCheckBoxEnabled="True" HorizontalContentAlignment="Stretch">
                 <ListView.ItemContainerTransitions>
                     <TransitionCollection>
                         <!--<RepositionThemeTransition />

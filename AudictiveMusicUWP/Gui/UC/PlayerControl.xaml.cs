@@ -175,6 +175,7 @@ namespace AudictiveMusicUWP.Gui.UC
         bool singleTap;
         public PlayerControl()
         {
+            this.Loaded += PlayerControl_Loaded;
             this.SizeChanged += PlayerControl_SizeChanged;
             this.InitializeComponent();
             this.mode = DisplayMode.Compact;
@@ -194,6 +195,11 @@ namespace AudictiveMusicUWP.Gui.UC
             ThemeSettings.ThemeBackgroundPreferenceChanged += ApplicationSettings_ThemeBackgroundPreferenceChanged;
             PlayerController.FullPlayerRequested += PlayerController_FullPlayerRequested;
             Ctr_Song.FavoritesChanged += Ctr_Song_FavoritesChanged;
+        }
+
+        private void PlayerControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateThemeColor(ThemeSettings.CurrentThemeColor);
         }
 
         private async void PlayerController_BackgroundActionRequested(BackgroundAudioShared.Messages.Action action)

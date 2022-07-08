@@ -22,7 +22,6 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!--<local:Acrylic x:Name="acrylic" AcrylicMode="Window"  Contrast="0.2" BlurOpacity="0.8" IsBlurEnabled="True" Grid.ColumnSpan="2" Grid.RowSpan="3" />-->
         <toolkit:Acrylic x:Name="acrylic" AcrylicBackgroundSource="HostBackdrop" AcrylicFallbackOpacity="1" AcrylicOpacity="1" AcrylicBrightness="0.4" AcrylicEnabled="True" Grid.ColumnSpan="2" Grid.RowSpan="3" />
 
         <!--<Grid x:Name="TintGrid" Grid.ColumnSpan="2" Grid.RowSpan="3" Opacity="0.1" Background="{Binding AccentColor, Mode=TwoWay, Source={StaticResource ApplicationAccentColor}}" />-->
@@ -56,22 +55,25 @@
         <Border x:Name="frameBackground" CornerRadius="{Binding ElementName=frameBorder, Path=CornerRadius}" BorderBrush="Transparent" BorderThickness="{Binding ElementName=frameBorder, Path=BorderThickness}" Background="{ThemeResource DefaultPageBackgroundBrush}" Grid.Column="1" Grid.Row="1" Canvas.ZIndex="2" Grid.RowSpan="2">
 
         </Border>
+
+
         <!--<Grid x:Name="acrillicPageBG" Grid.ColumnSpan="2" Visibility="Collapsed" Canvas.ZIndex="1" Opacity="0.2" Grid.Row="0" Grid.RowSpan="2" />-->
         <Border x:Name="frameBorder" CornerRadius="10,0,0,0" BorderBrush="#66999999" BorderThickness="1,1,0,0" Grid.Column="1" Grid.Row="1" Canvas.ZIndex="2" Grid.RowSpan="2">
-            <Frame x:Name="MainFrame" TabIndex="2" Navigated="MainFrame_Navigated">
-                <Frame.ContentTransitions>
-                    <TransitionCollection>
-                        <NavigationThemeTransition />
-                    </TransitionCollection>
-                </Frame.ContentTransitions>
-            </Frame>
+            <Grid>
+                <Grid Opacity="0.4" VerticalAlignment="Bottom" x:Name="footerBehindBackground" HorizontalAlignment="Stretch">
+                    <Grid.Background>
+                        <SolidColorBrush x:Name="footerBehindColor" />
+                    </Grid.Background>
+                </Grid>
+                <Frame x:Name="MainFrame" TabIndex="2" Navigated="MainFrame_Navigated">
+                    <Frame.ContentTransitions>
+                        <TransitionCollection>
+                            <NavigationThemeTransition />
+                        </TransitionCollection>
+                    </Frame.ContentTransitions>
+                </Frame>
+            </Grid>
         </Border>
-
-        <Grid Grid.Column="1" RequestedTheme="{Binding ElementName=navBar, Path=RequestedTheme}" Height="{Binding ElementName=footerBlur, Path=Height}" Grid.Row="1" VerticalAlignment="Bottom" Canvas.ZIndex="-99">
-            <Grid.Background>
-                <SolidColorBrush Color="{ThemeResource SystemChromeLowColor}" />
-            </Grid.Background>
-        </Grid>
 
         <local:NavigationBar x:Name="navBar" RequestedTheme="Dark" Grid.Column="1" Canvas.ZIndex="3" Grid.Row="1" Orientation="Horizontal" Height="50" ActionRequested="bottomNavBar_ActionRequested" VerticalAlignment="Bottom" />
 

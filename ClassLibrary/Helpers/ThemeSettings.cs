@@ -20,6 +20,7 @@ namespace ClassLibrary.Helpers
         public static event ThemeChangedEventHandler TransparencyEffectToggled;
         public static event ThemeChangedEventHandler PerformanceModeToggled;
 
+        public static readonly string[] ApplicationAccentColors = new string[] { "#FFFFB900", "#FFFF8C00", "#FFF7630C", "#FFCA5010", "#FFDA3B01", "#FFEF6950", "#FFD13438", "#FFFF4343", "#FFE74856", "#FFE81123", "#FFEA005E", "#FFC30052", "#FFE3008C", "#FFBF0077", "#FFC239B3", "#FF9A0089", "#FF0078D7", "#FF0063B1", "#FF8E8CD8", "#FF6B69D6", "#FF8764B8", "#FF744DA9", "#FFB146C2", "#FF881798", "#FF0099BC", "#FF2D7D9A", "#FF00B7C3", "#FF038387", "#FF00B294", "#FF018574", "#FF00CC6A", "#FF10893E", "#FF7A7574", "#FF5D5A58", "#FF68768A", "#FF515C6B", "#FF567C73", "#FF486860", "#FF498205", "#FF107C10", "#FF767676", "#FF4C4A48", "#FF69797E", "#FF4A5459", "#FF647C64", "#FF525E54", "#FF847545", "#FF7E735F", "#FF000000", "#FFFFFFFF" };
 
 
         /// <summary>
@@ -82,10 +83,11 @@ namespace ClassLibrary.Helpers
                 else
                     CurrentForegroundColor = Colors.Black;
 
-
-                ApplicationSettings.SaveSettingsValue("CurrentThemeColor", ImageHelper.GetHexFromColor(value));
-
-                CurrentThemeColorChanged?.Invoke();
+                if (CurrentThemeColor != value)
+                {
+                    ApplicationSettings.SaveSettingsValue("CurrentThemeColor", ImageHelper.GetHexFromColor(value));
+                    CurrentThemeColorChanged?.Invoke();
+                }
             }
         }
 
@@ -141,6 +143,23 @@ namespace ClassLibrary.Helpers
             set
             {
                 ApplicationSettings.SaveSettingsValue("AppTheme", (int)value);
+                ApplicationThemeChanged?.Invoke();
+            }
+        }
+
+        public static bool UseBlackBackgroundInsteadOfDarkGray
+        {
+            get
+            {
+                object value = ApplicationSettings.ReadSettingsValue("UseBlackBackgroundInsteadOfDarkGray");
+                if (value == null)
+                    return false;
+                else
+                    return (bool)value;
+            }
+            set
+            {
+                ApplicationSettings.SaveSettingsValue("UseBlackBackgroundInsteadOfDarkGray", (bool)value);
                 ApplicationThemeChanged?.Invoke();
             }
         }

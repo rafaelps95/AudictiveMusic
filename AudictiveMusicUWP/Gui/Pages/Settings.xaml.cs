@@ -45,8 +45,8 @@ namespace AudictiveMusicUWP.Gui.Pages
         private bool handledNavigation = false;
         private string NavigationPath;
         private bool storageInfoLoaded = false;
+        private bool _shadowVisible = false;
 
-        private string[] colors = new string[] { "#FFFFB900", "#FFFF8C00", "#FFF7630C", "#FFCA5010", "#FFDA3B01", "#FFEF6950", "#FFD13438", "#FFFF4343", "#FFE74856", "#FFE81123", "#FFEA005E", "#FFC30052", "#FFE3008C", "#FFBF0077", "#FFC239B3", "#FF9A0089", "#FF0078D7", "#FF0063B1", "#FF8E8CD8", "#FF6B69D6", "#FF8764B8", "#FF744DA9", "#FFB146C2", "#FF881798", "#FF0099BC", "#FF2D7D9A", "#FF00B7C3", "#FF038387", "#FF00B294", "#FF018574", "#FF00CC6A", "#FF10893E", "#FF7A7574", "#FF5D5A58", "#FF68768A", "#FF515C6B", "#FF567C73", "#FF486860", "#FF498205", "#FF107C10", "#FF767676", "#FF4C4A48", "#FF69797E", "#FF4A5459", "#FF647C64", "#FF525E54", "#FF847545", "#FF7E735F" };
         private ObservableCollection<ThemeColor> ColorsList = new ObservableCollection<ThemeColor>();
 
         private SettingsPageContent view;
@@ -548,7 +548,7 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
                     }
                 }
                 else
-                    dropDownList.AdditionalInfo = "Não";
+                    dropDownList.AdditionalInfo = ApplicationInfo.Current.Resources.GetString("NoColor");
             }
             else
             {
@@ -574,7 +574,7 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
 
             colorsList.ItemsSource = ColorsList;
 
-            foreach (string str in colors)
+            foreach (string str in ThemeSettings.ApplicationAccentColors)
             {
                 ThemeColor color = new ThemeColor();
                 color.Color = ImageHelper.GetColorFromHex(str);
@@ -616,13 +616,13 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
                 if (this.NavigationPath == "scrobble")
                 {
                     await Task.Delay(200);
-                    menuScroll.ScrollToElement(SendScrobbleSettingsItem);
+                    scroll.ScrollToElement(SendScrobbleSettingsItem);
                     SendScrobbleSettingsItem.Focus(FocusState.Keyboard);
                 }
                 else if (this.NavigationPath == "timer")
                 {
                     await Task.Delay(200);
-                    menuScroll.ScrollToElement(TimerBox);
+                    scroll.ScrollToElement(TimerBox);
                     TimerBox.Focus(FocusState.Keyboard);
                 }
             }
@@ -774,6 +774,27 @@ new Uri($"ms-windows-store://review/?PFN={Package.Current.Id.FamilyName}"));
         private void SendScrobbleSettingsItem_Toggled(object sender, RoutedEventArgs e)
         {
             ApplicationSettings.IsScrobbleEnabled = SendScrobbleSettingsItem.IsOn;
+        }
+
+        private void Scroll_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            if (e.NextView.VerticalOffset > 0)
+            {
+                if (!_shadowVisible)
+                {
+                    _shadowVisible = true;
+                    Animation.BeginBasicFadeInAnimation(fakeShadow, 300, 0.5);
+                }
+            }
+            else
+            {
+                if (_shadowVisible)
+                {
+                    _shadowVisible = false;
+                    Animation.BeginBasicFadeOutAnimation(fakeShadow);
+                }
+            }
+
         }
     }
 }

@@ -136,7 +136,7 @@
     <Compile Include="Helpers\ThemeSettings.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers\ApplicationInfo.cs" />
-    <Compile Include="Helpers\ApplicationSettingsHelper.cs" />
+    <Compile Include="Helpers\ApplicationSettings.cs" />
     <Compile Include="Helpers\BuildInfo.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\CustomPlaylistsHelper.cs" />

@@ -37,6 +37,7 @@ namespace AudictiveMusicUWP.Gui.Pages
             set;
         }
 
+        private bool _shadowVisible = false;
         private int SelectedItemsCount;
 
         private StorageFolder CurrentFolder { get; set; }
@@ -423,5 +424,30 @@ namespace AudictiveMusicUWP.Gui.Pages
                 EnableSelectionMode();
         }
 
+        private void ListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            ScrollViewer scrollViewer = listView.GetScrollViewer();
+            scrollViewer.ViewChanging += ScrollViewer_ViewChanging;
+        }
+
+        private void ScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            if (e.NextView.VerticalOffset > 0)
+            {
+                if (!_shadowVisible)
+                {
+                    _shadowVisible = true;
+                    Animation.BeginBasicFadeInAnimation(fakeShadow, 300, 0.5);
+                }
+            }
+            else
+            {
+                if (_shadowVisible)
+                {
+                    _shadowVisible = false;
+                    Animation.BeginBasicFadeOutAnimation(fakeShadow);
+                }
+            }
+        }
     }
 }
